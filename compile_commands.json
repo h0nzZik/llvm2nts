@@ -1,0 +1,57 @@
+[
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src",
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dllvm2nts_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/llvm2nts.dir/Pass.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/Pass.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/Pass.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src",
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dllvm2nts_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/llvm2nts.dir/llvm2nts.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/llvm2nts.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/llvm2nts.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/ntslib.dir/NTS.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/NTS.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/NTS.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/ntslib.dir/Printable.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/Printable.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/Printable.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/ntslib.dir/BinaryOpBase.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/BinaryOpBase.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/BinaryOpBase.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/ntslib.dir/BooleanTerm.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/BooleanTerm.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/BooleanTerm.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/ntslib.dir/Arithmetic.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/Arithmetic.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/Arithmetic.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/ntslib.dir/AtomicRelation.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/AtomicRelation.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/AtomicRelation.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/ntslib.dir/Havoc.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/Havoc.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/Havoc.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/ntslib.dir/BoolOp.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/BoolOp.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/BoolOp.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/ntslib.dir/Formula.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/Formula.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/Formula.cpp"
+}
+]
