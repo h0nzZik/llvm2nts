@@ -1,20 +1,40 @@
 #include <sstream>
 #include <llvm/Support/Casting.h>
 #include <llvm/IR/GlobalValue.h>
+#include "llvm/Support/raw_ostream.h"
+#include "llvm/IR/Constants.h"
+#include "llvm/Support/Casting.h"
+
 #include "VariableManager.hpp"
 
 
 
-void VariableManager::insVariable(const llvm::Value *llval, NTS::Variable *var)
+void VariableManager::insVariable(const llvm::Value *llval, NTS::IPrint *var)
 {
 	m_variables.insert(std::make_pair(llval, var));
 }
 
-NTS::Variable * VariableManager::getVariable(const llvm::Value *llval)
+NTS::IPrint * VariableManager::getIPrint(const llvm::Value *llval)
 {
-	NTS::Variable *v = m_variables.lookup(llval);
+	NTS::IPrint *v = m_variables.lookup(llval);
 	if (v)
 		return v;
+
+	if (llvm::isa<llvm::ConstantInt>(llval))
+	{
+		const auto *c =llvm:: cast<llvm::ConstantInt>(llval);
+		const auto &v = c->getValue();
+
+		// TODO: Make this more elegant
+		std::string s;
+		llvm::raw_string_ostream os(s);
+		v.print(os, false);
+		auto * co = new NTS::Constant(s);
+
+		insVariable(llval, co);
+		return co;
+	}
+
 
 	std::stringstream ss;
 	if (llvm::isa<llvm::GlobalValue>(llval))
@@ -28,6 +48,8 @@ NTS::Variable * VariableManager::getVariable(const llvm::Value *llval)
 	insVariable(llval, v);
 	return v;
 }
+
+#if 0
 
 NTS::ArithmeticVariableIdentifier *
 VariableManager::getArithPrimed(const NTS::Variable *var)
@@ -52,9 +74,11 @@ VariableManager::getArithUnprimed(const NTS::Variable *var)
 	m_var_to_arith_unprimed.insert(std::make_pair(var,id));
 	return id;
 }
+#endif
 
 VariableManager::~VariableManager()
 {
+#if 0
 	for (auto i : this->m_var_to_arith_primed)
 	{
 		delete i.second;
@@ -66,6 +90,7 @@ VariableManager::~VariableManager()
 		delete i.second;
 		i.second = NULL;
 	}
+#endif
 
 	for (auto i : this->m_variables)
 	{

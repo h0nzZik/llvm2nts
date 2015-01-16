@@ -2,25 +2,20 @@
 #define _NTS_VARIABLEIDENTIFIER_HPP_
 
 #include "Variable.hpp"
+#include "ConcreteCtx.hpp"
 
 namespace NTS
 {
 	class VariableIdentifier
 	{
 		private:
-			const Variable *m_var;
+			int m_varid;
 			bool m_primed;
 
 		public:
-			VariableIdentifier(const Variable *var, bool primed)
-				: m_var(var), m_primed(primed) {;}
+			VariableIdentifier(int var_id, bool primed);
 
-			void print(std::ostream &o) const
-			{
-				m_var->print(o);
-				if (m_primed)
-					o << "'";
-			}
+			void print(const ConcreteCtx &ctx, std::ostream &o) const;
 	};
 };
 

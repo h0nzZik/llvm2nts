@@ -4,6 +4,7 @@
 #include <vector>
 #include "Formula.hpp"
 #include "Variable.hpp"
+#include "IPrint.hpp"
 
 namespace NTS
 {
@@ -15,13 +16,10 @@ namespace NTS
 			bool m_final; // FIXME:: Not used
 
 		public:
-			State(int st, bool st_final) : m_st(st), m_final(st_final) {;}
+			State(int st, bool st_final);
 			State & operator=(State const &) = delete;
 
-			void print(std::ostream &o) const
-			{
-				o << "s_" << std::to_string(m_st);
-			}
+			void print(std::ostream &o) const;
 	};
 
 	class Transition
@@ -30,23 +28,17 @@ namespace NTS
 			const State * m_from;
 			const State * m_to;
 			const Formula * m_guard;
+			const ConcreteCtx m_ctx;
 
 		public:
-			Transition(const State *a, const State *b, const Formula *guard)
-				: m_from(a),
-				m_to(b),
-				m_guard(guard)
-		{;}
+			Transition(
+					const State *a,
+					const State *b,
+					const Formula *guard,
+					const std::initializer_list<const IPrint *>  &variables
+					);
 
-			void print(std::ostream &o) const
-			{
-				m_from->print(o);
-				o << " -> ";
-				m_to->print(o);
-				o << "{";
-				m_guard->print(o);
-				o << "}";
-			}
+			void print(std::ostream &o) const;
 	};
 
 
@@ -61,88 +53,36 @@ namespace NTS
 			std::vector<Transition> m_transitions;
 
 
-			const State & pr_addState(bool st_final)
-			{
-				const State * s = new State((int)m_states.size(), st_final);
-				m_states.push_back(s);
-				return *s;
-			}
+			const State & pr_addState(bool st_final);
 
 		public:
 
-			BasicNts()
-			{
+			BasicNts();
 
-			}
+			~BasicNts();
 
-			void setRetVar(const Variable * ret_var)
-			{
-				m_retvar = ret_var;
-			}
+			void setRetVar(const Variable * ret_var);
 
-			const Variable * getRetVar(void) const
-			{
-				return m_retvar;
-			}
+			const Variable * getRetVar(void) const;
 
-			void addVariable(Variable * var)
-			{
-				m_variables.push_back(var);
-			}
+			void addVariable(Variable * var);
 
-			void addArgument(Variable * arg)
-			{
-				m_arguments.push_back(arg);
-			}
+			void addArgument(Variable * arg);
 
-			const State & addState()
-			{
-				return pr_addState(false);
-			}
+			const State & addState();
 
-			const State & addFinalState()
-			{
-				return pr_addState(true);
-			}
+			const State & addFinalState();
 
-			const State & lastState() const
-			{
-				return *m_states.back();
-			}
+			const State & lastState() const;
 
-			void addTransition(const State * from, const State * to, Formula *guard)
-			{
-				Transition t(from, to, guard);
-				m_transitions.push_back(t);
-			}
+			void addTransition(
+					const State * from,
+					const State * to,
+					const Formula *guard,
+					const std::initializer_list<const IPrint *> &variables
+					);
 
-			void print(std::ostream &o) const
-			{
-
-				// TODO add types
-				o << "in ( ";
-				for(const auto *v : m_arguments)
-				{
-					v->print(o);
-					o << " ";
-				}
-				o << ");\n";
-				o << "out ( ";
-				m_retvar->print(o);
-				o << " );\n";
-				o << "-- Variables:\n";
-				for (const auto *v : m_variables)
-				{
-					v->print(o);
-					o << "\n";
-				}
-				o << "Transitions:\n";
-				for(const auto & t : m_transitions)
-				{
-					t.print(o);
-					o << "\n";
-				}
-			}
+			void print(std::ostream &o) const;
 	};
 
 

@@ -8,11 +8,11 @@ namespace NTS
 		;
 	}
 
-	void BinaryOpBase::print(std::ostream &o, enum Printable::Prio prio) const
+	void BinaryOpBase::print(const ConcreteCtx &ctx, std::ostream &o, enum Printable::Prio prio) const
 	{
-		m_t1->wrapped_print(o, prio) << " " << m_sym << " ";
+		m_t1->wrapped_print(ctx, o, prio) << " " << m_sym << " ";
 
-		m_t2->wrapped_print(o, prio);
+		m_t2->wrapped_print(ctx, o, prio);
 	}
 };
 

@@ -4,27 +4,32 @@
 #include "llvm/ADT/ValueMap.h"
 #include "llvm/ADT/DenseMap.h"
 #include "nts/NTS.hpp"
-#include "nts/Arithmetic.hpp"
+#include "nts/AbstractArithmetic.hpp"
+#include "nts/IPrint.hpp"
 
-class VariableManager
+// Manages variables and constants
+class VariableManager final
 {
 	private:
-		llvm::ValueMap<const llvm::Value *, NTS::Variable *> m_variables;
+		llvm::ValueMap<const llvm::Value *, NTS::IPrint *> m_variables;
 
+#if 0
 		typedef llvm::DenseMap<const NTS::Variable *,
 				NTS::ArithmeticVariableIdentifier *> dm_t;
 
 		dm_t m_var_to_arith_unprimed;
 		dm_t m_var_to_arith_primed;
-
+#endif
 	public:
 		VariableManager() {;}
 		~VariableManager();
 
-		void insVariable(const llvm::Value *llva, NTS::Variable *var);
-		NTS::Variable * getVariable(const llvm::Value * llval);
+		void insVariable(const llvm::Value *llva, NTS::IPrint *var);
+		NTS::IPrint * getIPrint(const llvm::Value * llval);
+#if 0
 		NTS::ArithmeticVariableIdentifier * getArithPrimed(const NTS::Variable *var);
 		NTS::ArithmeticVariableIdentifier * getArithUnprimed(const NTS::Variable *var);
+#endif
 };
 
 

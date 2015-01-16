@@ -9,9 +9,9 @@ namespace NTS
 		;
 	}
 
-	void BoolTermRelation::print(std::ostream &o) const
+	void BoolTermRelation::print(const ConcreteCtx &ctx, std::ostream &o) const
 	{
-		m_bob.print(o, m_prio);
+		m_bob.print(ctx, o, m_prio);
 	}
 
 };

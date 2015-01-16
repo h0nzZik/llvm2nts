@@ -36,8 +36,13 @@
 },
 {
   "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
-  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/ntslib.dir/Arithmetic.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/Arithmetic.cpp",
-  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/Arithmetic.cpp"
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/ntslib.dir/ConcreteArithmetic.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/ConcreteArithmetic.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/ConcreteArithmetic.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/ntslib.dir/AbstractArithmetic.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/AbstractArithmetic.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/AbstractArithmetic.cpp"
 },
 {
   "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
@@ -58,5 +63,15 @@
   "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
   "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/ntslib.dir/Formula.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/Formula.cpp",
   "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/Formula.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/ntslib.dir/ConcreteCtx.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/ConcreteCtx.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/ConcreteCtx.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/ntslib.dir/VariableIdentifier.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/VariableIdentifier.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/VariableIdentifier.cpp"
 }
 ]

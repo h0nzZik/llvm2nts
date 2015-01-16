@@ -2,10 +2,11 @@
 #define _NTS_VARIABLE_HPP_
 
 #include <string>
+#include "IPrint.hpp"
 
 namespace NTS
 {
-	class Variable
+	class Variable : public IPrint
 	{
 		private:
 			std::string m_name;
@@ -17,7 +18,26 @@ namespace NTS
 				;
 			}
 
-			void print(std::ostream &o) const
+			// implementation of IPrint
+			virtual void print(std::ostream &o) const
+			{
+				o << m_name;
+			}
+	};
+
+	class Constant : public IPrint
+	{
+		private:
+			std::string m_name;
+
+		public:
+			Constant(std::string name)
+				:m_name(name)
+			{
+				;
+			}
+
+			virtual void print(std::ostream &o) const
 			{
 				o << m_name;
 			}

@@ -9,7 +9,7 @@ namespace NTS
 	{
 		public:
 			BinaryOpBase(const Printable *t1, const Printable *t2, const char *sym);
-			void print(std::ostream &o, enum Printable::Prio prio) const;
+			void print(const ConcreteCtx &ctx, std::ostream &o, enum Printable::Prio prio) const;
 
 		private:
 			const Printable * const m_t1;

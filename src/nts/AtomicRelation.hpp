@@ -3,11 +3,11 @@
 
 #include "BinaryOpBase.hpp"
 #include "AtomicProposition.hpp"
-#include "Arithmetic.hpp"
+#include "AbstractArithmetic.hpp"
 
 namespace NTS
 {
-	class AtomicRelation : public AtomicProposition
+	class AtomicRelation final : public AtomicProposition
 	{
 		public:
 			enum class Relation
@@ -27,9 +27,9 @@ namespace NTS
 			const char * rel_to_sym(Relation r);
 
 		public:
-			AtomicRelation(Relation rel, ArithmeticTerm *t1, ArithmeticTerm *t2);
+			AtomicRelation(Relation rel, AbstArithTerm *t1, AbstArithTerm *t2);
 
-			virtual void print(std::ostream &o) const;
+			virtual void print(const ConcreteCtx &ctx, std::ostream &o) const;
 	};
 };
 

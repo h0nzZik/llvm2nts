@@ -8,9 +8,9 @@ namespace NTS
 		;
 	}
 
-	void FormulaBop::print(std::ostream &o) const
+	void FormulaBop::print(const ConcreteCtx &ctx, std::ostream &o) const
 	{
-		m_bob.print(o, Printable::m_prio);
+		m_bob.print(ctx, o, Printable::m_prio);
 	}
 
 };

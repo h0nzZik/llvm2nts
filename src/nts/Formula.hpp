@@ -13,7 +13,7 @@ namespace NTS
 			Formula(Prio pr) : Printable(pr) {;}
 
 			// Printable
-			virtual void print(std::ostream &o) const = 0;
+			virtual void print(const ConcreteCtx &ctx, std::ostream &o) const = 0;
 	};
 
 	class FormulaBop final : public Formula
@@ -24,7 +24,7 @@ namespace NTS
 		public:
 			FormulaBop(BoolOp op, Formula *f1, Formula *f2);
 
-			virtual void print(std::ostream &o) const;
+			virtual void print(const ConcreteCtx &ctx, std::ostream &o) const;
 
 	};
 };

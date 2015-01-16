@@ -2,6 +2,7 @@
 #define _NTS_ATOMICPROPOSITION_HPP_
 
 #include "Formula.hpp"
+#include "ConcreteCtx.hpp"
 
 namespace NTS
 {
@@ -11,7 +12,7 @@ namespace NTS
 			AtomicProposition(enum Prio pr) : Formula(pr) {;}
 
 			// Printable
-			virtual void print(std::ostream &o) const = 0;
+			virtual void print(const ConcreteCtx &ctx, std::ostream &o) const = 0;
 	};
 };
 

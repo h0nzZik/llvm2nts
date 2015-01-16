@@ -18,7 +18,7 @@
 #include <sstream>
 
 #include "nts/NTS.hpp"
-#include "nts/Arithmetic.hpp"
+//#include "nts/Arithmetic.hpp"
 #include "nts/VariableIdentifier.hpp"
 #include "nts/AtomicRelation.hpp"
 #include "nts/Havoc.hpp"
@@ -53,22 +53,6 @@ void llvm2nts::print(std::ostream &o) const
 	m_nts.print(o);
 }
 
-NTS::ArithmeticLiteral * llvm2nts::createArithmeticLiteral(const llvm::Value * value)
-{
-	if (isa<Constant>(value))
-	{
-		const auto *c = cast<llvm::ConstantInt>(value);
-		const auto &v = c->getValue();
-		auto * pn = new NTS::PositiveNumeral();
-		llvm::raw_string_ostream os(pn->getStr());
-		v.print(os, false); // TODO: what to do with isSigned parameter?
-
-		return pn;
-	}
-
-	const NTS::Variable *v = m_vm.getVariable(value);
-	return m_vm.getArithUnprimed(v);
-}
 
 const NTS::Variable * llvm2nts::addParam(const Argument * arg)
 {
@@ -78,20 +62,48 @@ const NTS::Variable * llvm2nts::addParam(const Argument * arg)
 	return v;
 }
 
+
+static const auto *f_mov = new FormulaBop
+(
+ BoolOp::And,
+ new AtomicRelation
+ (
+  AtomicRelation::Relation::Eq,
+  new AbstArithValue(0, true), // destination
+  new AbstArithValue(1, false) // source
+ ),
+ new Havoc{1});
+
+static const auto *f_add_nocheck = new FormulaBop
+(
+ BoolOp::And,
+ new AtomicRelation
+ (
+  AtomicRelation::Relation::Eq,
+  new AbstArithValue(0, true), // destination
+  new AbstArithTermRelation
+  (
+   AbstArithTermRelation::Connector::Add,
+   new AbstArithValue(1, false), // left source
+   new AbstArithValue(2, false)  // right source
+  )
+ ),
+ new Havoc{1,2});
+
+
 void llvm2nts::processInstruction(const Instruction &i)
 {
 	i.print(errs(), NULL);
 	//	NTS::State &s = this->m_nts.addState();
 	llvm::Type *t = i.getType();
 
-	const NTS::Variable *ret_value = NULL;
+	const NTS::IPrint *ret_value = NULL;
 	// Store the result
 	if (t && !t->isVoidTy())
 	{
-		ret_value = m_vm.getVariable(cast<const Value>(&i));
+		ret_value = m_vm.getIPrint(cast<const Value>(&i));
 	}
 	errs() << "\n";
-
 
 	// TODO: Split this
 	switch(i.getOpcode())
@@ -108,19 +120,12 @@ void llvm2nts::processInstruction(const Instruction &i)
 				if (ptri->getOpcode() != Instruction::Alloca)
 					throw std::logic_error("Store instruction: only storing to local (alloca) variable is implemented");
 
-				auto * dest = m_vm.getVariable(ptr);
-				auto * src = m_vm.getVariable(val);
-				auto * v_src = m_vm.getArithUnprimed(src);
-				auto * v_dest = m_vm.getArithPrimed(dest);
-
-				auto *f_eq = new AtomicRelation(AtomicRelation::Relation::Eq,
-						v_dest, v_src);
-				auto *f_havoc = new Havoc({dest});
-				auto *f = new FormulaBop(BoolOp::And, f_eq, f_havoc);
+				auto * dest = m_vm.getIPrint(ptr);
+				auto * src = m_vm.getIPrint(val);
 
 				const State & st_from = m_nts.lastState();
 				const State & st_to = m_nts.addState();
-				m_nts.addTransition(&st_from, &st_to, f);
+				m_nts.addTransition(&st_from, &st_to, f_mov, {dest, src});
 			}
 			break;
 
@@ -133,31 +138,23 @@ void llvm2nts::processInstruction(const Instruction &i)
 				if (ptri->getOpcode() != Instruction::Alloca)
 					throw std::logic_error("Load instruction: only storing to local (alloca) variable is implemented");
 
-				auto *var_src = m_vm.getVariable(ptr);
-				auto *term_src = m_vm.getArithUnprimed(var_src);
-				auto *term_dest = m_vm.getArithPrimed(ret_value);
-				auto *ap_eq = new AtomicRelation(AtomicRelation::Relation::Eq,
-						term_src, term_dest);
-				auto *ap_havoc = new Havoc({ret_value});
-				Formula *f = new FormulaBop(BoolOp::And, ap_eq, ap_havoc);
-
+				auto *src = m_vm.getIPrint(ptr);
 				const State & st_from = m_nts.lastState();
 				const State & st_to = m_nts.addState();
-				m_nts.addTransition(&st_from, &st_to, f);
+				m_nts.addTransition(&st_from, &st_to, f_mov, {ret_value, src});
 
 			}
 			break;
-
+#if 0
 		case Instruction::Add:
 			{
 				auto &bo = cast<llvm::BinaryOperator>(i);
 				const llvm::Value *l = bo.getOperand(0);
 				const llvm::Value *r = bo.getOperand(1);
 
-				auto * l_read = createArithmeticLiteral(l);
-				auto * r_read = createArithmeticLiteral(r);
+				auto * l_read = m_vm.getIPrint(l);
+				auto * r_read =m_vm.getIPrint(r);
 
-				auto * res_write = m_vm.getArithPrimed(ret_value);
 
 				// Overflow handling
 				// LLVM uses 'no unsigned unwrap' and 'no signed unwrap' flags.
@@ -325,6 +322,7 @@ void llvm2nts::processInstruction(const Instruction &i)
 				m_nts.addTransition(&st_from, &st_to, f);
 			}
 			break;
+#endif
 #if 1
 		case Instruction::Ret:
 			{
@@ -334,17 +332,10 @@ void llvm2nts::processInstruction(const Instruction &i)
 				if (rv->getType() != m_return_type)
 					throw std::logic_error("Return type missmatch");
 
-				auto * var = m_vm.getVariable(rv);
-				auto * term_src = m_vm.getArithUnprimed(var);
-				auto * term_dest = m_vm.getArithPrimed(m_return_var);
-				auto * ap_eq = new AtomicRelation(AtomicRelation::Relation::Eq,
-						term_dest, term_src);
-				auto * ap_havoc = new Havoc({m_return_var});
-				auto *f = new FormulaBop(BoolOp::And, ap_eq, ap_havoc);
-
+				auto * src = m_vm.getIPrint(rv);
 				const State & st_from = m_nts.lastState();
 				const State & st_to = m_nts.addFinalState();
-				m_nts.addTransition(&st_from, &st_to, f);
+				m_nts.addTransition(&st_from, &st_to, f_mov, {m_return_var, src});
 
 			}
 			break;

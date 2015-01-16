@@ -9,14 +9,12 @@
 #include "llvm/ADT/ValueMap.h"
 
 #include "nts/NTS.hpp"
-#include "nts/Arithmetic.hpp"
+#include "nts/AbstractArithmetic.hpp"
 #include "VariableManager.hpp"
 
 class llvm2nts
 {
 	private:
-//		llvm::ValueMap<const llvm::Value *, NTS::Variable *> m_variables;
-//		llvm::ValueMap<const llvm::Value *, NTS::Variable *> m_params;
 		const llvm::Type * m_return_type;
 		const NTS::Variable * m_return_var;
 
@@ -24,10 +22,6 @@ class llvm2nts
 
 		NTS::BasicNts m_nts;
 
-#if 0
-		const std::string & getValueName(const llvm::Value *value);
-#endif
-		NTS::ArithmeticLiteral * createArithmeticLiteral(const llvm::Value *value);
 
 	public:
 		llvm2nts(const llvm::Type *t);

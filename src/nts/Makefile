@@ -115,29 +115,29 @@ ntslib/fast:
 	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/build
 .PHONY : ntslib/fast
 
-Arithmetic.o: Arithmetic.cpp.o
-.PHONY : Arithmetic.o
+AbstractArithmetic.o: AbstractArithmetic.cpp.o
+.PHONY : AbstractArithmetic.o
 
 # target to build an object file
-Arithmetic.cpp.o:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/Arithmetic.cpp.o
-.PHONY : Arithmetic.cpp.o
+AbstractArithmetic.cpp.o:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/AbstractArithmetic.cpp.o
+.PHONY : AbstractArithmetic.cpp.o
 
-Arithmetic.i: Arithmetic.cpp.i
-.PHONY : Arithmetic.i
+AbstractArithmetic.i: AbstractArithmetic.cpp.i
+.PHONY : AbstractArithmetic.i
 
 # target to preprocess a source file
-Arithmetic.cpp.i:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/Arithmetic.cpp.i
-.PHONY : Arithmetic.cpp.i
+AbstractArithmetic.cpp.i:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/AbstractArithmetic.cpp.i
+.PHONY : AbstractArithmetic.cpp.i
 
-Arithmetic.s: Arithmetic.cpp.s
-.PHONY : Arithmetic.s
+AbstractArithmetic.s: AbstractArithmetic.cpp.s
+.PHONY : AbstractArithmetic.s
 
 # target to generate assembly for a file
-Arithmetic.cpp.s:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/Arithmetic.cpp.s
-.PHONY : Arithmetic.cpp.s
+AbstractArithmetic.cpp.s:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/AbstractArithmetic.cpp.s
+.PHONY : AbstractArithmetic.cpp.s
 
 AtomicRelation.o: AtomicRelation.cpp.o
 .PHONY : AtomicRelation.o
@@ -235,6 +235,54 @@ BooleanTerm.cpp.s:
 	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/BooleanTerm.cpp.s
 .PHONY : BooleanTerm.cpp.s
 
+ConcreteArithmetic.o: ConcreteArithmetic.cpp.o
+.PHONY : ConcreteArithmetic.o
+
+# target to build an object file
+ConcreteArithmetic.cpp.o:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/ConcreteArithmetic.cpp.o
+.PHONY : ConcreteArithmetic.cpp.o
+
+ConcreteArithmetic.i: ConcreteArithmetic.cpp.i
+.PHONY : ConcreteArithmetic.i
+
+# target to preprocess a source file
+ConcreteArithmetic.cpp.i:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/ConcreteArithmetic.cpp.i
+.PHONY : ConcreteArithmetic.cpp.i
+
+ConcreteArithmetic.s: ConcreteArithmetic.cpp.s
+.PHONY : ConcreteArithmetic.s
+
+# target to generate assembly for a file
+ConcreteArithmetic.cpp.s:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/ConcreteArithmetic.cpp.s
+.PHONY : ConcreteArithmetic.cpp.s
+
+ConcreteCtx.o: ConcreteCtx.cpp.o
+.PHONY : ConcreteCtx.o
+
+# target to build an object file
+ConcreteCtx.cpp.o:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/ConcreteCtx.cpp.o
+.PHONY : ConcreteCtx.cpp.o
+
+ConcreteCtx.i: ConcreteCtx.cpp.i
+.PHONY : ConcreteCtx.i
+
+# target to preprocess a source file
+ConcreteCtx.cpp.i:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/ConcreteCtx.cpp.i
+.PHONY : ConcreteCtx.cpp.i
+
+ConcreteCtx.s: ConcreteCtx.cpp.s
+.PHONY : ConcreteCtx.s
+
+# target to generate assembly for a file
+ConcreteCtx.cpp.s:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/ConcreteCtx.cpp.s
+.PHONY : ConcreteCtx.cpp.s
+
 Formula.o: Formula.cpp.o
 .PHONY : Formula.o
 
@@ -331,6 +379,30 @@ Printable.cpp.s:
 	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/Printable.cpp.s
 .PHONY : Printable.cpp.s
 
+VariableIdentifier.o: VariableIdentifier.cpp.o
+.PHONY : VariableIdentifier.o
+
+# target to build an object file
+VariableIdentifier.cpp.o:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/VariableIdentifier.cpp.o
+.PHONY : VariableIdentifier.cpp.o
+
+VariableIdentifier.i: VariableIdentifier.cpp.i
+.PHONY : VariableIdentifier.i
+
+# target to preprocess a source file
+VariableIdentifier.cpp.i:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/VariableIdentifier.cpp.i
+.PHONY : VariableIdentifier.cpp.i
+
+VariableIdentifier.s: VariableIdentifier.cpp.s
+.PHONY : VariableIdentifier.s
+
+# target to generate assembly for a file
+VariableIdentifier.cpp.s:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/VariableIdentifier.cpp.s
+.PHONY : VariableIdentifier.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -340,9 +412,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... ntslib"
 	@echo "... rebuild_cache"
-	@echo "... Arithmetic.o"
-	@echo "... Arithmetic.i"
-	@echo "... Arithmetic.s"
+	@echo "... AbstractArithmetic.o"
+	@echo "... AbstractArithmetic.i"
+	@echo "... AbstractArithmetic.s"
 	@echo "... AtomicRelation.o"
 	@echo "... AtomicRelation.i"
 	@echo "... AtomicRelation.s"
@@ -355,6 +427,12 @@ help:
 	@echo "... BooleanTerm.o"
 	@echo "... BooleanTerm.i"
 	@echo "... BooleanTerm.s"
+	@echo "... ConcreteArithmetic.o"
+	@echo "... ConcreteArithmetic.i"
+	@echo "... ConcreteArithmetic.s"
+	@echo "... ConcreteCtx.o"
+	@echo "... ConcreteCtx.i"
+	@echo "... ConcreteCtx.s"
 	@echo "... Formula.o"
 	@echo "... Formula.i"
 	@echo "... Formula.s"
@@ -367,6 +445,9 @@ help:
 	@echo "... Printable.o"
 	@echo "... Printable.i"
 	@echo "... Printable.s"
+	@echo "... VariableIdentifier.o"
+	@echo "... VariableIdentifier.i"
+	@echo "... VariableIdentifier.s"
 .PHONY : help
 
 

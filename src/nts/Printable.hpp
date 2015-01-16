@@ -2,6 +2,7 @@
 #define _NTS_PRINTABLE_H
 
 #include <ostream>
+#include "ConcreteCtx.hpp"
 
 namespace NTS
 {
@@ -38,8 +39,8 @@ namespace NTS
 			Printable(Prio prio);
 
 		public:
-			std::ostream & wrapped_print(std::ostream &o, enum Prio prio) const;
-			virtual void print(std::ostream &o) const = 0;
+			std::ostream & wrapped_print(const ConcreteCtx &ctx, std::ostream &o, enum Prio prio) const;
+			virtual void print(const ConcreteCtx &ctx, std::ostream &o) const = 0;
 
 	};
 };

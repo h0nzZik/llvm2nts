@@ -11,12 +11,12 @@ namespace NTS
 	class Havoc : public AtomicProposition
 	{
 		private:
-			std::vector<const Variable *> m_excluded_vars;
+			std::vector<int> m_excluded_vars;
 
 		public:
-			Havoc(std::initializer_list<const Variable *> excluded_vars);
+			Havoc(std::initializer_list<int> excluded_vars);
 
-			virtual void print(std::ostream &o) const;
+			virtual void print(const ConcreteCtx &ctx, std::ostream &o) const;
 	};
 };
 

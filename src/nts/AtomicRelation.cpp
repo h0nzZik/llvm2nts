@@ -27,15 +27,15 @@ namespace NTS
 	}
 
 	// TODO: optimize brackets
-	AtomicRelation::AtomicRelation(Relation rel, ArithmeticTerm *t1, ArithmeticTerm *t2)
+	AtomicRelation::AtomicRelation(Relation rel, AbstArithTerm *t1, AbstArithTerm *t2)
 		: AtomicProposition(PR_AlwaysBrackets), m_bob(t1, t2, rel_to_sym(rel))
 	{
 		;
 	}
 
-	void AtomicRelation::print(std::ostream &o) const
+	void AtomicRelation::print(const ConcreteCtx &ctx, std::ostream &o) const
 	{
-		m_bob.print(o, Printable::m_prio);
+		m_bob.print(ctx, o, Printable::m_prio);
 	}
 
 };
