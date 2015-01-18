@@ -163,6 +163,30 @@ VariableManager.cpp.s:
 	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/VariableManager.cpp.s
 .PHONY : VariableManager.cpp.s
 
+instructions/InstAdd.o: instructions/InstAdd.cpp.o
+.PHONY : instructions/InstAdd.o
+
+# target to build an object file
+instructions/InstAdd.cpp.o:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/instructions/InstAdd.cpp.o
+.PHONY : instructions/InstAdd.cpp.o
+
+instructions/InstAdd.i: instructions/InstAdd.cpp.i
+.PHONY : instructions/InstAdd.i
+
+# target to preprocess a source file
+instructions/InstAdd.cpp.i:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/instructions/InstAdd.cpp.i
+.PHONY : instructions/InstAdd.cpp.i
+
+instructions/InstAdd.s: instructions/InstAdd.cpp.s
+.PHONY : instructions/InstAdd.s
+
+# target to generate assembly for a file
+instructions/InstAdd.cpp.s:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/instructions/InstAdd.cpp.s
+.PHONY : instructions/InstAdd.cpp.s
+
 llvm2nts.o: llvm2nts.cpp.o
 .PHONY : llvm2nts.o
 
@@ -202,6 +226,9 @@ help:
 	@echo "... VariableManager.o"
 	@echo "... VariableManager.i"
 	@echo "... VariableManager.s"
+	@echo "... instructions/InstAdd.o"
+	@echo "... instructions/InstAdd.i"
+	@echo "... instructions/InstAdd.s"
 	@echo "... llvm2nts.o"
 	@echo "... llvm2nts.i"
 	@echo "... llvm2nts.s"

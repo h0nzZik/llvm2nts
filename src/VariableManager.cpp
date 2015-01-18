@@ -28,8 +28,9 @@ NTS::IPrint * VariableManager::getIPrint(const llvm::Value *llval)
 		// TODO: Make this more elegant
 		std::string s;
 		llvm::raw_string_ostream os(s);
-		v.print(os, false);
-		auto * co = new NTS::Constant(s);
+		//v.print(os, false);
+		os << v;
+		auto * co = new NTS::Constant(os.str());
 
 		insVariable(llval, co);
 		return co;

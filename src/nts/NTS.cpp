@@ -14,16 +14,15 @@ namespace NTS
 		o << "s_" << std::to_string(m_st);
 	}
 
-	Transition::Transition(
-			const State *a,
-			const State *b,
-			const Formula *guard,
-			const std::initializer_list<const IPrint *>  &variables
-			)
-		: m_from(a),
-		m_to(b),
-		m_guard(guard),
-		m_ctx(variables)
+
+	Transition::Transition(const State *a, const State *b, const ConcreteFormula &guard)
+		: m_from(a), m_to(b), m_guard(guard)
+	{
+		;
+	}
+
+	Transition::Transition(const Transition &other)
+		: m_from(other.m_from), m_to(other.m_to), m_guard(other.m_guard)
 	{
 		;
 	}
@@ -34,7 +33,7 @@ namespace NTS
 		o << " -> ";
 		m_to->print(o);
 		o << " {";
-		m_guard->print(m_ctx, o);
+		m_guard.print(o);
 		o << "}";
 	}
 
@@ -94,11 +93,9 @@ namespace NTS
 	void BasicNts::addTransition(
 			const State * from,
 			const State * to,
-			const Formula *guard,
-			const std::initializer_list<const IPrint *>  &variables
-			)
+			const ConcreteFormula &guard)	
 	{
-		m_transitions.emplace_back(from, to, guard, variables);
+		m_transitions.emplace_back(from, to, guard);
 	}
 
 	void BasicNts::print(std::ostream &o) const

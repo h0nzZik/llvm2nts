@@ -27,16 +27,13 @@ namespace NTS
 		private:
 			const State * m_from;
 			const State * m_to;
-			const Formula * m_guard;
-			const ConcreteCtx m_ctx;
+			const ConcreteFormula m_guard;
+
 
 		public:
-			Transition(
-					const State *a,
-					const State *b,
-					const Formula *guard,
-					const std::initializer_list<const IPrint *>  &variables
-					);
+			Transition(const State *a, const State *b, const ConcreteFormula &guard);
+			Transition(const Transition &other);
+			~Transition() {;}
 
 			void print(std::ostream &o) const;
 	};
@@ -78,8 +75,7 @@ namespace NTS
 			void addTransition(
 					const State * from,
 					const State * to,
-					const Formula *guard,
-					const std::initializer_list<const IPrint *> &variables
+					const ConcreteFormula &guard
 					);
 
 			void print(std::ostream &o) const;

@@ -1,11 +1,11 @@
-#include "llvm/Pass.h"
+#include <llvm/Pass.h>
 // Note: In version 3.5 ValueMap is inside IR directory
-#include "llvm/Transforms/Scalar.h"
-#include "llvm/ADT/ValueMap.h"
-#include "llvm/IR/Function.h"
+#include <llvm/Transforms/Scalar.h>
+#include <llvm/ADT/ValueMap.h>
+#include <llvm/IR/Function.h>
 // Note: In version 3.5 InstIterator is inside IR directory
-#include "llvm/Support/InstIterator.h"
-#include "llvm/Support/raw_ostream.h"
+#include <llvm/Support/InstIterator.h>
+#include <llvm/Support/raw_ostream.h>
 
 #include <sstream>
 

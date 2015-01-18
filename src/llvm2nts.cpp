@@ -1,14 +1,14 @@
 
-#include "llvm/Pass.h"
+#include <llvm/Pass.h>
 // Note: In version 3.5 ValueMap is inside IR directory
-#include "llvm/ADT/ValueMap.h"
-#include "llvm/ADT/APInt.h"
-#include "llvm/IR/Function.h"
+#include <llvm/ADT/ValueMap.h>
+#include <llvm/ADT/APInt.h>
+#include <llvm/IR/Function.h>
 // Note: In version 3.5 InstIterator is inside IR directory
-#include "llvm/Support/InstIterator.h"
-#include "llvm/Support/raw_ostream.h"
-#include "llvm/IR/Instructions.h"
-#include "llvm/IR/Constants.h"
+#include <llvm/Support/InstIterator.h>
+#include <llvm/Support/raw_ostream.h>
+#include <llvm/IR/Instructions.h>
+#include <llvm/IR/Constants.h>
 
 #include "llvm2nts.hpp"
 
@@ -22,6 +22,8 @@
 #include "nts/VariableIdentifier.hpp"
 #include "nts/AtomicRelation.hpp"
 #include "nts/Havoc.hpp"
+
+#include "instructions/InstAdd.hpp"
 
 using namespace llvm;
 using namespace NTS;
@@ -90,6 +92,7 @@ static const auto *f_add_nocheck = new FormulaBop
  ),
  new Havoc{1,2});
 
+static InstAdd ia;
 
 void llvm2nts::processInstruction(const Instruction &i)
 {
@@ -125,7 +128,8 @@ void llvm2nts::processInstruction(const Instruction &i)
 
 				const State & st_from = m_nts.lastState();
 				const State & st_to = m_nts.addState();
-				m_nts.addTransition(&st_from, &st_to, f_mov, {dest, src});
+				m_nts.addTransition(&st_from, &st_to,
+						ConcreteFormula(*f_mov, {dest, src}));
 			}
 			break;
 
@@ -141,13 +145,22 @@ void llvm2nts::processInstruction(const Instruction &i)
 				auto *src = m_vm.getIPrint(ptr);
 				const State & st_from = m_nts.lastState();
 				const State & st_to = m_nts.addState();
-				m_nts.addTransition(&st_from, &st_to, f_mov, {ret_value, src});
+				m_nts.addTransition(&st_from, &st_to,
+						ConcreteFormula(*f_mov, {ret_value, src}));
 
 			}
 			break;
-#if 0
+
 		case Instruction::Add:
 			{
+				const State & st_from = m_nts.lastState();
+				const State & st_to = m_nts.addState();
+
+				m_nts.addTransition(&st_from, &st_to, ia.process(i, m_vm));
+			}
+				break;
+
+#if 0
 				auto &bo = cast<llvm::BinaryOperator>(i);
 				const llvm::Value *l = bo.getOperand(0);
 				const llvm::Value *r = bo.getOperand(1);
@@ -335,7 +348,8 @@ void llvm2nts::processInstruction(const Instruction &i)
 				auto * src = m_vm.getIPrint(rv);
 				const State & st_from = m_nts.lastState();
 				const State & st_to = m_nts.addFinalState();
-				m_nts.addTransition(&st_from, &st_to, f_mov, {m_return_var, src});
+				m_nts.addTransition(&st_from, &st_to,
+						ConcreteFormula(*f_mov, {m_return_var, src}));
 
 			}
 			break;

@@ -2,6 +2,7 @@ add_library(llvm2nts MODULE
 	Pass.cpp
 	llvm2nts.cpp
 	VariableManager.cpp
+	"instructions/InstAdd.cpp"
 )
 
 add_subdirectory(nts)
