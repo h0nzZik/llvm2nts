@@ -78,5 +78,15 @@
   "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
   "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++0x -g -Wall -Wextra -fPIC   -o CMakeFiles/ntslib.dir/VariableIdentifier.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/VariableIdentifier.cpp",
   "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/VariableIdentifier.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/test_nts",
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -std=c++0x -g -Wall -Wextra -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/test_nts/../../externals/Catch/include -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/test_nts/../nts    -o CMakeFiles/test_ntslib.dir/main.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/test_nts/main.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/test_nts/main.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/test_nts",
+  "command": "/usr/lib64/ccache/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -std=c++0x -g -Wall -Wextra -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/test_nts/../../externals/Catch/include -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/test_nts/../nts    -o CMakeFiles/test_ntslib.dir/test_Printable.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/test_nts/test_Printable.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/test_nts/test_Printable.cpp"
 }
 ]

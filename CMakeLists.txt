@@ -10,6 +10,7 @@ find_package(LLVM REQUIRED CONFIG)
 
 add_definitions(${LLVM_DEFINITIONS})
 add_definitions(-D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS)
+
 include_directories(${LLVM_INCLUDE_DIRS})
 
 add_subdirectory(src)

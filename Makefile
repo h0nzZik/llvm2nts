@@ -127,6 +127,19 @@ ntslib/fast:
 	$(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/build
 .PHONY : ntslib/fast
 
+#=============================================================================
+# Target rules for targets named test_ntslib
+
+# Build rule for target.
+test_ntslib: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_ntslib
+.PHONY : test_ntslib
+
+# fast build rule for target.
+test_ntslib/fast:
+	$(MAKE) -f src/test_nts/CMakeFiles/test_ntslib.dir/build.make src/test_nts/CMakeFiles/test_ntslib.dir/build
+.PHONY : test_ntslib/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -137,6 +150,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... llvm2nts"
 	@echo "... ntslib"
+	@echo "... test_ntslib"
 .PHONY : help
 
 
