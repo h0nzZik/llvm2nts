@@ -13,6 +13,7 @@
 #include "../nts/ConcreteArithmetic.hpp"
 #include "../nts/AbstractArithmetic.hpp"
 #include "../nts/AtomicRelation.hpp"
+#include "../nts/Havoc.hpp"
 
 class InstAdd : public IInst
 {
@@ -85,6 +86,8 @@ class InstAdd : public IInst
 		// result assignment (like c' = a + b mod 256)
 		NTS::AtomicRelation m_f_assign;
 
+		NTS::Havoc m_havoc;
+
 		// No signed wrap, no unsigned wrap
 		NTS::Formula &m_f;
 		// Signed wrap
@@ -93,6 +96,11 @@ class InstAdd : public IInst
 		NTS::FormulaBop m_fu;
 		// Both signed and unsigned wrap
 		NTS::FormulaBop m_fsu;
+
+		NTS::FormulaBop m_f_havoc;
+		NTS::FormulaBop m_fs_havoc;
+		NTS::FormulaBop m_fu_havoc;
+		NTS::FormulaBop m_fsu_havoc;
 
 		struct BitsizeGroup
 		{

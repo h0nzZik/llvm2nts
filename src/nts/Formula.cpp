@@ -21,9 +21,8 @@ namespace NTS
 
 	void FormulaNot::print(const ConcreteCtx &ctx, std::ostream &o) const
 	{
-		o << "not (";
-		m_f->print(ctx, o);
-		o << ")";
+		o << "not ";
+		m_f->wrapped_print(ctx, o, PR_Not);
 	}
 
 

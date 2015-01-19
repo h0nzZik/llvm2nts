@@ -50,11 +50,17 @@ InstAdd::InstAdd()
 		m_f_no_of(BoolOp::And, &m_f_no_signed_of, &m_f_no_unsigned_of),
 
 		m_f_assign(AtomicRelation::Relation::Eq, &m_adst, &m_plus_mod),
+		m_havoc({0}),
 
 		m_f(m_f_assign),
 		m_fs(BoolOp::Impl, &m_f_no_signed_of, &m_f_assign),
 		m_fu(BoolOp::Impl, &m_f_no_unsigned_of, &m_f_assign),
-		m_fsu(BoolOp::Impl, &m_f_no_of, &m_f_assign)
+		m_fsu(BoolOp::Impl, &m_f_no_of, &m_f_assign),
+
+		m_f_havoc(BoolOp::And, &m_f, &m_havoc),
+		m_fs_havoc(BoolOp::And, &m_fs, &m_havoc),
+		m_fu_havoc(BoolOp::And, &m_fu, &m_havoc),
+		m_fsu_havoc(BoolOp::And, &m_fsu, &m_havoc)
 {
 
 	;
@@ -99,12 +105,12 @@ bool InstAdd::supports(unsigned int opcode) const
 const NTS::Formula & InstAdd::getFormula(bool signed_wrap, bool unsigned_wrap) const
 {
 	if (!signed_wrap && !unsigned_wrap)
-		return m_f;
+		return m_f_havoc;
 	if (!signed_wrap && unsigned_wrap)
-		return m_fu;
+		return m_fu_havoc;
 	if (signed_wrap && !unsigned_wrap)
-		return m_fs;
-	return m_fsu;
+		return m_fs_havoc;
+	return m_fsu_havoc;
 }
 
 NTS::ConcreteFormula InstAdd::process(const llvm::Instruction &i, VariableManager &vm)

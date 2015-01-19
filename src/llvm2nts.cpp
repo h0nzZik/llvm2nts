@@ -74,7 +74,7 @@ static const auto *f_mov = new FormulaBop
   new AbstArithValue(0, true), // destination
   new AbstArithValue(1, false) // source
  ),
- new Havoc{1});
+ new Havoc{0});
 
 static const auto *f_add_nocheck = new FormulaBop
 (
