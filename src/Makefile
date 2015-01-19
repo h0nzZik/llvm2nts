@@ -187,6 +187,30 @@ instructions/InstAdd.cpp.s:
 	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/instructions/InstAdd.cpp.s
 .PHONY : instructions/InstAdd.cpp.s
 
+instructions/InstLoadStore.o: instructions/InstLoadStore.cpp.o
+.PHONY : instructions/InstLoadStore.o
+
+# target to build an object file
+instructions/InstLoadStore.cpp.o:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/instructions/InstLoadStore.cpp.o
+.PHONY : instructions/InstLoadStore.cpp.o
+
+instructions/InstLoadStore.i: instructions/InstLoadStore.cpp.i
+.PHONY : instructions/InstLoadStore.i
+
+# target to preprocess a source file
+instructions/InstLoadStore.cpp.i:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/instructions/InstLoadStore.cpp.i
+.PHONY : instructions/InstLoadStore.cpp.i
+
+instructions/InstLoadStore.s: instructions/InstLoadStore.cpp.s
+.PHONY : instructions/InstLoadStore.s
+
+# target to generate assembly for a file
+instructions/InstLoadStore.cpp.s:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/instructions/InstLoadStore.cpp.s
+.PHONY : instructions/InstLoadStore.cpp.s
+
 llvm2nts.o: llvm2nts.cpp.o
 .PHONY : llvm2nts.o
 
@@ -229,6 +253,9 @@ help:
 	@echo "... instructions/InstAdd.o"
 	@echo "... instructions/InstAdd.i"
 	@echo "... instructions/InstAdd.s"
+	@echo "... instructions/InstLoadStore.o"
+	@echo "... instructions/InstLoadStore.i"
+	@echo "... instructions/InstLoadStore.s"
 	@echo "... llvm2nts.o"
 	@echo "... llvm2nts.i"
 	@echo "... llvm2nts.s"

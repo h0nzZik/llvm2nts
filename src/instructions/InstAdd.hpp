@@ -120,7 +120,10 @@ class InstAdd : public IInst
 		virtual ~InstAdd() {;}
 
 		virtual bool supports(unsigned int opcode) const;
-		virtual NTS::ConcreteFormula process(const llvm::Instruction &i, VariableManager &vm);
+		virtual NTS::ConcreteFormula process(
+				const llvm::Instruction &i,
+				VariableManager &vm,
+				NTS::BasicNts &n);
 };
 
 #endif // _INSTADD_HPP_

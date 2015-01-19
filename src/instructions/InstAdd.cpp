@@ -113,7 +113,10 @@ const NTS::Formula & InstAdd::getFormula(bool signed_wrap, bool unsigned_wrap) c
 	return m_fsu_havoc;
 }
 
-NTS::ConcreteFormula InstAdd::process(const llvm::Instruction &i, VariableManager &vm)
+NTS::ConcreteFormula InstAdd::process(
+		const llvm::Instruction &i,
+		VariableManager &vm,
+		BasicNts &n)
 {
 	if (i.getOpcode() != llvm::Instruction::Add)
 		throw std::invalid_argument("Unknown llvm instruction");
