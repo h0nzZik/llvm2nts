@@ -117,7 +117,7 @@ class InstAdd : public IInst
 
 	public:
 		InstAdd();
-		virtual ~InstAdd() {;}
+		virtual ~InstAdd();
 
 		virtual bool supports(unsigned int opcode) const;
 		virtual NTS::ConcreteFormula process(

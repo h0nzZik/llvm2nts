@@ -67,6 +67,24 @@ InstAdd::InstAdd()
 
 }
 
+InstAdd::~InstAdd()
+{
+	for (BitsizeGroup &g : m_bs)
+	{
+		if (g.unsigned_bound)
+		{
+			delete g.unsigned_bound;
+			g.unsigned_bound = nullptr;
+		}
+
+		if (g.signed_bound)
+		{
+			delete g.signed_bound;
+			g.signed_bound = nullptr;
+		}
+	}
+}
+
 const InstAdd::BitsizeGroup & InstAdd::getBitsizeGroup(unsigned int bitsz)
 {
 	// Only bit size of 2 to 63 bits is supported

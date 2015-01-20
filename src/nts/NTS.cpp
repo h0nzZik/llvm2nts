@@ -44,7 +44,10 @@ namespace NTS
 
 	BasicNts::~BasicNts()
 	{
-		;
+		for(const State * s : m_states)
+		{
+			delete s;
+		}
 	}
 
 	const State & BasicNts::pr_addState(bool st_final)
