@@ -1,11 +1,9 @@
 
 #include <llvm/Pass.h>
-// Note: In version 3.5 ValueMap is inside IR directory
-#include <llvm/ADT/ValueMap.h>
+#include <llvm/IR/ValueMap.h>
 #include <llvm/ADT/APInt.h>
 #include <llvm/IR/Function.h>
-// Note: In version 3.5 InstIterator is inside IR directory
-#include <llvm/Support/InstIterator.h>
+#include <llvm/IR/InstIterator.h>
 #include <llvm/Support/raw_ostream.h>
 #include <llvm/IR/Instructions.h>
 #include <llvm/IR/Constants.h>
@@ -18,7 +16,6 @@
 #include <sstream>
 
 #include "nts/NTS.hpp"
-//#include "nts/Arithmetic.hpp"
 #include "nts/VariableIdentifier.hpp"
 #include "nts/AtomicRelation.hpp"
 #include "nts/Havoc.hpp"
@@ -70,7 +67,7 @@ static InstLoadStore ils;
 
 void llvm2nts::processInstruction(const Instruction &i)
 {
-	i.print(errs(), NULL);
+	i.print(errs());
 	errs() << "\n";
 
 	// TODO: Split this

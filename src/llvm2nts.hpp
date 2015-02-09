@@ -5,8 +5,7 @@
 #include <ostream>
 
 #include "llvm/Pass.h"
-// Note: In version 3.5 ValueMap is inside IR directory
-#include "llvm/ADT/ValueMap.h"
+#include "llvm/IR/ValueMap.h"
 
 #include "nts/NTS.hpp"
 #include "nts/AbstractArithmetic.hpp"

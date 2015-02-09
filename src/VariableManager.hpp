@@ -1,7 +1,7 @@
 #ifndef _VARIABLEMANAGER_HPP_
 #define _VARIABLEMANAGER_HPP_
 
-#include "llvm/ADT/ValueMap.h"
+#include "llvm/IR/ValueMap.h"
 #include "llvm/ADT/DenseMap.h"
 #include "nts/NTS.hpp"
 #include "nts/AbstractArithmetic.hpp"

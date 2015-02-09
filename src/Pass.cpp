@@ -1,59 +1,77 @@
 #include <llvm/Pass.h>
-// Note: In version 3.5 ValueMap is inside IR directory
+#include <llvm/Support/CommandLine.h>
 #include <llvm/Transforms/Scalar.h>
-#include <llvm/ADT/ValueMap.h>
+#include <llvm/IR/ValueMap.h>
+#include <llvm/IR/Module.h>
 #include <llvm/IR/Function.h>
-// Note: In version 3.5 InstIterator is inside IR directory
-#include <llvm/Support/InstIterator.h>
+#include <llvm/IR/InstIterator.h>
 #include <llvm/Support/raw_ostream.h>
 
 #include <sstream>
+#include <iostream>
+#include <fstream>
 
 #include "nts/NTS.hpp"
 #include "llvm2nts.hpp"
 
 using namespace llvm;
 
+static cl::opt<std::string> OutputFilename(
+		"llvm2nts_of",
+		cl::desc("Specify output filename for llvm2nts"),
+		cl::value_desc("output.nts"),
+		cl::Required
+		);
 
-// TODO: use instruction namer (instnamer) before this
 namespace {
 
-	struct Hello : public FunctionPass {
-		static char ID;
-		Hello() : FunctionPass(ID) {}
-		
-		virtual void getAnalysisUsage(AnalysisUsage &AU) const {
-			AU.setPreservesAll();
-			AU.addRequiredID(InstructionNamerID);
-		}
+	class LLVM2NTS : public ModulePass
+	{
+		public:
+			static char ID;
+			LLVM2NTS() : ModulePass(ID) {}
 
-		virtual bool runOnFunction(Function &F) {
-			llvm2nts l2n(F.getReturnType());
-
-			errs().write_escaped(F.getName()) << "{\n";
-			for (const auto &v : F.getArgumentList())
-			{
-				l2n.addParam(&v);
+			virtual void getAnalysisUsage(AnalysisUsage &AU) const {
+				AU.setPreservesAll();
+				AU.addRequiredID(InstructionNamerID);
 			}
 
-			for (const auto &b : F.getBasicBlockList())
+			virtual bool runOnModule(Module &M)
 			{
-				for (const auto &i : b.getInstList())
+				std::ofstream ofs;
+				ofs.open(OutputFilename.c_str());
+				for (const auto &f : M.getFunctionList())
 				{
-					l2n.processInstruction(i);
+					onFunction(f, ofs);
 				}
+				ofs.close();
+				return false;
 			}
 
-			std::stringstream s;
-			l2n.print(s);
-			errs() << "From stream:\n" << s.str();
+		private:
 
-			return false;
-		}
+			void onFunction(const Function &F, std::ostream &str)
+			{
+				llvm2nts l2n(F.getReturnType());
 
+				str << F.getName().str() << "{\n";
+				for (const auto &v : F.getArgumentList())
+				{
+					l2n.addParam(&v);
+				}
+
+				for (const auto &b : F.getBasicBlockList())
+				{
+					for (const auto &i : b.getInstList())
+					{
+						l2n.processInstruction(i);
+					}
+				}
+
+				l2n.print(str);
+			}
 	};
-
 }
 
-char Hello::ID = 0;
-static RegisterPass<Hello> X("hello", "Hello World Pass", false, false);
+char LLVM2NTS::ID = 0;
+static RegisterPass<LLVM2NTS> X("llvm2nts", "Converts llvm IR to NTS", false, false);
