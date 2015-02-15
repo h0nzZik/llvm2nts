@@ -25,6 +25,11 @@
   "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/instructions/InstLoadStore.cpp"
 },
 {
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src",
+  "command": "/usr/bin/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dllvm2nts_EXPORTS -std=c++11 -g -Wall -Wextra -fno-rtti -fPIC -I/home/jenda/git/llvm/include -I/home/jenda/build/llvm/include    -o CMakeFiles/llvm2nts.dir/instructions/InstBr.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/instructions/InstBr.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/instructions/InstBr.cpp"
+},
+{
   "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts",
   "command": "/usr/bin/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dntslib_EXPORTS -std=c++11 -g -Wall -Wextra -fno-rtti -fPIC -I/home/jenda/git/llvm/include -I/home/jenda/build/llvm/include    -o CMakeFiles/ntslib.dir/NTS.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/NTS.cpp",
   "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/NTS.cpp"

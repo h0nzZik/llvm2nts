@@ -12,10 +12,14 @@ class IInst
 		virtual ~IInst() {};
 
 		virtual bool supports(unsigned int opcode) const = 0;
-		virtual NTS::ConcreteFormula process(
-				const llvm::Instruction &i,
-				VariableManager &vm,
-				NTS::BasicNts &n) = 0;
+
+		virtual const NTS::State * process(
+				const NTS::State        * from    ,
+				const llvm::Instruction & i       ,
+				VariableManager         & vm      ,
+				NTS::BasicNts           & n       ,
+				int                       bb_id   ,
+				int                       inst_id ) = 0;
 };
 
 

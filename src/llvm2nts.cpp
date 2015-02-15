@@ -6,6 +6,7 @@
 #include <llvm/IR/InstIterator.h>
 #include <llvm/Support/raw_ostream.h>
 #include <llvm/IR/Instructions.h>
+#include <llvm/IR/InstIterator.h>
 #include <llvm/IR/Constants.h>
 
 #include "llvm2nts.hpp"
@@ -22,19 +23,17 @@
 
 #include "instructions/InstAdd.hpp"
 #include "instructions/InstLoadStore.hpp"
+#include "instructions/InstBr.hpp"
 
 using namespace llvm;
 using namespace NTS;
 
 // TODO: Support types
-// TODO: Memory leaks: store all formulas somewhere
 
 // TODO: try argument promotion pass (-argpromotion)
 
 llvm2nts::llvm2nts(const llvm::Type *t)
 {
-	t->print(errs());
-	m_nts.addState(); // first (initial) state
 	m_return_type = t;
 
 	NTS::Variable *v = new NTS::Variable("ret_var");
@@ -64,44 +63,70 @@ const NTS::Variable * llvm2nts::addParam(const Argument * arg)
 
 static InstAdd ia;
 static InstLoadStore ils;
+static InstBr ibr;
 
-void llvm2nts::processInstruction(const Instruction &i)
+void llvm2nts::process_basic_block ( const llvm::BasicBlock &b, int bb_id )
+{
+	int inst_id = 1; // 0 is initial bb state
+	const NTS::State * s = m_vm.get_bb_start(&b);
+	for (const auto &i : b.getInstList())
+	{
+		// assert( s != NULL );
+		s = process_instruction(s, i, bb_id, inst_id);
+		inst_id ++;
+	}
+}
+
+void llvm2nts::process_function ( const llvm::Function &f )
+{
+	errs()  << "process function\n";
+	for ( const auto &v : f.getArgumentList() )
+	{
+		addParam ( &v );
+	}
+
+	int bb_id = 0;
+	for ( const auto &b : f.getBasicBlockList() )
+	{
+		m_vm.ins_bb_start ( &b, &m_nts.addState ( bb_id, 0 ) );
+		bb_id ++;
+	}
+
+	bb_id = 0;
+	for ( const auto &b : f.getBasicBlockList() )
+	{
+		process_basic_block ( b, bb_id );
+		bb_id ++;
+	}
+}
+
+const State * llvm2nts::process_instruction (
+		const State       * st_from ,
+		const Instruction & i       ,
+		int                 bb_id   ,
+		int                 inst_id )
 {
 	i.print(errs());
 	errs() << "\n";
 
-	// TODO: Split this
 	switch(i.getOpcode())
 	{
 		case Instruction::Alloca:
 			break;
 
 		case Instruction::Store:
-			// fall through
 		case Instruction::Load:
-			// fall through
 		case Instruction::Ret:
-			{
-				const State & st_from = m_nts.lastState();
-				const State & st_to = i.getOpcode() == Instruction::Ret?
-					m_nts.addFinalState() : m_nts.addState();
-
-				m_nts.addTransition(&st_from, &st_to,
-						ils.process(i, m_vm, m_nts));
-			}
-
-			break;
+			return ils.process ( st_from, i, m_vm, m_nts, bb_id, inst_id );
 
 		case Instruction::Add:
-			{
-				const State & st_from = m_nts.lastState();
-				const State & st_to = m_nts.addState();
+			return ia.process  ( st_from, i, m_vm, m_nts, bb_id, inst_id );
 
-				m_nts.addTransition(&st_from, &st_to, ia.process(i, m_vm, m_nts));
-			}
-			break;
+		case Instruction::Br:
+			return ibr.process ( st_from, i, m_vm, m_nts, bb_id, inst_id );
 
 	}
 
+	return st_from;
 }
 

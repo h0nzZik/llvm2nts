@@ -3,15 +3,15 @@
 namespace NTS
 {
 
-	State::State(int st, bool st_final)
-		: m_st(st), m_final(st_final)
+	State::State ( int bb_id, int inst_id, bool st_final )
+		: m_bb ( bb_id ), m_inst ( inst_id ), m_final ( st_final )
 	{
 		;
 	}
 
 	void State::print(std::ostream &o) const
 	{
-		o << "s_" << std::to_string(m_st);
+		o << "s_" << std::to_string(m_bb) << "_" << std::to_string( m_inst );
 	}
 
 
@@ -50,9 +50,9 @@ namespace NTS
 		}
 	}
 
-	const State & BasicNts::pr_addState(bool st_final)
+	const State & BasicNts::pr_addState ( int bb_id, int inst_id, bool st_final )
 	{
-		const State * s = new State((int)m_states.size(), st_final);
+		const State * s = new State ( bb_id, inst_id, st_final );
 		m_states.push_back(s);
 		return *s;
 	}
@@ -77,14 +77,14 @@ namespace NTS
 		m_arguments.push_back(arg);
 	}
 
-	const State & BasicNts::addState()
+	const State & BasicNts::addState( int bb_id, int inst_id )
 	{
-		return pr_addState(false);
+		return pr_addState ( bb_id, inst_id, false );
 	}
 
-	const State & BasicNts::addFinalState()
+	const State & BasicNts::addFinalState( int bb_id, int inst_id )
 	{
-		return pr_addState(true);
+		return pr_addState ( bb_id, inst_id, true );
 	}
 
 	const State & BasicNts::lastState() const

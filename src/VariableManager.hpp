@@ -1,6 +1,7 @@
 #ifndef _VARIABLEMANAGER_HPP_
 #define _VARIABLEMANAGER_HPP_
 
+#include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/ValueMap.h"
 #include "llvm/ADT/DenseMap.h"
 #include "nts/NTS.hpp"
@@ -12,24 +13,20 @@ class VariableManager final
 {
 	private:
 		llvm::ValueMap<const llvm::Value *, NTS::IPrint *> m_variables;
+		llvm::DenseMap<const llvm::BasicBlock *, const NTS::State *> m_block_start;
 
-#if 0
-		typedef llvm::DenseMap<const NTS::Variable *,
-				NTS::ArithmeticVariableIdentifier *> dm_t;
 
-		dm_t m_var_to_arith_unprimed;
-		dm_t m_var_to_arith_primed;
-#endif
 	public:
 		VariableManager() {;}
 		~VariableManager();
 
 		void insVariable(const llvm::Value *llva, NTS::IPrint *var);
 		NTS::IPrint * getIPrint(const llvm::Value * llval);
-#if 0
-		NTS::ArithmeticVariableIdentifier * getArithPrimed(const NTS::Variable *var);
-		NTS::ArithmeticVariableIdentifier * getArithUnprimed(const NTS::Variable *var);
-#endif
+
+		void ins_bb_start ( const llvm::BasicBlock *block,
+						    const NTS::State *s );
+
+		const NTS::State * get_bb_start ( const llvm::BasicBlock * block );
 };
 
 

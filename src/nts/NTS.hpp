@@ -12,11 +12,12 @@ namespace NTS
 	class State
 	{
 		private:
-			int m_st;
+			int m_bb;
+			int m_inst;
 			bool m_final; // FIXME:: Not used
 
 		public:
-			State(int st, bool st_final);
+			State(int bb_id, int inst_id, bool st_final);
 			State & operator=(State const &) = delete;
 
 			void print(std::ostream &o) const;
@@ -48,9 +49,8 @@ namespace NTS
 			std::vector<Variable *> m_arguments;
 			std::vector<const State *> m_states;
 			std::vector<Transition> m_transitions;
-
-
-			const State & pr_addState(bool st_final);
+	
+			const State & pr_addState ( int bb_id, int inst_id, bool st_final );
 
 		public:
 
@@ -66,9 +66,9 @@ namespace NTS
 
 			void addArgument(Variable * arg);
 
-			const State & addState();
+			const State & addState ( int bb_id, int inst_id );
 
-			const State & addFinalState();
+			const State & addFinalState ( int bb_id, int inst_id );
 
 			const State & lastState() const;
 

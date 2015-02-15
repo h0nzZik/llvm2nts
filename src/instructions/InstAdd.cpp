@@ -131,23 +131,28 @@ const NTS::Formula & InstAdd::getFormula(bool signed_wrap, bool unsigned_wrap) c
 	return m_fsu_havoc;
 }
 
-NTS::ConcreteFormula InstAdd::process(
-		const llvm::Instruction &i,
-		VariableManager &vm,
-		BasicNts &n)
+const State * InstAdd::process(
+		const NTS::State        * from    ,
+		const llvm::Instruction & i       ,
+		VariableManager         & vm      ,
+		NTS::BasicNts           & n       ,
+		int                       bb_id   ,
+		int                       inst_id )
 {
 	if (i.getOpcode() != llvm::Instruction::Add)
 		throw std::invalid_argument("Unknown llvm instruction");
 
 	auto &bo = llvm::cast<llvm::BinaryOperator>(i);
 
-	const IPrint *left = vm.getIPrint(bo.getOperand(0));
-	const IPrint *right = vm.getIPrint(bo.getOperand(1));
-	const IPrint *result = vm.getIPrint(&llvm::cast<llvm::Value>(i));
+	const IPrint *left   = vm.getIPrint ( bo.getOperand(0) );
+	const IPrint *right  = vm.getIPrint ( bo.getOperand(1) );
+	const IPrint *result = vm.getIPrint ( &llvm::cast<llvm::Value>(i) );
 	auto &g = getBitsizeGroup(i.getType()->getIntegerBitWidth());
 
-	const NTS::Formula &f = getFormula(!bo.hasNoSignedWrap(), !bo.hasNoUnsignedWrap());
-
-	return NTS::ConcreteFormula(f,
-			{result, left, right, g.unsigned_bound, g.signed_bound});
+	const NTS::Formula &f = getFormula ( !bo.hasNoSignedWrap(), !bo.hasNoUnsignedWrap() );
+	const NTS::State * to = & n.addState ( bb_id, inst_id );
+	const auto &cf        = NTS::ConcreteFormula ( f,
+			{result, left, right, g.unsigned_bound, g.signed_bound} );
+	n.addTransition ( from, to, cf );
+	return to;
 }

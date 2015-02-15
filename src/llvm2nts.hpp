@@ -6,6 +6,7 @@
 
 #include "llvm/Pass.h"
 #include "llvm/IR/ValueMap.h"
+#include "llvm/IR/BasicBlock.h"
 
 #include "nts/NTS.hpp"
 #include "nts/AbstractArithmetic.hpp"
@@ -21,6 +22,15 @@ class llvm2nts
 
 		NTS::BasicNts m_nts;
 
+		void process_basic_block ( 
+				const llvm::BasicBlock & b,
+				int                      bb_id );
+
+		const NTS::State * process_instruction (
+				const NTS::State        * st_from ,
+				const llvm::Instruction & i       ,
+				int                       bb_id   ,
+				int                       inst_id );
 
 	public:
 		llvm2nts(const llvm::Type *t);
@@ -28,7 +38,7 @@ class llvm2nts
 
 		void setReturnType(const llvm::Type *t);
 		const NTS::Variable * addParam(const llvm::Argument *val);
-		void processInstruction(const llvm::Instruction &i);
+		void process_function    ( const llvm::Function &f);
 		void print(std::ostream &o) const;
 };
 

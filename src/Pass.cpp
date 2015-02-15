@@ -16,6 +16,9 @@
 
 using namespace llvm;
 
+// FIXME local variables does not work!
+// Probably problem with InstructionNamer pass?
+
 static cl::opt<std::string> OutputFilename(
 		"llvm2nts_of",
 		cl::desc("Specify output filename for llvm2nts"),
@@ -25,7 +28,7 @@ static cl::opt<std::string> OutputFilename(
 
 namespace {
 
-	class LLVM2NTS : public ModulePass
+	class LLVM2NTS final : public ModulePass
 	{
 		public:
 			static char ID;
@@ -53,21 +56,8 @@ namespace {
 			void onFunction(const Function &F, std::ostream &str)
 			{
 				llvm2nts l2n(F.getReturnType());
-
+				l2n.process_function(F);
 				str << F.getName().str() << "{\n";
-				for (const auto &v : F.getArgumentList())
-				{
-					l2n.addParam(&v);
-				}
-
-				for (const auto &b : F.getBasicBlockList())
-				{
-					for (const auto &i : b.getInstList())
-					{
-						l2n.processInstruction(i);
-					}
-				}
-
 				l2n.print(str);
 			}
 	};

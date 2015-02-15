@@ -18,7 +18,7 @@
 class InstAdd : public IInst
 {
 	private:
-		
+
 		// Abstract destination
 		NTS::AbstArithValue m_adst;
 		// Abstract left source
@@ -37,7 +37,7 @@ class InstAdd : public IInst
 		NTS::AbstArithTermRelation m_plus_mod;
 		// Unsigned bound + signed bound
 		NTS::AbstArithTermRelation m_ub_plus_sb;
-		
+
 		// Left source is positive
 		NTS::AtomicRelation m_ls_pos;
 		// Right source is positive
@@ -71,7 +71,7 @@ class InstAdd : public IInst
 		//    but still smaller than largest unsigned value)
 		//    and their sum is positive (of course greater than largest
 		//    unsigned value, but smaller than or equal to LPV + LUV)
-		
+
 
 		NTS::FormulaBop m_f_signed_of_positive;
 		NTS::FormulaBop m_f_signed_of_negative;
@@ -120,10 +120,14 @@ class InstAdd : public IInst
 		virtual ~InstAdd();
 
 		virtual bool supports(unsigned int opcode) const;
-		virtual NTS::ConcreteFormula process(
-				const llvm::Instruction &i,
-				VariableManager &vm,
-				NTS::BasicNts &n);
+
+		virtual const NTS::State * process(
+				const NTS::State        * from    ,
+				const llvm::Instruction & i       ,
+				VariableManager         & vm      ,
+				NTS::BasicNts           & n       ,
+				int                       bb_id   ,
+				int                       inst_id );
 };
 
 #endif // _INSTADD_HPP_

@@ -40,62 +40,39 @@ NTS::IPrint * VariableManager::getIPrint(const llvm::Value *llval)
 	std::stringstream ss;
 	if (llvm::isa<llvm::GlobalValue>(llval))
 	{
-		ss << "g_" << llval->getName().str();
+		ss << "g_";
 	} else {
-		ss << "l_" << llval->getName().str();
+		ss << "l_";
 	}
+
+	std::string s = llval->getName().str();
+	llvm::errs() << "name: " << s << "\n";
+	ss << llval->getName().str();
 
 	v = new NTS::Variable(ss.str());
 	insVariable(llval, v);
 	return v;
 }
 
-#if 0
-
-NTS::ArithmeticVariableIdentifier *
-VariableManager::getArithPrimed(const NTS::Variable *var)
+void VariableManager::ins_bb_start(const llvm::BasicBlock *block, const NTS::State *s)
 {
-	auto id = m_var_to_arith_primed.lookup(var);
-	if (id)
-		return id;
-
-	id = new NTS::ArithmeticVariableIdentifier(var, true);
-	m_var_to_arith_primed.insert(std::make_pair(var, id));
-	return id;
+	m_block_start.insert(std::make_pair(block, s));
 }
 
-NTS::ArithmeticVariableIdentifier *
-VariableManager::getArithUnprimed(const NTS::Variable *var)
+const NTS::State * VariableManager::get_bb_start(const llvm::BasicBlock * block)
 {
-	auto id = m_var_to_arith_primed.lookup(var);
-	if (id)
-		return id;
-
-	id = new NTS::ArithmeticVariableIdentifier(var, true);
-	m_var_to_arith_unprimed.insert(std::make_pair(var,id));
-	return id;
+	auto * s = m_block_start.lookup(block);
+	if (!s)
+		throw std::logic_error("Start of basic block not found");
+	return s;
 }
-#endif
 
 VariableManager::~VariableManager()
 {
-#if 0
-	for (auto i : this->m_var_to_arith_primed)
-	{
-		delete i.second;
-		i.second = NULL;
-	}
-
-	for (auto i : this->m_var_to_arith_unprimed)
-	{
-		delete i.second;
-		i.second = NULL;
-	}
-#endif
-
 	for (auto i : this->m_variables)
 	{
 		delete i.second;
 		i.second = NULL;
 	}
 }
+
