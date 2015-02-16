@@ -1,3 +1,6 @@
 [submodule "externals/Catch"]
 	path = externals/Catch
 	url = https://github.com/philsquared/Catch.git
+[submodule "externals/nts-examples"]
+	path = externals/nts-examples
+	url = https://github.com/h0nzZik/nts-examples.git
