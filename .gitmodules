@@ -2,3 +2,6 @@
 	path = externals/Catch
 	url = https://github.com/philsquared/Catch.git
 
+[submodule "externals/nts-examples"]
+	path = externals/nts-examples
+	url = git@github.com:h0nzZik/nts-examples.git
