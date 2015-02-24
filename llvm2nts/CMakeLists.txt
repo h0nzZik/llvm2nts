@@ -1,5 +1,4 @@
-add_library(llvm2nts MODULE
-	"Pass.cpp"
+add_library(llvm2nts SHARED
 	"llvm2nts.cpp"
 	"llvmFunction2nts.cpp"
 	"FunctionMapping.cpp"
@@ -8,7 +7,8 @@ add_library(llvm2nts MODULE
 	"instructions/InstBr.cpp"
 )
 
-add_subdirectory(nts)
-add_subdirectory(test_nts)
+include_directories(${LLVM_INCLUDE_DIRS})
+include_directories ( ".." )
 
-target_link_libraries(llvm2nts ntslib)
+target_link_libraries ( llvm2nts ntslib )
+

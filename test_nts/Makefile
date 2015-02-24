@@ -73,14 +73,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(CMAKE_COMMAND) -E cmake_progress_start /home/jenda/Documents/School-current/BP/llvm/llvm2nts/CMakeFiles /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/test_nts/CMakeFiles/progress.marks
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 src/test_nts/all
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(CMAKE_COMMAND) -E cmake_progress_start /home/jenda/Documents/School-current/BP/llvm/llvm2nts/CMakeFiles /home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_nts/CMakeFiles/progress.marks
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 test_nts/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/jenda/Documents/School-current/BP/llvm/llvm2nts/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 src/test_nts/clean
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 test_nts/clean
 .PHONY : clean
 
 # The main clean target
@@ -89,12 +89,12 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 src/test_nts/preinstall
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 test_nts/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 src/test_nts/preinstall
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 test_nts/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
@@ -103,17 +103,17 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-src/test_nts/CMakeFiles/test_ntslib.dir/rule:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 src/test_nts/CMakeFiles/test_ntslib.dir/rule
-.PHONY : src/test_nts/CMakeFiles/test_ntslib.dir/rule
+test_nts/CMakeFiles/test_ntslib.dir/rule:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 test_nts/CMakeFiles/test_ntslib.dir/rule
+.PHONY : test_nts/CMakeFiles/test_ntslib.dir/rule
 
 # Convenience name for target.
-test_ntslib: src/test_nts/CMakeFiles/test_ntslib.dir/rule
+test_ntslib: test_nts/CMakeFiles/test_ntslib.dir/rule
 .PHONY : test_ntslib
 
 # fast build rule for target.
 test_ntslib/fast:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/test_nts/CMakeFiles/test_ntslib.dir/build.make src/test_nts/CMakeFiles/test_ntslib.dir/build
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f test_nts/CMakeFiles/test_ntslib.dir/build.make test_nts/CMakeFiles/test_ntslib.dir/build
 .PHONY : test_ntslib/fast
 
 main.o: main.cpp.o
@@ -121,7 +121,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/test_nts/CMakeFiles/test_ntslib.dir/build.make src/test_nts/CMakeFiles/test_ntslib.dir/main.cpp.o
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f test_nts/CMakeFiles/test_ntslib.dir/build.make test_nts/CMakeFiles/test_ntslib.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -129,7 +129,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/test_nts/CMakeFiles/test_ntslib.dir/build.make src/test_nts/CMakeFiles/test_ntslib.dir/main.cpp.i
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f test_nts/CMakeFiles/test_ntslib.dir/build.make test_nts/CMakeFiles/test_ntslib.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -137,7 +137,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/test_nts/CMakeFiles/test_ntslib.dir/build.make src/test_nts/CMakeFiles/test_ntslib.dir/main.cpp.s
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f test_nts/CMakeFiles/test_ntslib.dir/build.make test_nts/CMakeFiles/test_ntslib.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 test_Printable.o: test_Printable.cpp.o
@@ -145,7 +145,7 @@ test_Printable.o: test_Printable.cpp.o
 
 # target to build an object file
 test_Printable.cpp.o:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/test_nts/CMakeFiles/test_ntslib.dir/build.make src/test_nts/CMakeFiles/test_ntslib.dir/test_Printable.cpp.o
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f test_nts/CMakeFiles/test_ntslib.dir/build.make test_nts/CMakeFiles/test_ntslib.dir/test_Printable.cpp.o
 .PHONY : test_Printable.cpp.o
 
 test_Printable.i: test_Printable.cpp.i
@@ -153,7 +153,7 @@ test_Printable.i: test_Printable.cpp.i
 
 # target to preprocess a source file
 test_Printable.cpp.i:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/test_nts/CMakeFiles/test_ntslib.dir/build.make src/test_nts/CMakeFiles/test_ntslib.dir/test_Printable.cpp.i
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f test_nts/CMakeFiles/test_ntslib.dir/build.make test_nts/CMakeFiles/test_ntslib.dir/test_Printable.cpp.i
 .PHONY : test_Printable.cpp.i
 
 test_Printable.s: test_Printable.cpp.s
@@ -161,7 +161,7 @@ test_Printable.s: test_Printable.cpp.s
 
 # target to generate assembly for a file
 test_Printable.cpp.s:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/test_nts/CMakeFiles/test_ntslib.dir/build.make src/test_nts/CMakeFiles/test_ntslib.dir/test_Printable.cpp.s
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f test_nts/CMakeFiles/test_ntslib.dir/build.make test_nts/CMakeFiles/test_ntslib.dir/test_Printable.cpp.s
 .PHONY : test_Printable.cpp.s
 
 # Help Target

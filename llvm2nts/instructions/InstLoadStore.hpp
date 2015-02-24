@@ -1,31 +1,30 @@
-/*
- * InstBr.hpp
- *
- *  Created on: 15. 2. 2015
- *      Author: jenda
- */
-
-#ifndef SRC_INSTRUCTIONS_INSTBR_HPP_
-#define SRC_INSTRUCTIONS_INSTBR_HPP_
+#ifndef _INSTRUCTION_INST_LOAD_STORE_HPP_
+#define _INSTRUCTION_INST_LOAD_STORE_HPP_
 
 // LLVM headers
 #include <llvm/IR/Instructions.h>
 
+// NTS headers
+#include <nts/AbstractArithmetic.hpp>
+#include <nts/ConcreteArithmetic.hpp>
+#include <nts/AtomicRelation.hpp>
+#include <nts/Havoc.hpp>
+
 // Project headers
 #include "IInst.hpp"
-#include "../nts/Havoc.hpp"
 
-/*
- *
- */
-class InstBr : public IInst
+class InstLoadStore : public IInst
 {
 	private:
+		NTS::AbstArithValue m_dst;
+		NTS::AbstArithValue m_src;
+		NTS::AtomicRelation m_assign;
 		NTS::Havoc m_havoc;
+		NTS::FormulaBop m_f;
 
 	public:
-		InstBr();
-		virtual ~InstBr();
+		InstLoadStore();
+		~InstLoadStore() {;}
 
 		virtual bool supports(unsigned int opcode) const;
 
@@ -38,4 +37,6 @@ class InstBr : public IInst
 				int                       inst_id );
 };
 
-#endif /* SRC_INSTRUCTIONS_INSTBR_HPP_ */
+
+#endif // _INSTRUCTION_INST_LOAD_STORE_HPP_
+

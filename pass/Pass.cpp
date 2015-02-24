@@ -11,8 +11,8 @@
 #include <iostream>
 #include <fstream>
 
-#include "nts/NTS.hpp"
-#include "llvm2nts.hpp"
+//#include <nts/NTS.hpp>
+#include <llvm2nts/llvm2nts.hpp>
 
 using namespace llvm;
 

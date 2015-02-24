@@ -1,45 +1,45 @@
  // Variables
-var_l_tmp,var_l_tmp1,var_l_tmp3,var_l_tmp4,var_l_tmp5,var_l_d,var_l_tmp6,var_l_tmp7,var_l_tmp9,var_l_tmp12 : int
-in ( arg_a,arg_b );
+var_l_, var_l_, var_l_, var_l_, var_l_, var_l_d, var_l_, var_l_, var_l_, var_l_ : int
+in ( arg_a, arg_b );
 out ( ret_var );
 Transitions:
-s_0_0 -> s_0_4 {(var_l_tmp' = arg_a) && havoc(var_l_tmp)}
-s_0_4 -> s_0_5 {(var_l_tmp1' = arg_b) && havoc(var_l_tmp1)}
+s_0_0 -> s_0_4 {(var_l_' = arg_a) && havoc(var_l_)}
+s_0_4 -> s_0_5 {(var_l_' = arg_b) && havoc(var_l_)}
 s_0_5 -> s_1_0 {havoc()}
-s_1_0 -> s_1_1 {(var_l_tmp3' = var_l_tmp) && havoc(var_l_tmp3)}
-s_1_1 -> s_1_2 {(var_l_tmp4' = var_l_tmp1) && havoc(var_l_tmp4)}
-s_1_2 -> s_1_4 {(var_l_d' = var_l_tmp5) && havoc(var_l_d)}
-s_1_4 -> s_1_5 {(var_l_tmp6' = var_l_tmp1) && havoc(var_l_tmp6)}
-s_1_5 -> s_1_6 {(var_l_tmp' = var_l_tmp6) && havoc(var_l_tmp)}
-s_1_6 -> s_1_7 {(var_l_tmp7' = var_l_d) && havoc(var_l_tmp7)}
-s_1_7 -> s_1_8 {(var_l_tmp1' = var_l_tmp7) && havoc(var_l_tmp1)}
+s_1_0 -> s_1_1 {(var_l_' = var_l_) && havoc(var_l_)}
+s_1_1 -> s_1_2 {(var_l_' = var_l_) && havoc(var_l_)}
+s_1_2 -> s_1_4 {(var_l_d' = var_l_) && havoc(var_l_d)}
+s_1_4 -> s_1_5 {(var_l_' = var_l_) && havoc(var_l_)}
+s_1_5 -> s_1_6 {(var_l_' = var_l_) && havoc(var_l_)}
+s_1_6 -> s_1_7 {(var_l_' = var_l_d) && havoc(var_l_)}
+s_1_7 -> s_1_8 {(var_l_' = var_l_) && havoc(var_l_)}
 s_1_8 -> s_2_0 {havoc()}
-s_2_0 -> s_2_1 {(var_l_tmp9' = var_l_tmp1) && havoc(var_l_tmp9)}
-s_3_0 -> s_3_1 {(var_l_tmp12' = var_l_tmp) && havoc(var_l_tmp12)}
-s_3_1 -> st_final {(ret_var' = var_l_tmp12) && havoc(ret_var)}
+s_2_0 -> s_2_1 {(var_l_' = var_l_) && havoc(var_l_)}
+s_3_0 -> s_3_1 {(var_l_' = var_l_) && havoc(var_l_)}
+s_3_1 -> st_final {(ret_var' = var_l_) && havoc(ret_var)}
  // Variables
-var_l_tmp,var_l_tmp1,var_l_tmp2 : int
+var_l_, var_l_, var_l_ : int
 in ( arg_x );
 out ( ret_var );
 Transitions:
-s_0_0 -> s_0_2 {(var_l_tmp' = arg_x) && havoc(var_l_tmp)}
-s_0_2 -> s_0_3 {(var_l_tmp1' = var_l_tmp) && havoc(var_l_tmp1)}
-s_0_3 -> s_0_4 {((1 + var_l_tmp1 < 4294967296) -> (var_l_tmp2' = (1 + var_l_tmp1) % 4294967296)) && havoc(var_l_tmp2)}
-s_0_4 -> st_final {(ret_var' = var_l_tmp2) && havoc(ret_var)}
+s_0_0 -> s_0_2 {(var_l_' = arg_x) && havoc(var_l_)}
+s_0_2 -> s_0_3 {(var_l_' = var_l_) && havoc(var_l_)}
+s_0_3 -> s_0_4 {((1 + var_l_ < 4294967296) -> (var_l_' = (1 + var_l_) % 4294967296)) && havoc(var_l_)}
+s_0_4 -> st_final {(ret_var' = var_l_) && havoc(ret_var)}
  // Variables
-var_l_tmp,var_l_tmp1,var_l_tmp2 : int
+var_l_, var_l_, var_l_ : int
 in ( arg_x );
 out ( ret_var );
 Transitions:
-s_0_0 -> s_0_2 {(var_l_tmp' = arg_x) && havoc(var_l_tmp)}
-s_0_2 -> s_0_3 {(var_l_tmp1' = var_l_tmp) && havoc(var_l_tmp1)}
-s_0_3 -> s_0_4 {(not (((1 < 2147483648) && (var_l_tmp1 < 2147483648)) && (1 + var_l_tmp1 >= 2147483648) || ((1 >= 2147483648) && (var_l_tmp1 >= 2147483648)) && (1 + var_l_tmp1 < 4294967296 + 2147483648)) && (1 + var_l_tmp1 < 4294967296) -> (var_l_tmp2' = (1 + var_l_tmp1) % 4294967296)) && havoc(var_l_tmp2)}
-s_0_4 -> st_final {(ret_var' = var_l_tmp2) && havoc(ret_var)}
+s_0_0 -> s_0_2 {(var_l_' = arg_x) && havoc(var_l_)}
+s_0_2 -> s_0_3 {(var_l_' = var_l_) && havoc(var_l_)}
+s_0_3 -> s_0_4 {(not (((1 < 2147483648) && (var_l_ < 2147483648)) && (1 + var_l_ >= 2147483648) || ((1 >= 2147483648) && (var_l_ >= 2147483648)) && (1 + var_l_ < 4294967296 + 2147483648)) && (1 + var_l_ < 4294967296) -> (var_l_' = (1 + var_l_) % 4294967296)) && havoc(var_l_)}
+s_0_4 -> st_final {(ret_var' = var_l_) && havoc(ret_var)}
  // Variables
-var_l_tmp1,var_l_tmp,var_l_tmp2,var_l_tmp4 : int
+var_l_, var_l_, var_l_, var_l_ : int
 in ( arg_b );
 out ( ret_var );
 Transitions:
-s_0_0 -> s_0_3 {(var_l_tmp' = var_l_tmp1) && havoc(var_l_tmp)}
-s_0_3 -> s_0_4 {(var_l_tmp2' = var_l_tmp) && havoc(var_l_tmp2)}
-s_0_4 -> st_final {(ret_var' = var_l_tmp4) && havoc(ret_var)}
+s_0_0 -> s_0_3 {(var_l_' = var_l_) && havoc(var_l_)}
+s_0_3 -> s_0_4 {(var_l_' = var_l_) && havoc(var_l_)}
+s_0_4 -> st_final {(ret_var' = var_l_) && havoc(ret_var)}

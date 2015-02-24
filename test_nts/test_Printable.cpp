@@ -2,8 +2,8 @@
 #include <sstream>
 #include <catch.hpp>
 
-#include <Printable.hpp>
-#include <Formula.hpp>
+#include <nts/Printable.hpp>
+#include <nts/Formula.hpp>
 
 using std::stringstream;
 using namespace NTS;

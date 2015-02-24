@@ -12,3 +12,5 @@ add_library(ntslib SHARED
 	ConcreteCtx.cpp
 	VariableIdentifier.cpp
 )
+
+include_directories ( "../nts" )

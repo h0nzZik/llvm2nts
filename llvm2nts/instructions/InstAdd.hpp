@@ -7,13 +7,16 @@
 // LLVM headers
 #include <llvm/IR/Instructions.h>
 
+// NTS headers
+#include <nts/Formula.hpp>
+#include <nts/ConcreteArithmetic.hpp>
+#include <nts/AbstractArithmetic.hpp>
+#include <nts/AtomicRelation.hpp>
+#include <nts/Havoc.hpp>
+
 // Project headers
 #include "IInst.hpp"
-#include "../nts/Formula.hpp"
-#include "../nts/ConcreteArithmetic.hpp"
-#include "../nts/AbstractArithmetic.hpp"
-#include "../nts/AtomicRelation.hpp"
-#include "../nts/Havoc.hpp"
+
 
 class InstAdd : public IInst
 {

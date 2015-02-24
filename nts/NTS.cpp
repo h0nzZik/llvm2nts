@@ -1,5 +1,5 @@
 #include <utility>
-#include "../util.hpp"
+#include "util.hpp"
 #include "NTS.hpp"
 
 namespace NTS

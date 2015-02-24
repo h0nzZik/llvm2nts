@@ -2,8 +2,8 @@
 #define _IINST_HPP_
 
 #include <llvm/IR/Instruction.h>
-#include "../nts/Formula.hpp"
-#include "../nts/NTS.hpp"
+#include <nts/Formula.hpp>
+#include <nts/NTS.hpp>
 #include "../FunctionMapping.hpp"
 
 class IInst

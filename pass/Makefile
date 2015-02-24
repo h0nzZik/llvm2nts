@@ -73,14 +73,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jenda/Documents/School-current/BP/llvm/llvm2nts/CMakeFiles /home/jenda/Documents/School-current/BP/llvm/llvm2nts/CMakeFiles/progress.marks
-	$(MAKE) -f CMakeFiles/Makefile2 all
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(CMAKE_COMMAND) -E cmake_progress_start /home/jenda/Documents/School-current/BP/llvm/llvm2nts/CMakeFiles /home/jenda/Documents/School-current/BP/llvm/llvm2nts/pass/CMakeFiles/progress.marks
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 pass/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/jenda/Documents/School-current/BP/llvm/llvm2nts/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	$(MAKE) -f CMakeFiles/Makefile2 clean
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 pass/clean
 .PHONY : clean
 
 # The main clean target
@@ -89,83 +89,56 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 pass/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 pass/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
-#=============================================================================
-# Target rules for targets named pass_llvm2nts
+# Convenience name for target.
+pass/CMakeFiles/pass_llvm2nts.dir/rule:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 pass/CMakeFiles/pass_llvm2nts.dir/rule
+.PHONY : pass/CMakeFiles/pass_llvm2nts.dir/rule
 
-# Build rule for target.
-pass_llvm2nts: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 pass_llvm2nts
+# Convenience name for target.
+pass_llvm2nts: pass/CMakeFiles/pass_llvm2nts.dir/rule
 .PHONY : pass_llvm2nts
 
 # fast build rule for target.
 pass_llvm2nts/fast:
-	$(MAKE) -f pass/CMakeFiles/pass_llvm2nts.dir/build.make pass/CMakeFiles/pass_llvm2nts.dir/build
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f pass/CMakeFiles/pass_llvm2nts.dir/build.make pass/CMakeFiles/pass_llvm2nts.dir/build
 .PHONY : pass_llvm2nts/fast
 
-#=============================================================================
-# Target rules for targets named ntslib
+Pass.o: Pass.cpp.o
+.PHONY : Pass.o
 
-# Build rule for target.
-ntslib: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 ntslib
-.PHONY : ntslib
+# target to build an object file
+Pass.cpp.o:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f pass/CMakeFiles/pass_llvm2nts.dir/build.make pass/CMakeFiles/pass_llvm2nts.dir/Pass.cpp.o
+.PHONY : Pass.cpp.o
 
-# fast build rule for target.
-ntslib/fast:
-	$(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/build
-.PHONY : ntslib/fast
+Pass.i: Pass.cpp.i
+.PHONY : Pass.i
 
-#=============================================================================
-# Target rules for targets named test_ntslib
+# target to preprocess a source file
+Pass.cpp.i:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f pass/CMakeFiles/pass_llvm2nts.dir/build.make pass/CMakeFiles/pass_llvm2nts.dir/Pass.cpp.i
+.PHONY : Pass.cpp.i
 
-# Build rule for target.
-test_ntslib: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 test_ntslib
-.PHONY : test_ntslib
+Pass.s: Pass.cpp.s
+.PHONY : Pass.s
 
-# fast build rule for target.
-test_ntslib/fast:
-	$(MAKE) -f test_nts/CMakeFiles/test_ntslib.dir/build.make test_nts/CMakeFiles/test_ntslib.dir/build
-.PHONY : test_ntslib/fast
-
-#=============================================================================
-# Target rules for targets named llvm2nts
-
-# Build rule for target.
-llvm2nts: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 llvm2nts
-.PHONY : llvm2nts
-
-# fast build rule for target.
-llvm2nts/fast:
-	$(MAKE) -f llvm2nts/CMakeFiles/llvm2nts.dir/build.make llvm2nts/CMakeFiles/llvm2nts.dir/build
-.PHONY : llvm2nts/fast
-
-#=============================================================================
-# Target rules for targets named test_llvm2nts
-
-# Build rule for target.
-test_llvm2nts: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 test_llvm2nts
-.PHONY : test_llvm2nts
-
-# fast build rule for target.
-test_llvm2nts/fast:
-	$(MAKE) -f test_llvm2nts/CMakeFiles/test_llvm2nts.dir/build.make test_llvm2nts/CMakeFiles/test_llvm2nts.dir/build
-.PHONY : test_llvm2nts/fast
+# target to generate assembly for a file
+Pass.cpp.s:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f pass/CMakeFiles/pass_llvm2nts.dir/build.make pass/CMakeFiles/pass_llvm2nts.dir/Pass.cpp.s
+.PHONY : Pass.cpp.s
 
 # Help Target
 help:
@@ -174,12 +147,11 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
-	@echo "... rebuild_cache"
 	@echo "... pass_llvm2nts"
-	@echo "... ntslib"
-	@echo "... test_ntslib"
-	@echo "... llvm2nts"
-	@echo "... test_llvm2nts"
+	@echo "... rebuild_cache"
+	@echo "... Pass.o"
+	@echo "... Pass.i"
+	@echo "... Pass.s"
 .PHONY : help
 
 
@@ -191,6 +163,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

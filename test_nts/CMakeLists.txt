@@ -4,8 +4,8 @@ add_executable(test_ntslib
 )
 
 include_directories(
-	"../../externals/Catch/include"
-	"../nts"
+	"../externals/Catch/include"
+	".."
 	)
 
 target_link_libraries(test_ntslib ntslib)

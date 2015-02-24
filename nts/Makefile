@@ -73,14 +73,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(CMAKE_COMMAND) -E cmake_progress_start /home/jenda/Documents/School-current/BP/llvm/llvm2nts/CMakeFiles /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/nts/CMakeFiles/progress.marks
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 src/nts/all
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(CMAKE_COMMAND) -E cmake_progress_start /home/jenda/Documents/School-current/BP/llvm/llvm2nts/CMakeFiles /home/jenda/Documents/School-current/BP/llvm/llvm2nts/nts/CMakeFiles/progress.marks
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 nts/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/jenda/Documents/School-current/BP/llvm/llvm2nts/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 src/nts/clean
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 nts/clean
 .PHONY : clean
 
 # The main clean target
@@ -89,12 +89,12 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 src/nts/preinstall
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 nts/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 src/nts/preinstall
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 nts/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
@@ -103,17 +103,17 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-src/nts/CMakeFiles/ntslib.dir/rule:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 src/nts/CMakeFiles/ntslib.dir/rule
-.PHONY : src/nts/CMakeFiles/ntslib.dir/rule
+nts/CMakeFiles/ntslib.dir/rule:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f CMakeFiles/Makefile2 nts/CMakeFiles/ntslib.dir/rule
+.PHONY : nts/CMakeFiles/ntslib.dir/rule
 
 # Convenience name for target.
-ntslib: src/nts/CMakeFiles/ntslib.dir/rule
+ntslib: nts/CMakeFiles/ntslib.dir/rule
 .PHONY : ntslib
 
 # fast build rule for target.
 ntslib/fast:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/build
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/build
 .PHONY : ntslib/fast
 
 AbstractArithmetic.o: AbstractArithmetic.cpp.o
@@ -121,7 +121,7 @@ AbstractArithmetic.o: AbstractArithmetic.cpp.o
 
 # target to build an object file
 AbstractArithmetic.cpp.o:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/AbstractArithmetic.cpp.o
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/AbstractArithmetic.cpp.o
 .PHONY : AbstractArithmetic.cpp.o
 
 AbstractArithmetic.i: AbstractArithmetic.cpp.i
@@ -129,7 +129,7 @@ AbstractArithmetic.i: AbstractArithmetic.cpp.i
 
 # target to preprocess a source file
 AbstractArithmetic.cpp.i:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/AbstractArithmetic.cpp.i
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/AbstractArithmetic.cpp.i
 .PHONY : AbstractArithmetic.cpp.i
 
 AbstractArithmetic.s: AbstractArithmetic.cpp.s
@@ -137,7 +137,7 @@ AbstractArithmetic.s: AbstractArithmetic.cpp.s
 
 # target to generate assembly for a file
 AbstractArithmetic.cpp.s:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/AbstractArithmetic.cpp.s
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/AbstractArithmetic.cpp.s
 .PHONY : AbstractArithmetic.cpp.s
 
 AtomicRelation.o: AtomicRelation.cpp.o
@@ -145,7 +145,7 @@ AtomicRelation.o: AtomicRelation.cpp.o
 
 # target to build an object file
 AtomicRelation.cpp.o:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/AtomicRelation.cpp.o
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/AtomicRelation.cpp.o
 .PHONY : AtomicRelation.cpp.o
 
 AtomicRelation.i: AtomicRelation.cpp.i
@@ -153,7 +153,7 @@ AtomicRelation.i: AtomicRelation.cpp.i
 
 # target to preprocess a source file
 AtomicRelation.cpp.i:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/AtomicRelation.cpp.i
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/AtomicRelation.cpp.i
 .PHONY : AtomicRelation.cpp.i
 
 AtomicRelation.s: AtomicRelation.cpp.s
@@ -161,7 +161,7 @@ AtomicRelation.s: AtomicRelation.cpp.s
 
 # target to generate assembly for a file
 AtomicRelation.cpp.s:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/AtomicRelation.cpp.s
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/AtomicRelation.cpp.s
 .PHONY : AtomicRelation.cpp.s
 
 BinaryOpBase.o: BinaryOpBase.cpp.o
@@ -169,7 +169,7 @@ BinaryOpBase.o: BinaryOpBase.cpp.o
 
 # target to build an object file
 BinaryOpBase.cpp.o:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/BinaryOpBase.cpp.o
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/BinaryOpBase.cpp.o
 .PHONY : BinaryOpBase.cpp.o
 
 BinaryOpBase.i: BinaryOpBase.cpp.i
@@ -177,7 +177,7 @@ BinaryOpBase.i: BinaryOpBase.cpp.i
 
 # target to preprocess a source file
 BinaryOpBase.cpp.i:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/BinaryOpBase.cpp.i
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/BinaryOpBase.cpp.i
 .PHONY : BinaryOpBase.cpp.i
 
 BinaryOpBase.s: BinaryOpBase.cpp.s
@@ -185,7 +185,7 @@ BinaryOpBase.s: BinaryOpBase.cpp.s
 
 # target to generate assembly for a file
 BinaryOpBase.cpp.s:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/BinaryOpBase.cpp.s
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/BinaryOpBase.cpp.s
 .PHONY : BinaryOpBase.cpp.s
 
 BoolOp.o: BoolOp.cpp.o
@@ -193,7 +193,7 @@ BoolOp.o: BoolOp.cpp.o
 
 # target to build an object file
 BoolOp.cpp.o:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/BoolOp.cpp.o
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/BoolOp.cpp.o
 .PHONY : BoolOp.cpp.o
 
 BoolOp.i: BoolOp.cpp.i
@@ -201,7 +201,7 @@ BoolOp.i: BoolOp.cpp.i
 
 # target to preprocess a source file
 BoolOp.cpp.i:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/BoolOp.cpp.i
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/BoolOp.cpp.i
 .PHONY : BoolOp.cpp.i
 
 BoolOp.s: BoolOp.cpp.s
@@ -209,7 +209,7 @@ BoolOp.s: BoolOp.cpp.s
 
 # target to generate assembly for a file
 BoolOp.cpp.s:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/BoolOp.cpp.s
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/BoolOp.cpp.s
 .PHONY : BoolOp.cpp.s
 
 BooleanTerm.o: BooleanTerm.cpp.o
@@ -217,7 +217,7 @@ BooleanTerm.o: BooleanTerm.cpp.o
 
 # target to build an object file
 BooleanTerm.cpp.o:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/BooleanTerm.cpp.o
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/BooleanTerm.cpp.o
 .PHONY : BooleanTerm.cpp.o
 
 BooleanTerm.i: BooleanTerm.cpp.i
@@ -225,7 +225,7 @@ BooleanTerm.i: BooleanTerm.cpp.i
 
 # target to preprocess a source file
 BooleanTerm.cpp.i:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/BooleanTerm.cpp.i
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/BooleanTerm.cpp.i
 .PHONY : BooleanTerm.cpp.i
 
 BooleanTerm.s: BooleanTerm.cpp.s
@@ -233,7 +233,7 @@ BooleanTerm.s: BooleanTerm.cpp.s
 
 # target to generate assembly for a file
 BooleanTerm.cpp.s:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/BooleanTerm.cpp.s
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/BooleanTerm.cpp.s
 .PHONY : BooleanTerm.cpp.s
 
 ConcreteArithmetic.o: ConcreteArithmetic.cpp.o
@@ -241,7 +241,7 @@ ConcreteArithmetic.o: ConcreteArithmetic.cpp.o
 
 # target to build an object file
 ConcreteArithmetic.cpp.o:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/ConcreteArithmetic.cpp.o
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/ConcreteArithmetic.cpp.o
 .PHONY : ConcreteArithmetic.cpp.o
 
 ConcreteArithmetic.i: ConcreteArithmetic.cpp.i
@@ -249,7 +249,7 @@ ConcreteArithmetic.i: ConcreteArithmetic.cpp.i
 
 # target to preprocess a source file
 ConcreteArithmetic.cpp.i:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/ConcreteArithmetic.cpp.i
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/ConcreteArithmetic.cpp.i
 .PHONY : ConcreteArithmetic.cpp.i
 
 ConcreteArithmetic.s: ConcreteArithmetic.cpp.s
@@ -257,7 +257,7 @@ ConcreteArithmetic.s: ConcreteArithmetic.cpp.s
 
 # target to generate assembly for a file
 ConcreteArithmetic.cpp.s:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/ConcreteArithmetic.cpp.s
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/ConcreteArithmetic.cpp.s
 .PHONY : ConcreteArithmetic.cpp.s
 
 ConcreteCtx.o: ConcreteCtx.cpp.o
@@ -265,7 +265,7 @@ ConcreteCtx.o: ConcreteCtx.cpp.o
 
 # target to build an object file
 ConcreteCtx.cpp.o:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/ConcreteCtx.cpp.o
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/ConcreteCtx.cpp.o
 .PHONY : ConcreteCtx.cpp.o
 
 ConcreteCtx.i: ConcreteCtx.cpp.i
@@ -273,7 +273,7 @@ ConcreteCtx.i: ConcreteCtx.cpp.i
 
 # target to preprocess a source file
 ConcreteCtx.cpp.i:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/ConcreteCtx.cpp.i
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/ConcreteCtx.cpp.i
 .PHONY : ConcreteCtx.cpp.i
 
 ConcreteCtx.s: ConcreteCtx.cpp.s
@@ -281,7 +281,7 @@ ConcreteCtx.s: ConcreteCtx.cpp.s
 
 # target to generate assembly for a file
 ConcreteCtx.cpp.s:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/ConcreteCtx.cpp.s
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/ConcreteCtx.cpp.s
 .PHONY : ConcreteCtx.cpp.s
 
 Formula.o: Formula.cpp.o
@@ -289,7 +289,7 @@ Formula.o: Formula.cpp.o
 
 # target to build an object file
 Formula.cpp.o:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/Formula.cpp.o
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/Formula.cpp.o
 .PHONY : Formula.cpp.o
 
 Formula.i: Formula.cpp.i
@@ -297,7 +297,7 @@ Formula.i: Formula.cpp.i
 
 # target to preprocess a source file
 Formula.cpp.i:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/Formula.cpp.i
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/Formula.cpp.i
 .PHONY : Formula.cpp.i
 
 Formula.s: Formula.cpp.s
@@ -305,7 +305,7 @@ Formula.s: Formula.cpp.s
 
 # target to generate assembly for a file
 Formula.cpp.s:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/Formula.cpp.s
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/Formula.cpp.s
 .PHONY : Formula.cpp.s
 
 Havoc.o: Havoc.cpp.o
@@ -313,7 +313,7 @@ Havoc.o: Havoc.cpp.o
 
 # target to build an object file
 Havoc.cpp.o:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/Havoc.cpp.o
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/Havoc.cpp.o
 .PHONY : Havoc.cpp.o
 
 Havoc.i: Havoc.cpp.i
@@ -321,7 +321,7 @@ Havoc.i: Havoc.cpp.i
 
 # target to preprocess a source file
 Havoc.cpp.i:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/Havoc.cpp.i
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/Havoc.cpp.i
 .PHONY : Havoc.cpp.i
 
 Havoc.s: Havoc.cpp.s
@@ -329,7 +329,7 @@ Havoc.s: Havoc.cpp.s
 
 # target to generate assembly for a file
 Havoc.cpp.s:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/Havoc.cpp.s
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/Havoc.cpp.s
 .PHONY : Havoc.cpp.s
 
 NTS.o: NTS.cpp.o
@@ -337,7 +337,7 @@ NTS.o: NTS.cpp.o
 
 # target to build an object file
 NTS.cpp.o:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/NTS.cpp.o
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/NTS.cpp.o
 .PHONY : NTS.cpp.o
 
 NTS.i: NTS.cpp.i
@@ -345,7 +345,7 @@ NTS.i: NTS.cpp.i
 
 # target to preprocess a source file
 NTS.cpp.i:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/NTS.cpp.i
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/NTS.cpp.i
 .PHONY : NTS.cpp.i
 
 NTS.s: NTS.cpp.s
@@ -353,7 +353,7 @@ NTS.s: NTS.cpp.s
 
 # target to generate assembly for a file
 NTS.cpp.s:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/NTS.cpp.s
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/NTS.cpp.s
 .PHONY : NTS.cpp.s
 
 Printable.o: Printable.cpp.o
@@ -361,7 +361,7 @@ Printable.o: Printable.cpp.o
 
 # target to build an object file
 Printable.cpp.o:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/Printable.cpp.o
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/Printable.cpp.o
 .PHONY : Printable.cpp.o
 
 Printable.i: Printable.cpp.i
@@ -369,7 +369,7 @@ Printable.i: Printable.cpp.i
 
 # target to preprocess a source file
 Printable.cpp.i:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/Printable.cpp.i
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/Printable.cpp.i
 .PHONY : Printable.cpp.i
 
 Printable.s: Printable.cpp.s
@@ -377,7 +377,7 @@ Printable.s: Printable.cpp.s
 
 # target to generate assembly for a file
 Printable.cpp.s:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/Printable.cpp.s
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/Printable.cpp.s
 .PHONY : Printable.cpp.s
 
 VariableIdentifier.o: VariableIdentifier.cpp.o
@@ -385,7 +385,7 @@ VariableIdentifier.o: VariableIdentifier.cpp.o
 
 # target to build an object file
 VariableIdentifier.cpp.o:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/VariableIdentifier.cpp.o
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/VariableIdentifier.cpp.o
 .PHONY : VariableIdentifier.cpp.o
 
 VariableIdentifier.i: VariableIdentifier.cpp.i
@@ -393,7 +393,7 @@ VariableIdentifier.i: VariableIdentifier.cpp.i
 
 # target to preprocess a source file
 VariableIdentifier.cpp.i:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/VariableIdentifier.cpp.i
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/VariableIdentifier.cpp.i
 .PHONY : VariableIdentifier.cpp.i
 
 VariableIdentifier.s: VariableIdentifier.cpp.s
@@ -401,7 +401,7 @@ VariableIdentifier.s: VariableIdentifier.cpp.s
 
 # target to generate assembly for a file
 VariableIdentifier.cpp.s:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/nts/CMakeFiles/ntslib.dir/build.make src/nts/CMakeFiles/ntslib.dir/VariableIdentifier.cpp.s
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f nts/CMakeFiles/ntslib.dir/build.make nts/CMakeFiles/ntslib.dir/VariableIdentifier.cpp.s
 .PHONY : VariableIdentifier.cpp.s
 
 # Help Target
