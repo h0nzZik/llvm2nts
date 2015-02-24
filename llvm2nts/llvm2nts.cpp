@@ -27,7 +27,7 @@ void llvm2nts::process_module ( const Module &m )
 {
 	for ( const Function & f : m)
 	{
-		m_bnts.emplace_back();
+		m_bnts.emplace_back ( f.getName().str() );
 		llvmFunction2nts conv ( f, m_bnts.back() );
 		conv.process();
 	}

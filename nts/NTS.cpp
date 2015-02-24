@@ -54,7 +54,8 @@ namespace NTS
 		o << "}";
 	}
 
-	BasicNts::BasicNts()
+	BasicNts::BasicNts ( const std::string & name ) :
+		m_name ( name )
 	{
 		m_final_st = new FinalState ();
 		m_retvar   = new Variable ( "ret_var" );
@@ -161,27 +162,44 @@ namespace NTS
 
 	void BasicNts::print(std::ostream &o) const
 	{
+		o << m_name << " {\n";
 		if ( !m_variables.empty() )
 		{
-			o << " // Variables\n";
+			o << "\t// Variables\n\t";
 			to_csv ( o, m_variables );
-			o << " : int\n";
+			o << " : int;\n";
 		}
 
 		// TODO add types
-		o << "in ( ";
+		o << "\tin ( ";
 		to_csv ( o, m_arguments );
 		o << " );\n";
 
-		o << "out ( " << *m_retvar << " );\n";
+		o << "\tout ( " << *m_retvar << " );\n";
 
+		if ( !m_states.empty() )
+		{
+			o << "\tinitial ";
+			m_states[0]->print(o);
+			o << ";\n";
+		}
 
-		o << "Transitions:\n";
+		if ( m_final_st != nullptr)
+		{
+			o << "\tfinal ";
+			m_final_st->print ( o );
+			o << ";\n";
+		}
+
+		o << "\t// Transitions:\n";
 		for ( const Transition & t : m_transitions )
 		{
+			o << "\t";
 			t.print ( o );
 			o << "\n";
 		}
+
+		o << "}\n";
 	}
 
 

@@ -66,7 +66,7 @@ namespace NTS
 	
 		public:
 
-			BasicNts ( );
+			BasicNts ( const std::string & name );
 			BasicNts ( const BasicNts & cp ) = delete;
 			BasicNts ( BasicNts && old);
 
