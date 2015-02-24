@@ -1,10 +1,12 @@
 add_executable ( test_llvm2nts
 	"test_main.cpp"
+	"test_instructions.cpp"
 )
 
 include_directories(
 	"../externals/Catch/include"
 	".."
+	${LLVM_INCLUDE_DIRS}
 )
 
 # Taken from http://llvm.org/docs/CMake.html
