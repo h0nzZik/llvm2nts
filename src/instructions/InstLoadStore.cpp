@@ -35,7 +35,7 @@ bool InstLoadStore::supports(unsigned int opcode) const
 const State * InstLoadStore::process(
 		const NTS::State        * from    ,
 		const llvm::Instruction & i       ,
-		VariableManager         & vm      ,
+		FunctionMapping         & map     ,
 		NTS::BasicNts           & n       ,
 		int                       bb_id   ,
 		int                       inst_id )
@@ -50,27 +50,27 @@ const State * InstLoadStore::process(
 		case llvm::Instruction::Store:
 			{
 				const auto &st = llvm::cast<llvm::StoreInst>(i);
-				src   = vm.getIPrint ( st.getValueOperand() );
-				dest  = vm.getIPrint ( st.getPointerOperand() );
-				st_to = & n.addState ( bb_id, inst_id );
+				src   = map.get_iprint ( st.getValueOperand() );
+				dest  = map.get_iprint ( st.getPointerOperand() );
+				st_to = n.addState ( bb_id, inst_id );
 			}
 			break;
 
 		case llvm::Instruction::Load:
 			{
 				const auto &ld = llvm::cast<llvm::LoadInst>(i);
-				src   = vm.getIPrint ( ld.getPointerOperand() );
-				dest  = vm.getIPrint ( &i );
-				st_to = & n.addState ( bb_id, inst_id );
+				src   = map.get_iprint ( ld.getPointerOperand() );
+				dest  = map.get_iprint ( &i );
+				st_to = n.addState ( bb_id, inst_id );
 			}
 			break;
 
 		case llvm::Instruction::Ret:
 			{
 				const auto &rt = llvm::cast<llvm::ReturnInst>(i);
-				src   = vm.getIPrint ( rt.getReturnValue() );
+				src   = map.get_iprint ( rt.getReturnValue() );
 				dest  = n.getRetVar ( );
-				st_to = & n.addFinalState( bb_id, inst_id );
+				st_to = n.final_state();
 				// TODO: Later we should support empty ret
 				if (!dest || !src)
 					throw std::logic_error("Ret without return value");

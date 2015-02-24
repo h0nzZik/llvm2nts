@@ -1,7 +1,8 @@
 add_library(llvm2nts MODULE
-	Pass.cpp
-	llvm2nts.cpp
-	VariableManager.cpp
+	"Pass.cpp"
+	"llvm2nts.cpp"
+	"llvmFunction2nts.cpp"
+	"FunctionMapping.cpp"
 	"instructions/InstAdd.cpp"
 	"instructions/InstLoadStore.cpp"
 	"instructions/InstBr.cpp"

@@ -11,19 +11,30 @@ namespace NTS
 
 	class State
 	{
+		public:
+			virtual void print ( std::ostream &o ) const = 0;
+	};
+
+	class CommonState final : public State
+	{
 		private:
 			int m_bb;
 			int m_inst;
-			bool m_final; // FIXME:: Not used
 
 		public:
-			State(int bb_id, int inst_id, bool st_final);
-			State & operator=(State const &) = delete;
+			CommonState ( int bb_id, int inst_id );
+			CommonState & operator= ( State const & src ) = delete;
 
-			void print(std::ostream &o) const;
+			virtual void print ( std::ostream &o ) const;
 	};
 
-	class Transition
+	class FinalState final : public State
+	{
+		public:
+			virtual void print ( std::ostream &o ) const;
+	};
+
+	class Transition final
 	{
 		private:
 			const State * m_from;
@@ -32,8 +43,9 @@ namespace NTS
 
 
 		public:
-			Transition(const State *a, const State *b, const ConcreteFormula &guard);
-			Transition(const Transition &other);
+			Transition ( const State *a, const State *b, const ConcreteFormula &guard );
+			Transition ( const Transition &other );
+			Transition ( Transition && old );
 			~Transition() {;}
 
 			void print(std::ostream &o) const;
@@ -43,35 +55,39 @@ namespace NTS
 	class BasicNts
 	{
 		private:
-			std::string m_name;
-			const Variable * m_retvar;
-			std::vector<Variable *> m_variables;
-			std::vector<Variable *> m_arguments;
-			std::vector<const State *> m_states;
-			std::vector<Transition> m_transitions;
+			std::string                   m_name;
+			std::vector < Variable    * > m_variables;
+			std::vector < Constant    * > m_constants;
+			std::vector < Variable    * > m_arguments;
+			std::vector < CommonState * > m_states;
+			std::vector < Transition    > m_transitions;
+			FinalState                  * m_final_st;
+			Variable                    * m_retvar;
 	
-			const State & pr_addState ( int bb_id, int inst_id, bool st_final );
-
 		public:
 
-			BasicNts();
+			BasicNts ( );
+			BasicNts ( const BasicNts & cp ) = delete;
+			BasicNts ( BasicNts && old);
 
 			~BasicNts();
 
-			void setRetVar(const Variable * ret_var);
+			BasicNts & operator= ( const BasicNts & orig) = delete;
 
 			const Variable * getRetVar(void) const;
 
-			void addVariable(Variable * var);
+			const Variable * add_variable ( const std::string & name );
 
-			void addArgument(Variable * arg);
+			const Variable * add_argument ( const std::string & name );
 
-			const State & addState ( int bb_id, int inst_id );
+			const Constant * add_constant ( const std::string & value );
 
-			const State & addFinalState ( int bb_id, int inst_id );
+			const CommonState * addState ( int bb_id, int inst_id );
 
-			const State & lastState() const;
+			const CommonState * lastState() const;
 
+			const FinalState * final_state() const;
+	
 			void addTransition(
 					const State * from,
 					const State * to,

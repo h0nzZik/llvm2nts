@@ -4,7 +4,7 @@
 #include <llvm/IR/Instruction.h>
 #include "../nts/Formula.hpp"
 #include "../nts/NTS.hpp"
-#include "../VariableManager.hpp"
+#include "../FunctionMapping.hpp"
 
 class IInst
 {
@@ -16,7 +16,7 @@ class IInst
 		virtual const NTS::State * process(
 				const NTS::State        * from    ,
 				const llvm::Instruction & i       ,
-				VariableManager         & vm      ,
+				FunctionMapping         & map     ,
 				NTS::BasicNts           & n       ,
 				int                       bb_id   ,
 				int                       inst_id ) = 0;

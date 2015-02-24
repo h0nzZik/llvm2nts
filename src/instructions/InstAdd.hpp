@@ -124,7 +124,7 @@ class InstAdd : public IInst
 		virtual const NTS::State * process(
 				const NTS::State        * from    ,
 				const llvm::Instruction & i       ,
-				VariableManager         & vm      ,
+				FunctionMapping         & map     ,
 				NTS::BasicNts           & n       ,
 				int                       bb_id   ,
 				int                       inst_id );

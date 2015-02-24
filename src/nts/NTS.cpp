@@ -1,28 +1,45 @@
+#include <utility>
+#include "../util.hpp"
 #include "NTS.hpp"
 
 namespace NTS
 {
-
-	State::State ( int bb_id, int inst_id, bool st_final )
-		: m_bb ( bb_id ), m_inst ( inst_id ), m_final ( st_final )
+	CommonState::CommonState ( int bb_id, int inst_id ) :
+		m_bb   ( bb_id ),
+		m_inst ( inst_id )
 	{
 		;
 	}
 
-	void State::print(std::ostream &o) const
+	void CommonState::print ( std::ostream &o ) const
 	{
 		o << "s_" << std::to_string(m_bb) << "_" << std::to_string( m_inst );
 	}
 
+	void FinalState::print ( std::ostream & o ) const
+	{
+		o << "st_final";
+	}
 
-	Transition::Transition(const State *a, const State *b, const ConcreteFormula &guard)
+
+	Transition::Transition ( const State *a, const State *b, const ConcreteFormula &guard )
 		: m_from(a), m_to(b), m_guard(guard)
 	{
 		;
 	}
 
-	Transition::Transition(const Transition &other)
-		: m_from(other.m_from), m_to(other.m_to), m_guard(other.m_guard)
+	Transition::Transition(const Transition &other) :
+		m_from  ( other.m_from ),
+		m_to    ( other.m_to ),
+		m_guard ( other.m_guard )
+	{
+		;
+	}
+
+	Transition::Transition ( Transition && old) :
+		m_from  ( old.m_from ),
+		m_to    ( old.m_to ),
+		m_guard ( std::move ( old.m_guard ) )
 	{
 		;
 	}
@@ -39,27 +56,56 @@ namespace NTS
 
 	BasicNts::BasicNts()
 	{
-		;
+		m_final_st = new FinalState ();
+		m_retvar   = new Variable ( "ret_var" );
+	}
+
+	BasicNts::BasicNts ( BasicNts && old ) :
+		m_name        ( std::move ( old.m_name        ) ),
+		m_variables   ( std::move ( old.m_variables   ) ),
+		m_constants   ( std::move ( old.m_constants   ) ),
+		m_arguments   ( std::move ( old.m_arguments   ) ),
+		m_states      ( std::move ( old.m_states      ) ),
+		m_transitions ( std::move ( old.m_transitions ) ),
+		m_final_st    ( std::move ( old.m_final_st    ) ),
+		m_retvar      ( std::move ( old.m_retvar      ) )
+	{
+		old.m_name = "( moved out )";
+		old.m_final_st = nullptr;
+		old.m_retvar = nullptr;
 	}
 
 	BasicNts::~BasicNts()
 	{
-		for(const State * s : m_states)
+		delete m_final_st;
+		m_final_st = nullptr;
+
+		delete m_retvar;
+		m_retvar = nullptr;
+
+		for ( CommonState * st : m_states )
 		{
-			delete s;
+			delete st;
 		}
-	}
+		m_states.clear();
 
-	const State & BasicNts::pr_addState ( int bb_id, int inst_id, bool st_final )
-	{
-		const State * s = new State ( bb_id, inst_id, st_final );
-		m_states.push_back(s);
-		return *s;
-	}
+		for ( Variable * v : m_variables )
+		{
+			delete v;
+		}
+		m_variables.clear();
 
-	void BasicNts::setRetVar(const Variable * ret_var)
-	{
-		m_retvar = ret_var;
+		for ( Constant *c : m_constants )
+		{
+			delete c;
+		}
+		m_constants.clear();
+
+		for ( Variable *v : m_arguments )
+		{
+			delete v;
+		}
+		m_arguments.clear();
 	}
 
 	const Variable * BasicNts::getRetVar(void) const
@@ -67,31 +113,43 @@ namespace NTS
 		return m_retvar;
 	}
 
-	void BasicNts::addVariable(Variable * var)
+	const CommonState * BasicNts::addState( int bb_id, int inst_id )
 	{
-		m_variables.push_back(var);
+		CommonState * st = new CommonState ( bb_id, inst_id );
+		m_states.push_back ( st );
+		return st;
 	}
 
-	void BasicNts::addArgument(Variable * arg)
+	const CommonState * BasicNts::lastState() const
 	{
-		m_arguments.push_back(arg);
+		return m_states.back();
 	}
 
-	const State & BasicNts::addState( int bb_id, int inst_id )
+	const FinalState * BasicNts::final_state () const
 	{
-		return pr_addState ( bb_id, inst_id, false );
+		return m_final_st;
 	}
 
-	const State & BasicNts::addFinalState( int bb_id, int inst_id )
+	const Variable * BasicNts::add_variable ( const std::string & name )
 	{
-		return pr_addState ( bb_id, inst_id, true );
+		Variable *v = new Variable ( "var_" + name );
+		m_variables.push_back ( v );
+		return v;
 	}
 
-	const State & BasicNts::lastState() const
+	const Constant * BasicNts::add_constant ( const std::string & value )
 	{
-		return *m_states.back();
+		Constant *c = new Constant ( value );
+		m_constants.push_back ( c );
+		return c;
 	}
 
+	const Variable * BasicNts::add_argument ( const std::string & name )
+	{
+		Variable * arg = new Variable ( "arg_" + name );
+		m_arguments.push_back ( arg );
+		return arg;
+	}
 
 	void BasicNts::addTransition(
 			const State * from,
@@ -103,28 +161,25 @@ namespace NTS
 
 	void BasicNts::print(std::ostream &o) const
 	{
+		if ( !m_variables.empty() )
+		{
+			o << " // Variables\n";
+			to_csv ( o, m_variables );
+			o << " : int\n";
+		}
 
 		// TODO add types
 		o << "in ( ";
-		for(const auto *v : m_arguments)
-		{
-			v->print(o);
-			o << " ";
-		}
-		o << ");\n";
-		o << "out ( ";
-		m_retvar->print(o);
+		to_csv ( o, m_arguments );
 		o << " );\n";
-		o << "-- Variables:\n";
-		for (const auto *v : m_variables)
-		{
-			v->print(o);
-			o << "\n";
-		}
+
+		o << "out ( " << *m_retvar << " );\n";
+
+
 		o << "Transitions:\n";
-		for(const auto & t : m_transitions)
+		for ( const Transition & t : m_transitions )
 		{
-			t.print(o);
+			t.print ( o );
 			o << "\n";
 		}
 	}

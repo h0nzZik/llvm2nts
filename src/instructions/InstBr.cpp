@@ -28,7 +28,7 @@ bool InstBr::supports(unsigned int opcode) const
 const State * InstBr::process(
 		const NTS::State        * from    ,
 		const llvm::Instruction & i       ,
-		VariableManager         & vm      ,
+		FunctionMapping         & map     ,
 		NTS::BasicNts           & n       ,
 		int                       bb_id   ,
 		int                       inst_id )
@@ -47,7 +47,7 @@ const State * InstBr::process(
 		throw std::logic_error("Conditional branch is not implemented");
 	} else {
 		llvm::BasicBlock *b = br.getSuccessor ( 0 );
-		to = vm.get_bb_start ( b );
+		to = map.get_bb_start ( b );
 	}
 
 	ConcreteFormula cf ( m_havoc, {} );

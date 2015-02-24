@@ -116,6 +116,30 @@ llvm2nts/fast:
 	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/build
 .PHONY : llvm2nts/fast
 
+FunctionMapping.o: FunctionMapping.cpp.o
+.PHONY : FunctionMapping.o
+
+# target to build an object file
+FunctionMapping.cpp.o:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/FunctionMapping.cpp.o
+.PHONY : FunctionMapping.cpp.o
+
+FunctionMapping.i: FunctionMapping.cpp.i
+.PHONY : FunctionMapping.i
+
+# target to preprocess a source file
+FunctionMapping.cpp.i:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/FunctionMapping.cpp.i
+.PHONY : FunctionMapping.cpp.i
+
+FunctionMapping.s: FunctionMapping.cpp.s
+.PHONY : FunctionMapping.s
+
+# target to generate assembly for a file
+FunctionMapping.cpp.s:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/FunctionMapping.cpp.s
+.PHONY : FunctionMapping.cpp.s
+
 Pass.o: Pass.cpp.o
 .PHONY : Pass.o
 
@@ -139,30 +163,6 @@ Pass.s: Pass.cpp.s
 Pass.cpp.s:
 	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/Pass.cpp.s
 .PHONY : Pass.cpp.s
-
-VariableManager.o: VariableManager.cpp.o
-.PHONY : VariableManager.o
-
-# target to build an object file
-VariableManager.cpp.o:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/VariableManager.cpp.o
-.PHONY : VariableManager.cpp.o
-
-VariableManager.i: VariableManager.cpp.i
-.PHONY : VariableManager.i
-
-# target to preprocess a source file
-VariableManager.cpp.i:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/VariableManager.cpp.i
-.PHONY : VariableManager.cpp.i
-
-VariableManager.s: VariableManager.cpp.s
-.PHONY : VariableManager.s
-
-# target to generate assembly for a file
-VariableManager.cpp.s:
-	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/VariableManager.cpp.s
-.PHONY : VariableManager.cpp.s
 
 instructions/InstAdd.o: instructions/InstAdd.cpp.o
 .PHONY : instructions/InstAdd.o
@@ -260,6 +260,30 @@ llvm2nts.cpp.s:
 	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/llvm2nts.cpp.s
 .PHONY : llvm2nts.cpp.s
 
+llvmFunction2nts.o: llvmFunction2nts.cpp.o
+.PHONY : llvmFunction2nts.o
+
+# target to build an object file
+llvmFunction2nts.cpp.o:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/llvmFunction2nts.cpp.o
+.PHONY : llvmFunction2nts.cpp.o
+
+llvmFunction2nts.i: llvmFunction2nts.cpp.i
+.PHONY : llvmFunction2nts.i
+
+# target to preprocess a source file
+llvmFunction2nts.cpp.i:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/llvmFunction2nts.cpp.i
+.PHONY : llvmFunction2nts.cpp.i
+
+llvmFunction2nts.s: llvmFunction2nts.cpp.s
+.PHONY : llvmFunction2nts.s
+
+# target to generate assembly for a file
+llvmFunction2nts.cpp.s:
+	cd /home/jenda/Documents/School-current/BP/llvm/llvm2nts && $(MAKE) -f src/CMakeFiles/llvm2nts.dir/build.make src/CMakeFiles/llvm2nts.dir/llvmFunction2nts.cpp.s
+.PHONY : llvmFunction2nts.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -269,12 +293,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... llvm2nts"
 	@echo "... rebuild_cache"
+	@echo "... FunctionMapping.o"
+	@echo "... FunctionMapping.i"
+	@echo "... FunctionMapping.s"
 	@echo "... Pass.o"
 	@echo "... Pass.i"
 	@echo "... Pass.s"
-	@echo "... VariableManager.o"
-	@echo "... VariableManager.i"
-	@echo "... VariableManager.s"
 	@echo "... instructions/InstAdd.o"
 	@echo "... instructions/InstAdd.i"
 	@echo "... instructions/InstAdd.s"
@@ -287,6 +311,9 @@ help:
 	@echo "... llvm2nts.o"
 	@echo "... llvm2nts.i"
 	@echo "... llvm2nts.s"
+	@echo "... llvmFunction2nts.o"
+	@echo "... llvmFunction2nts.i"
+	@echo "... llvmFunction2nts.s"
 .PHONY : help
 
 

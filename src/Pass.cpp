@@ -43,22 +43,14 @@ namespace {
 			{
 				std::ofstream ofs;
 				ofs.open(OutputFilename.c_str());
-				for (const auto &f : M.getFunctionList())
-				{
-					onFunction(f, ofs);
-				}
+
+				llvm2nts l2n;
+				l2n.process_module ( M );
+
+				l2n.print ( ofs );
 				ofs.close();
+
 				return false;
-			}
-
-		private:
-
-			void onFunction(const Function &F, std::ostream &str)
-			{
-				llvm2nts l2n(F.getReturnType());
-				l2n.process_function(F);
-				str << F.getName().str() << "{\n";
-				l2n.print(str);
 			}
 	};
 }

@@ -134,7 +134,7 @@ const NTS::Formula & InstAdd::getFormula(bool signed_wrap, bool unsigned_wrap) c
 const State * InstAdd::process(
 		const NTS::State        * from    ,
 		const llvm::Instruction & i       ,
-		VariableManager         & vm      ,
+		FunctionMapping         & map     ,
 		NTS::BasicNts           & n       ,
 		int                       bb_id   ,
 		int                       inst_id )
@@ -144,13 +144,13 @@ const State * InstAdd::process(
 
 	auto &bo = llvm::cast<llvm::BinaryOperator>(i);
 
-	const IPrint *left   = vm.getIPrint ( bo.getOperand(0) );
-	const IPrint *right  = vm.getIPrint ( bo.getOperand(1) );
-	const IPrint *result = vm.getIPrint ( &llvm::cast<llvm::Value>(i) );
+	const IPrint *left   = map.get_iprint ( bo.getOperand(0) );
+	const IPrint *right  = map.get_iprint ( bo.getOperand(1) );
+	const IPrint *result = map.get_iprint ( &llvm::cast<llvm::Value>(i) );
 	auto &g = getBitsizeGroup(i.getType()->getIntegerBitWidth());
 
 	const NTS::Formula &f = getFormula ( !bo.hasNoSignedWrap(), !bo.hasNoUnsignedWrap() );
-	const NTS::State * to = & n.addState ( bb_id, inst_id );
+	const NTS::State * to =  n.addState ( bb_id, inst_id );
 	const auto &cf        = NTS::ConcreteFormula ( f,
 			{result, left, right, g.unsigned_bound, g.signed_bound} );
 	n.addTransition ( from, to, cf );

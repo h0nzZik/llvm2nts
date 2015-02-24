@@ -11,8 +11,13 @@
 },
 {
   "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src",
-  "command": "/usr/bin/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dllvm2nts_EXPORTS -std=c++11 -g -Wall -Wextra -fno-rtti -fPIC -I/home/jenda/git/llvm/include -I/home/jenda/build/llvm/include    -o CMakeFiles/llvm2nts.dir/VariableManager.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/VariableManager.cpp",
-  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/VariableManager.cpp"
+  "command": "/usr/bin/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dllvm2nts_EXPORTS -std=c++11 -g -Wall -Wextra -fno-rtti -fPIC -I/home/jenda/git/llvm/include -I/home/jenda/build/llvm/include    -o CMakeFiles/llvm2nts.dir/llvmFunction2nts.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/llvmFunction2nts.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/llvmFunction2nts.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src",
+  "command": "/usr/bin/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dllvm2nts_EXPORTS -std=c++11 -g -Wall -Wextra -fno-rtti -fPIC -I/home/jenda/git/llvm/include -I/home/jenda/build/llvm/include    -o CMakeFiles/llvm2nts.dir/FunctionMapping.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/FunctionMapping.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src/FunctionMapping.cpp"
 },
 {
   "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/src",
