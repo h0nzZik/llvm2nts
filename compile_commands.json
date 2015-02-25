@@ -75,6 +75,11 @@
   "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_nts/test_Printable.cpp"
 },
 {
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_nts",
+  "command": "/usr/bin/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -std=c++11 -g -Wall -Wextra -fno-rtti -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_nts/../externals/Catch/include -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_nts/..    -o CMakeFiles/test_ntslib.dir/test_Nts.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_nts/test_Nts.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_nts/test_Nts.cpp"
+},
+{
   "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/llvm2nts",
   "command": "/usr/bin/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dllvm2nts_EXPORTS -std=c++11 -g -Wall -Wextra -fno-rtti -fPIC -I/home/jenda/git/llvm/include -I/home/jenda/build/llvm/include -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/llvm2nts/..    -o CMakeFiles/llvm2nts.dir/llvm2nts.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/llvm2nts/llvm2nts.cpp",
   "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/llvm2nts/llvm2nts.cpp"
@@ -106,12 +111,12 @@
 },
 {
   "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_llvm2nts",
-  "command": "/usr/bin/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -std=c++11 -g -Wall -Wextra -fno-rtti -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_llvm2nts/../externals/Catch/include -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_llvm2nts/.. -I/home/jenda/git/llvm/include -I/home/jenda/build/llvm/include    -o CMakeFiles/test_llvm2nts.dir/test_main.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_llvm2nts/test_main.cpp",
+  "command": "/usr/bin/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -std=c++11 -g -Wall -Wextra -fno-rtti -I/home/jenda/git/llvm/include -I/home/jenda/build/llvm/include -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_llvm2nts/../externals/Catch/include -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_llvm2nts/..    -o CMakeFiles/test_llvm2nts.dir/test_main.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_llvm2nts/test_main.cpp",
   "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_llvm2nts/test_main.cpp"
 },
 {
   "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_llvm2nts",
-  "command": "/usr/bin/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -std=c++11 -g -Wall -Wextra -fno-rtti -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_llvm2nts/../externals/Catch/include -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_llvm2nts/.. -I/home/jenda/git/llvm/include -I/home/jenda/build/llvm/include    -o CMakeFiles/test_llvm2nts.dir/test_instructions.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_llvm2nts/test_instructions.cpp",
+  "command": "/usr/bin/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -std=c++11 -g -Wall -Wextra -fno-rtti -I/home/jenda/git/llvm/include -I/home/jenda/build/llvm/include -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_llvm2nts/../externals/Catch/include -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_llvm2nts/..    -o CMakeFiles/test_llvm2nts.dir/test_instructions.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_llvm2nts/test_instructions.cpp",
   "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/test_llvm2nts/test_instructions.cpp"
 }
 ]

@@ -4,6 +4,8 @@
 #include <llvm/IR/Module.h>
 #include <llvm/IR/Function.h>
 #include <llvm/IR/Constants.h>
+#include <llvm/Support/raw_ostream.h>
+
 
 #include "llvm2nts.hpp"
 
@@ -17,6 +19,8 @@
 #include "nts/AtomicRelation.hpp"
 #include "nts/Havoc.hpp"
 
+
+
 #include "llvmFunction2nts.hpp"
 
 using namespace llvm;
@@ -25,6 +29,8 @@ using namespace NTS;
 
 void llvm2nts::process_module ( const Module &m )
 {
+//	llvm::errs() << m.getName().str() << "\n";
+	m_name = m.getName().str().c_str();
 	for ( const Function & f : m)
 	{
 		m_bnts.emplace_back ( f.getName().str() );
@@ -35,6 +41,7 @@ void llvm2nts::process_module ( const Module &m )
 
 void llvm2nts::print(std::ostream &o) const
 {
+	o << "NTS " << m_name << ";\n";
 	for (const BasicNts & n : m_bnts)
 	{
 		n.print ( o );

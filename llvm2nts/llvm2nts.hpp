@@ -15,6 +15,7 @@
 class llvm2nts
 {
 	private:
+		std::string m_name;
 		std::vector<NTS::BasicNts> m_bnts;
 
 	public:
