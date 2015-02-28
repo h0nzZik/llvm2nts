@@ -21,7 +21,8 @@ using namespace llvm;
 TEST_CASE( "Trivial", "Tests nothing")
 {
 	BasicNts nts ( "unnamed" );
-	FunctionMapping map ( nts );
+	ModuleMapping modmap;
+	FunctionMapping map ( nts, modmap );
 
 	const State * s = nts.addState ( 0, 0 );
 

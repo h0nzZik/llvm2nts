@@ -8,8 +8,9 @@
 
 #include "FunctionMapping.hpp"
 
-FunctionMapping::FunctionMapping ( NTS::BasicNts & nts) :
-	m_nts ( nts )
+FunctionMapping::FunctionMapping ( NTS::BasicNts & nts, const ModuleMapping &mod ) :
+	m_modmap ( mod ),
+	m_nts    ( nts )
 {
 	;
 }

@@ -96,6 +96,11 @@
 },
 {
   "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/llvm2nts",
+  "command": "/usr/bin/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dllvm2nts_EXPORTS -std=c++11 -g -Wall -Wextra -fno-rtti -fPIC -I/home/jenda/git/llvm/include -I/home/jenda/build/llvm/include -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/llvm2nts/..    -o CMakeFiles/llvm2nts.dir/ModuleMapping.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/llvm2nts/ModuleMapping.cpp",
+  "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/llvm2nts/ModuleMapping.cpp"
+},
+{
+  "directory": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/llvm2nts",
   "command": "/usr/bin/c++   -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -Dllvm2nts_EXPORTS -std=c++11 -g -Wall -Wextra -fno-rtti -fPIC -I/home/jenda/git/llvm/include -I/home/jenda/build/llvm/include -I/home/jenda/Documents/School-current/BP/llvm/llvm2nts/llvm2nts/..    -o CMakeFiles/llvm2nts.dir/instructions/InstAdd.cpp.o -c /home/jenda/Documents/School-current/BP/llvm/llvm2nts/llvm2nts/instructions/InstAdd.cpp",
   "file": "/home/jenda/Documents/School-current/BP/llvm/llvm2nts/llvm2nts/instructions/InstAdd.cpp"
 },

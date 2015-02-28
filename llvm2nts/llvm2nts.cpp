@@ -29,13 +29,31 @@ using namespace NTS;
 
 void llvm2nts::process_module ( const Module &m )
 {
-//	llvm::errs() << m.getName().str() << "\n";
 	m_name = m.getName().str().c_str();
+
+	// Reserve the space now, because appending may invalidate
+	// all iterators and reference.
+	m_bnts.reserve ( m.getFunctionList().size() );
+
+
+	// Create one NTS for each function
+	// and map each function to corresponding NTS
 	for ( const Function & f : m)
 	{
 		m_bnts.emplace_back ( f.getName().str() );
-		llvmFunction2nts conv ( f, m_bnts.back() );
+		m_modmap.ins_function ( &f, &m_bnts.back() );
+	}
+
+	// From now do not insert elements.
+
+	// Convert function to NTS
+	// Note that the processing requires valid mapping 'Function -> BasicNts'
+	unsigned int id = 0;
+	for ( const Function &f : m )
+	{
+		llvmFunction2nts conv ( f, m_bnts[id], m_modmap );
 		conv.process();
+		id++;
 	}
 }
 

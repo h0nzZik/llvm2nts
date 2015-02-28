@@ -31,7 +31,9 @@ class llvmFunction2nts
 		const NTS::Variable * add_param ( const llvm::Argument * arg );
 
 	public:
-		llvmFunction2nts  ( const llvm::Function &f, NTS::BasicNts &nts );
+		llvmFunction2nts ( const llvm::Function & f,
+						   NTS::BasicNts        & nts,
+						   const ModuleMapping  & modmap );
 		~llvmFunction2nts ( );
 
 		void process();

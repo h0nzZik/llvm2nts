@@ -20,9 +20,11 @@ static InstAdd ia;
 static InstLoadStore ils;
 static InstBr ibr;
 
-llvmFunction2nts::llvmFunction2nts ( const Function &f, BasicNts &nts ) :
+llvmFunction2nts::llvmFunction2nts ( const Function      & f,
+									 BasicNts            & nts,
+									 const ModuleMapping & modmap ) :
 	m_f   ( f ),
-	m_map ( nts ),
+	m_map ( nts, modmap ),
 	m_nts ( nts )
 {
 
@@ -36,7 +38,7 @@ llvmFunction2nts::~llvmFunction2nts()
 
 const NTS::Variable * llvmFunction2nts::add_param ( const Argument * arg )
 {
-	const NTS::Variable *v = m_nts.add_argument(arg->getName().str());
+	const NTS::Variable *v = m_nts.add_argument("arg_" + arg->getName().str());
 	m_map.ins_iprint ( cast<Value>(arg), v );
 	return v;
 }
@@ -80,9 +82,6 @@ const State * llvmFunction2nts::process_instruction (
 		const State       * st_from ,
 		const Instruction & i       )
 {
-	//i.print(errs());
-	//errs() << "\n";
-
 	switch(i.getOpcode())
 	{
 		case Instruction::Alloca:

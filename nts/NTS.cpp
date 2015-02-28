@@ -58,7 +58,8 @@ namespace NTS
 		m_name ( name )
 	{
 		m_final_st = new FinalState ();
-		m_retvar   = new Variable ( "ret_var" );
+		m_retvar   = new Variable ( "_ret_var" ); // Return value
+		m_var_lbb  = new Variable ( "_lbb_var" ); // Last basic block
 	}
 
 	BasicNts::BasicNts ( BasicNts && old ) :
@@ -69,11 +70,13 @@ namespace NTS
 		m_states      ( std::move ( old.m_states      ) ),
 		m_transitions ( std::move ( old.m_transitions ) ),
 		m_final_st    ( std::move ( old.m_final_st    ) ),
-		m_retvar      ( std::move ( old.m_retvar      ) )
+		m_retvar      ( std::move ( old.m_retvar      ) ),
+		m_var_lbb     ( std::move ( old.m_var_lbb     ) )
 	{
 		old.m_name = "( moved out )";
 		old.m_final_st = nullptr;
 		old.m_retvar = nullptr;
+		old.m_var_lbb = nullptr;
 	}
 
 	BasicNts::~BasicNts()
@@ -83,6 +86,9 @@ namespace NTS
 
 		delete m_retvar;
 		m_retvar = nullptr;
+
+		delete m_var_lbb;
+		m_var_lbb = nullptr;
 
 		for ( CommonState * st : m_states )
 		{
@@ -114,6 +120,11 @@ namespace NTS
 		return m_retvar;
 	}
 
+	const Variable * BasicNts::get_lbb_var() const
+	{
+		return m_var_lbb;
+	}
+
 	const CommonState * BasicNts::addState( int bb_id, int inst_id )
 	{
 		CommonState * st = new CommonState ( bb_id, inst_id );
@@ -133,7 +144,7 @@ namespace NTS
 
 	const Variable * BasicNts::add_variable ( const std::string & name )
 	{
-		Variable *v = new Variable ( "var_" + name );
+		Variable *v = new Variable ( name );
 		m_variables.push_back ( v );
 		return v;
 	}
@@ -147,7 +158,7 @@ namespace NTS
 
 	const Variable * BasicNts::add_argument ( const std::string & name )
 	{
-		Variable * arg = new Variable ( "arg_" + name );
+		Variable * arg = new Variable ( name );
 		m_arguments.push_back ( arg );
 		return arg;
 	}

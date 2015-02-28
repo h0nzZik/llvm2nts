@@ -1,62 +1,62 @@
 NTS ./externals/nts-examples/02_gcd.ll;
 gcd {
 	// Variables
-	var_l_tmp, var_l_tmp1, var_l_tmp3, var_l_tmp4, var_l_tmp5, var_l_d, var_l_tmp6, var_l_tmp7, var_l_tmp9, var_l_tmp12 : int;
+	l_tmp, l_tmp1, l_tmp3, l_tmp4, l_tmp5, l_d, l_tmp6, l_tmp7, l_tmp9, l_tmp12 : int;
 	in ( arg_a, arg_b );
-	out ( ret_var );
+	out ( _ret_var );
 	initial s_0_0;
 	final st_final;
 	// Transitions:
-	s_0_0 -> s_0_4 {(var_l_tmp' = arg_a) && havoc(var_l_tmp)}
-	s_0_4 -> s_0_5 {(var_l_tmp1' = arg_b) && havoc(var_l_tmp1)}
+	s_0_0 -> s_0_4 {(l_tmp' = arg_a) && havoc(l_tmp)}
+	s_0_4 -> s_0_5 {(l_tmp1' = arg_b) && havoc(l_tmp1)}
 	s_0_5 -> s_1_0 {havoc()}
-	s_1_0 -> s_1_1 {(var_l_tmp3' = var_l_tmp) && havoc(var_l_tmp3)}
-	s_1_1 -> s_1_2 {(var_l_tmp4' = var_l_tmp1) && havoc(var_l_tmp4)}
-	s_1_2 -> s_1_4 {(var_l_d' = var_l_tmp5) && havoc(var_l_d)}
-	s_1_4 -> s_1_5 {(var_l_tmp6' = var_l_tmp1) && havoc(var_l_tmp6)}
-	s_1_5 -> s_1_6 {(var_l_tmp' = var_l_tmp6) && havoc(var_l_tmp)}
-	s_1_6 -> s_1_7 {(var_l_tmp7' = var_l_d) && havoc(var_l_tmp7)}
-	s_1_7 -> s_1_8 {(var_l_tmp1' = var_l_tmp7) && havoc(var_l_tmp1)}
+	s_1_0 -> s_1_1 {(l_tmp3' = l_tmp) && havoc(l_tmp3)}
+	s_1_1 -> s_1_2 {(l_tmp4' = l_tmp1) && havoc(l_tmp4)}
+	s_1_2 -> s_1_4 {(l_d' = l_tmp5) && havoc(l_d)}
+	s_1_4 -> s_1_5 {(l_tmp6' = l_tmp1) && havoc(l_tmp6)}
+	s_1_5 -> s_1_6 {(l_tmp' = l_tmp6) && havoc(l_tmp)}
+	s_1_6 -> s_1_7 {(l_tmp7' = l_d) && havoc(l_tmp7)}
+	s_1_7 -> s_1_8 {(l_tmp1' = l_tmp7) && havoc(l_tmp1)}
 	s_1_8 -> s_2_0 {havoc()}
-	s_2_0 -> s_2_1 {(var_l_tmp9' = var_l_tmp1) && havoc(var_l_tmp9)}
-	s_3_0 -> s_3_1 {(var_l_tmp12' = var_l_tmp) && havoc(var_l_tmp12)}
-	s_3_1 -> st_final {(ret_var' = var_l_tmp12) && havoc(ret_var)}
+	s_2_0 -> s_2_1 {(l_tmp9' = l_tmp1) && havoc(l_tmp9)}
+	s_3_0 -> s_3_1 {(l_tmp12' = l_tmp) && havoc(l_tmp12)}
+	s_3_1 -> st_final {(_ret_var' = l_tmp12) && havoc(_ret_var)}
 }
 add {
 	// Variables
-	var_l_tmp, var_l_tmp1, var_l_tmp2 : int;
+	l_tmp, l_tmp1, l_tmp2 : int;
 	in ( arg_x );
-	out ( ret_var );
+	out ( _ret_var );
 	initial s_0_0;
 	final st_final;
 	// Transitions:
-	s_0_0 -> s_0_2 {(var_l_tmp' = arg_x) && havoc(var_l_tmp)}
-	s_0_2 -> s_0_3 {(var_l_tmp1' = var_l_tmp) && havoc(var_l_tmp1)}
-	s_0_3 -> s_0_4 {((1 + var_l_tmp1 < 4294967296) -> (var_l_tmp2' = (1 + var_l_tmp1) % 4294967296)) && havoc(var_l_tmp2)}
-	s_0_4 -> st_final {(ret_var' = var_l_tmp2) && havoc(ret_var)}
+	s_0_0 -> s_0_2 {(l_tmp' = arg_x) && havoc(l_tmp)}
+	s_0_2 -> s_0_3 {(l_tmp1' = l_tmp) && havoc(l_tmp1)}
+	s_0_3 -> s_0_4 {((1 + l_tmp1 < 4294967296) -> (l_tmp2' = (1 + l_tmp1) % 4294967296)) && havoc(l_tmp2)}
+	s_0_4 -> st_final {(_ret_var' = l_tmp2) && havoc(_ret_var)}
 }
 addu {
 	// Variables
-	var_l_tmp, var_l_tmp1, var_l_tmp2 : int;
+	l_tmp, l_tmp1, l_tmp2 : int;
 	in ( arg_x );
-	out ( ret_var );
+	out ( _ret_var );
 	initial s_0_0;
 	final st_final;
 	// Transitions:
-	s_0_0 -> s_0_2 {(var_l_tmp' = arg_x) && havoc(var_l_tmp)}
-	s_0_2 -> s_0_3 {(var_l_tmp1' = var_l_tmp) && havoc(var_l_tmp1)}
-	s_0_3 -> s_0_4 {(not (((1 < 2147483648) && (var_l_tmp1 < 2147483648)) && (1 + var_l_tmp1 >= 2147483648) || ((1 >= 2147483648) && (var_l_tmp1 >= 2147483648)) && (1 + var_l_tmp1 < 4294967296 + 2147483648)) && (1 + var_l_tmp1 < 4294967296) -> (var_l_tmp2' = (1 + var_l_tmp1) % 4294967296)) && havoc(var_l_tmp2)}
-	s_0_4 -> st_final {(ret_var' = var_l_tmp2) && havoc(ret_var)}
+	s_0_0 -> s_0_2 {(l_tmp' = arg_x) && havoc(l_tmp)}
+	s_0_2 -> s_0_3 {(l_tmp1' = l_tmp) && havoc(l_tmp1)}
+	s_0_3 -> s_0_4 {(not (((1 < 2147483648) && (l_tmp1 < 2147483648)) && (1 + l_tmp1 >= 2147483648) || ((1 >= 2147483648) && (l_tmp1 >= 2147483648)) && (1 + l_tmp1 < 4294967296 + 2147483648)) && (1 + l_tmp1 < 4294967296) -> (l_tmp2' = (1 + l_tmp1) % 4294967296)) && havoc(l_tmp2)}
+	s_0_4 -> st_final {(_ret_var' = l_tmp2) && havoc(_ret_var)}
 }
 neg {
 	// Variables
-	var_l_tmp1, var_l_tmp, var_l_tmp2, var_l_tmp4 : int;
+	l_tmp1, l_tmp, l_tmp2, l_tmp4 : int;
 	in ( arg_b );
-	out ( ret_var );
+	out ( _ret_var );
 	initial s_0_0;
 	final st_final;
 	// Transitions:
-	s_0_0 -> s_0_3 {(var_l_tmp' = var_l_tmp1) && havoc(var_l_tmp)}
-	s_0_3 -> s_0_4 {(var_l_tmp2' = var_l_tmp) && havoc(var_l_tmp2)}
-	s_0_4 -> st_final {(ret_var' = var_l_tmp4) && havoc(ret_var)}
+	s_0_0 -> s_0_3 {(l_tmp' = l_tmp1) && havoc(l_tmp)}
+	s_0_3 -> s_0_4 {(l_tmp2' = l_tmp) && havoc(l_tmp2)}
+	s_0_4 -> st_final {(_ret_var' = l_tmp4) && havoc(_ret_var)}
 }

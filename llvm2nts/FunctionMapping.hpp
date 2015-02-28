@@ -5,12 +5,16 @@
 #include <llvm/IR/ValueMap.h>
 #include <llvm/ADT/DenseMap.h>
 
-#include "nts/NTS.hpp"
+#include <nts/NTS.hpp>
+
+#include "ModuleMapping.hpp"
 
 class FunctionMapping
 {
 	public:
-		FunctionMapping ( NTS::BasicNts & nts );
+		const ModuleMapping & m_modmap;
+
+		FunctionMapping ( NTS::BasicNts & nts, const ModuleMapping &mod );
 
 		void ins_iprint ( const llvm::Value *llva, const NTS::IPrint *var );
 		const NTS::IPrint * get_iprint ( const llvm::Value *value );
@@ -19,7 +23,6 @@ class FunctionMapping
 						    const NTS::State *s );
 
 		const NTS::State * get_bb_start ( const llvm::BasicBlock * block );
-
 
 	private:
 		NTS::BasicNts & m_nts;

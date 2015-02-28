@@ -63,6 +63,7 @@ namespace NTS
 			std::vector < Transition    > m_transitions;
 			FinalState                  * m_final_st;
 			Variable                    * m_retvar;
+			Variable                    * m_var_lbb;
 	
 		public:
 
@@ -75,6 +76,8 @@ namespace NTS
 			BasicNts & operator= ( const BasicNts & orig) = delete;
 
 			const Variable * getRetVar(void) const;
+
+			const Variable * get_lbb_var () const;
 
 			const Variable * add_variable ( const std::string & name );
 
