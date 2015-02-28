@@ -83,6 +83,7 @@ namespace NTS
 
 			const Variable * add_argument ( const std::string & name );
 
+			const Constant * add_constant ( int value );
 			const Constant * add_constant ( const std::string & value );
 
 			const CommonState * addState ( int bb_id, int inst_id );

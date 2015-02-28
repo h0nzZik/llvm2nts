@@ -1,7 +1,7 @@
 NTS ./externals/nts-examples/02_gcd.ll;
 gcd {
 	// Variables
-	l_tmp, l_tmp1, l_tmp3, l_tmp4, l_tmp5, l_d, l_tmp6, l_tmp7, l_tmp9, l_tmp12 : int;
+	_ret_var, _lbb_var, l_tmp, l_tmp1, l_tmp3, l_tmp4, l_tmp5, l_d, l_tmp6, l_tmp7, l_tmp9, l_tmp12 : int;
 	in ( arg_a, arg_b );
 	out ( _ret_var );
 	initial s_0_0;
@@ -9,7 +9,7 @@ gcd {
 	// Transitions:
 	s_0_0 -> s_0_4 {(l_tmp' = arg_a) && havoc(l_tmp)}
 	s_0_4 -> s_0_5 {(l_tmp1' = arg_b) && havoc(l_tmp1)}
-	s_0_5 -> s_1_0 {havoc()}
+	s_0_5 -> s_1_0 {(_lbb_var' = 0) && havoc(_lbb_var)}
 	s_1_0 -> s_1_1 {(l_tmp3' = l_tmp) && havoc(l_tmp3)}
 	s_1_1 -> s_1_2 {(l_tmp4' = l_tmp1) && havoc(l_tmp4)}
 	s_1_2 -> s_1_4 {(l_d' = l_tmp5) && havoc(l_d)}
@@ -17,14 +17,14 @@ gcd {
 	s_1_5 -> s_1_6 {(l_tmp' = l_tmp6) && havoc(l_tmp)}
 	s_1_6 -> s_1_7 {(l_tmp7' = l_d) && havoc(l_tmp7)}
 	s_1_7 -> s_1_8 {(l_tmp1' = l_tmp7) && havoc(l_tmp1)}
-	s_1_8 -> s_2_0 {havoc()}
+	s_1_8 -> s_2_0 {(_lbb_var' = 1) && havoc(_lbb_var)}
 	s_2_0 -> s_2_1 {(l_tmp9' = l_tmp1) && havoc(l_tmp9)}
 	s_3_0 -> s_3_1 {(l_tmp12' = l_tmp) && havoc(l_tmp12)}
 	s_3_1 -> st_final {(_ret_var' = l_tmp12) && havoc(_ret_var)}
 }
 add {
 	// Variables
-	l_tmp, l_tmp1, l_tmp2 : int;
+	_ret_var, _lbb_var, l_tmp, l_tmp1, l_tmp2 : int;
 	in ( arg_x );
 	out ( _ret_var );
 	initial s_0_0;
@@ -37,7 +37,7 @@ add {
 }
 addu {
 	// Variables
-	l_tmp, l_tmp1, l_tmp2 : int;
+	_ret_var, _lbb_var, l_tmp, l_tmp1, l_tmp2 : int;
 	in ( arg_x );
 	out ( _ret_var );
 	initial s_0_0;
@@ -50,7 +50,7 @@ addu {
 }
 neg {
 	// Variables
-	l_tmp1, l_tmp, l_tmp2, l_tmp4 : int;
+	_ret_var, _lbb_var, l_tmp1, l_tmp, l_tmp2, l_tmp4 : int;
 	in ( arg_b );
 	out ( _ret_var );
 	initial s_0_0;

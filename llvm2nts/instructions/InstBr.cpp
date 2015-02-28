@@ -10,7 +10,11 @@
 using namespace NTS;
 
 InstBr::InstBr() :
-	m_havoc({})
+	m_aval_lbb   ( 0, true  ),
+	m_aval_bbid  ( 1, false ),
+	m_assign_lbb ( AtomicRelation::Relation::Eq, &m_aval_lbb, &m_aval_bbid ),
+	m_havoc      ( { 0 } ),
+	m_formula    ( BoolOp::And, &m_assign_lbb, &m_havoc )
 {
 
 }
@@ -46,11 +50,16 @@ const State * InstBr::process(
 		return from; // TODO implement
 		throw std::logic_error("Conditional branch is not implemented");
 	} else {
-		llvm::BasicBlock *b = br.getSuccessor ( 0 );
+		const llvm::BasicBlock *b = br.getSuccessor ( 0 );
 		to = map.get_bb_start ( b );
 	}
 
-	ConcreteFormula cf ( m_havoc, {} );
+	// Variable in which id of last visited basic block is stored
+	const IPrint *lbb = n.get_lbb_var();
+	// Constant with this basic block id
+	const IPrint *val = n.add_constant ( bb_id );
+	
+	ConcreteFormula cf ( m_formula, { lbb, val } );
 	n.addTransition ( from, to, cf );
 
 	return NULL;
