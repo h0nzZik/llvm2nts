@@ -15,12 +15,14 @@
 #include <nts/Havoc.hpp>
 
 // Project headers
+#include "Constants.hpp"
 #include "IInst.hpp"
-
 
 class InstAdd : public IInst
 {
 	private:
+
+		Constants & m_constants;
 
 		// Abstract destination
 		NTS::AbstArithValue m_adst;
@@ -105,21 +107,12 @@ class InstAdd : public IInst
 		NTS::FormulaBop m_fu_havoc;
 		NTS::FormulaBop m_fsu_havoc;
 
-		struct BitsizeGroup
-		{
-			NTS::ConPositiveNumeral * unsigned_bound;
-			NTS::ConPositiveNumeral * signed_bound;
-		};
 
-
-		std::vector<BitsizeGroup> m_bs;
-
-		const BitsizeGroup & getBitsizeGroup(unsigned int bitsz);
 		const NTS::Formula & getFormula(bool signed_wrap, bool unsigned_wrap) const;
 
 
 	public:
-		InstAdd();
+		InstAdd ( Constants & bit_bounds );
 		virtual ~InstAdd();
 
 		virtual bool supports(unsigned int opcode) const;

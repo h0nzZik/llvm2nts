@@ -6,9 +6,11 @@
 
 #include "llvmFunction2nts.hpp"
 
+#include "instructions/Constants.hpp"
 #include "instructions/InstAdd.hpp"
 #include "instructions/InstLoadStore.hpp"
 #include "instructions/InstBr.hpp"
+#include "instructions/InstIcmp.hpp"
 
 
 #include <sstream>
@@ -16,9 +18,25 @@
 using namespace llvm;
 using namespace NTS;
 
-static InstAdd ia;
-static InstLoadStore ils;
-static InstBr ibr;
+class Context
+{
+	public:
+		Context () :
+			m_ia   ( m_constants ),
+			m_icmp ( m_constants )
+		{
+
+		}
+
+		Constants     m_constants;
+		InstAdd       m_ia;
+		InstLoadStore m_ils;
+		InstBr        m_ibr;
+		InstIcmp      m_icmp;
+};
+
+
+static Context ctx;
 
 llvmFunction2nts::llvmFunction2nts ( const Function      & f,
 									 BasicNts            & nts,
@@ -90,13 +108,16 @@ const State * llvmFunction2nts::process_instruction (
 		case Instruction::Store:
 		case Instruction::Load:
 		case Instruction::Ret:
-			return ils.process ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
+			return ctx.m_ils.process  ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
 
 		case Instruction::Add:
-			return ia.process  ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
+			return ctx.m_ia.process   ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
 
 		case Instruction::Br:
-			return ibr.process ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
+			return ctx.m_ibr.process  ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
+
+		case Instruction::ICmp:
+			return ctx.m_icmp.process ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
 
 	}
 

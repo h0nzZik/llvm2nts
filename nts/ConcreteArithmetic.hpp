@@ -33,7 +33,7 @@ namespace NTS
 			ConPositiveNumeral(const std::string &s);
 
 			// ConArithLiteral -> IPrint
-			virtual void print(std::ostream &o) const;
+			virtual void print(std::ostream &o) const override;
 	};
 };
 

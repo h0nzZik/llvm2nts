@@ -6,6 +6,8 @@ add_library(llvm2nts SHARED
 	"instructions/InstAdd.cpp"
 	"instructions/InstLoadStore.cpp"
 	"instructions/InstBr.cpp"
+	"instructions/InstIcmp.cpp"
+	"instructions/Constants.cpp"
 )
 
 include_directories(${LLVM_INCLUDE_DIRS})

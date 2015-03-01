@@ -11,7 +11,6 @@ class llvmFunction2nts
 {
 	private:
 		const llvm::Function & m_f;
-		const NTS::Variable  * m_return_var;
 		FunctionMapping        m_map;
 		NTS::BasicNts        & m_nts;
 

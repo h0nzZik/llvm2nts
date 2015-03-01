@@ -2,6 +2,8 @@
 #include <sstream>
 
 #include <llvm/Support/Casting.h> // llvm::cast
+
+
 #include "InstAdd.hpp"
 
 using namespace NTS;
@@ -16,8 +18,10 @@ using namespace NTS;
 // starting from.. 0bit?
 // TODO: Test what happens with 0b, 1b or 2b formulas
 
-InstAdd::InstAdd()
+InstAdd::InstAdd ( Constants & bit_bounds )
 	:
+		m_constants ( bit_bounds ),
+
 		m_adst(0, true),
 		m_als(1, false),
 		m_ars(2, false),
@@ -69,51 +73,9 @@ InstAdd::InstAdd()
 
 InstAdd::~InstAdd()
 {
-	for (BitsizeGroup &g : m_bs)
-	{
-		if (g.unsigned_bound)
-		{
-			delete g.unsigned_bound;
-			g.unsigned_bound = nullptr;
-		}
 
-		if (g.signed_bound)
-		{
-			delete g.signed_bound;
-			g.signed_bound = nullptr;
-		}
-	}
 }
 
-const InstAdd::BitsizeGroup & InstAdd::getBitsizeGroup(unsigned int bitsz)
-{
-	// Only bit size of 2 to 63 bits is supported
-	// TODO: add support for greater scales (eg using APInt)
-	if (bitsz < 2 || bitsz >= 8 * sizeof(unsigned long long int))
-		throw std::domain_error("Bit width too large");
-
-	if (m_bs.size() <= bitsz)
-		m_bs.resize(bitsz + 1);
-
-	BitsizeGroup &g = m_bs[bitsz];
-
-	// If one of them are NULL, all of them are NULL
-	if (!g.unsigned_bound)
-	{
-		std::stringstream ss;
-		unsigned long long int x = 1ULL << bitsz;
-		ss << x;
-		g.unsigned_bound = new ConPositiveNumeral(ss.str());
-		ss.str(std::string());
-		x = 1ULL << (bitsz - 1);
-		ss << x;
-
-		// assert(g.signed_bound == NULL);
-		g.signed_bound = new ConPositiveNumeral(ss.str());
-	}
-
-	return g;
-}
 
 bool InstAdd::supports(unsigned int opcode) const
 {
@@ -147,7 +109,8 @@ const State * InstAdd::process(
 	const IPrint *left   = map.get_iprint ( bo.getOperand(0) );
 	const IPrint *right  = map.get_iprint ( bo.getOperand(1) );
 	const IPrint *result = map.get_iprint ( &llvm::cast<llvm::Value>(i) );
-	auto &g = getBitsizeGroup(i.getType()->getIntegerBitWidth());
+	unsigned int  width  = i.getType()->getIntegerBitWidth();
+	const Constants::BitsizeGroup &g  = m_constants.get_bitsize_group ( width );
 
 	const NTS::Formula &f = getFormula ( !bo.hasNoSignedWrap(), !bo.hasNoUnsignedWrap() );
 	const NTS::State * to =  n.addState ( bb_id, inst_id );

@@ -37,7 +37,6 @@ const State * InstBr::process(
 		int                       bb_id   ,
 		int                       inst_id )
 {
-	(void) bb_id;
 	(void) inst_id;
 
 	if (i.getOpcode() != llvm::Instruction::Br)
