@@ -63,7 +63,6 @@ const NTS::Variable * llvmFunction2nts::add_param ( const Argument * arg )
 
 void llvmFunction2nts::process (  )
 {
-	errs()  << "process function\n";
 	for ( const auto &v : m_f.getArgumentList() )
 	{
 		add_param ( &v );

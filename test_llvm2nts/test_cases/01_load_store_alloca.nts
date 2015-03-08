@@ -1,0 +1,13 @@
+NTS test_cases/01_load_store_alloca.ll;
+test_load_store_alloca {
+	// Variables
+	_ret_var, _lbb_var, l_ptr, l_value : int;
+	in (  );
+	out ( _ret_var );
+	initial s_0_0;
+	final st_final;
+	// Transitions:
+	s_0_0 -> s_0_2 {(l_ptr' = 15) && havoc(l_ptr)}
+	s_0_2 -> s_0_3 {(l_value' = l_ptr) && havoc(l_value)}
+	s_0_3 -> st_final {(_ret_var' = 0) && havoc(_ret_var)}
+}

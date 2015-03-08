@@ -68,12 +68,20 @@ const State * InstLoadStore::process(
 		case llvm::Instruction::Ret:
 			{
 				const auto &rt = llvm::cast<llvm::ReturnInst>(i);
-				src   = map.get_iprint ( rt.getReturnValue() );
-				dest  = n.getRetVar ( );
 				st_to = n.final_state();
-				// TODO: Later we should support empty ret
-				if (!dest || !src)
-					throw std::logic_error("Ret without return value");
+				dest  = n.getRetVar ( );
+
+				// If there is no return value, just havoc()
+				if ( !rt.getReturnValue() )
+				{
+					// Our havoc accesses only 0th item
+					ConcreteFormula cf ( m_havoc, { dest } );
+					n.addTransition ( from, st_to, cf );
+					return st_to;
+				}
+
+				// Else move the return value to coresponding variable
+				src   = map.get_iprint ( rt.getReturnValue() );
 			}
 			break;
 

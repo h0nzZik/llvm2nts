@@ -1,0 +1,11 @@
+NTS test_cases/00_empty.ll;
+test_empty {
+	// Variables
+	_ret_var, _lbb_var : int;
+	in (  );
+	out ( _ret_var );
+	initial s_0_0;
+	final st_final;
+	// Transitions:
+	s_0_0 -> st_final {havoc(_ret_var)}
+}
