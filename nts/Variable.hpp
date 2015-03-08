@@ -26,7 +26,7 @@ namespace NTS
 			}
 
 			// implementation of IPrint
-			virtual void print ( std::ostream &o ) const
+			virtual void print ( std::ostream &o ) const override
 			{
 				o << m_name;
 			}
@@ -44,7 +44,7 @@ namespace NTS
 				;
 			}
 
-			virtual void print(std::ostream &o) const
+			virtual void print(std::ostream &o) const override
 			{
 				o << m_name;
 			}

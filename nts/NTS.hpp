@@ -5,6 +5,8 @@
 #include "Formula.hpp"
 #include "Variable.hpp"
 #include "IPrint.hpp"
+#include "TransitionRule.hpp"
+#include "ConcreteFormula.hpp"
 
 namespace NTS
 {
@@ -39,11 +41,11 @@ namespace NTS
 		private:
 			const State * m_from;
 			const State * m_to;
-			const ConcreteFormula m_guard;
+			const TransitionRule * m_rule;
 
 
 		public:
-			Transition ( const State *a, const State *b, const ConcreteFormula &guard );
+			Transition ( const State *a, const State *b, const TransitionRule * rule );
 			Transition ( const Transition &other );
 			Transition ( Transition && old );
 			~Transition() {;}
@@ -55,15 +57,16 @@ namespace NTS
 	class BasicNts
 	{
 		private:
-			std::string                   m_name;
-			std::vector < Variable    * > m_variables;
-			std::vector < Constant    * > m_constants;
-			std::vector < Variable    * > m_arguments;
-			std::vector < CommonState * > m_states;
-			std::vector < Transition    > m_transitions;
-			FinalState                  * m_final_st;
-			Variable                    * m_retvar;
-			Variable                    * m_var_lbb;
+			std::string                       m_name;
+			std::vector < Variable        * > m_variables;
+			std::vector < Constant        * > m_constants;
+			std::vector < Variable        * > m_arguments;
+			std::vector < CommonState     * > m_states;
+			std::vector < ConcreteFormula * > m_cformulas;
+			std::vector < Transition        > m_transitions;
+			FinalState                      * m_final_st;
+			Variable                        * m_retvar;
+			Variable                        * m_var_lbb;
 	
 		public:
 
@@ -74,6 +77,8 @@ namespace NTS
 			~BasicNts();
 
 			BasicNts & operator= ( const BasicNts & orig) = delete;
+
+			const std::string & get_name () const;
 
 			const Variable * getRetVar(void) const;
 
@@ -91,14 +96,17 @@ namespace NTS
 			const CommonState * lastState() const;
 
 			const FinalState * final_state() const;
+
+			void add_concrete_formula ( const ConcreteFormula & cf );
 	
-			void addTransition(
-					const State * from,
-					const State * to,
-					const ConcreteFormula &guard
+			void addTransition (
+					const State          * from,
+					const State          * to,
+					const TransitionRule * rule
 					);
 
 			void print(std::ostream &o) const;
+
 	};
 
 

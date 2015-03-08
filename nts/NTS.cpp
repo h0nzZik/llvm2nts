@@ -22,35 +22,37 @@ namespace NTS
 	}
 
 
-	Transition::Transition ( const State *a, const State *b, const ConcreteFormula &guard )
-		: m_from(a), m_to(b), m_guard(guard)
+	Transition::Transition ( const State *a, const State *b, const TransitionRule *rule ) :
+			m_from ( a    ),
+			m_to   ( b    ),
+			m_rule ( rule )
 	{
 		;
 	}
 
 	Transition::Transition(const Transition &other) :
 		m_from  ( other.m_from ),
-		m_to    ( other.m_to ),
-		m_guard ( other.m_guard )
+		m_to    ( other.m_to   ),
+		m_rule  ( other.m_rule )
 	{
 		;
 	}
 
 	Transition::Transition ( Transition && old) :
 		m_from  ( old.m_from ),
-		m_to    ( old.m_to ),
-		m_guard ( std::move ( old.m_guard ) )
+		m_to    ( old.m_to   ),
+		m_rule  ( old.m_rule )
 	{
 		;
 	}
 
 	void Transition::print(std::ostream &o) const
 	{
-		m_from->print(o);
+		m_from->print ( o );
 		o << " -> ";
-		m_to->print(o);
+		m_to->print ( o );
 		o << " {";
-		m_guard.print(o);
+		m_rule->print ( o );
 		o << "}";
 	}
 
@@ -71,12 +73,12 @@ namespace NTS
 		m_constants   ( std::move ( old.m_constants   ) ),
 		m_arguments   ( std::move ( old.m_arguments   ) ),
 		m_states      ( std::move ( old.m_states      ) ),
+		m_cformulas   ( std::move ( old.m_cformulas   ) ),
 		m_transitions ( std::move ( old.m_transitions ) ),
 		m_final_st    ( std::move ( old.m_final_st    ) ),
 		m_retvar      ( std::move ( old.m_retvar      ) ),
 		m_var_lbb     ( std::move ( old.m_var_lbb     ) )
 	{
-		//old.m_name = "( moved out )";
 		old.m_final_st = nullptr;
 		old.m_retvar = nullptr;
 		old.m_var_lbb = nullptr;
@@ -86,11 +88,7 @@ namespace NTS
 	{
 		delete m_final_st;
 		m_final_st = nullptr;
-
-		//delete m_retvar;
 		m_retvar = nullptr;
-
-		//delete m_var_lbb;
 		m_var_lbb = nullptr;
 
 		for ( CommonState * st : m_states )
@@ -116,6 +114,17 @@ namespace NTS
 			delete v;
 		}
 		m_arguments.clear();
+
+		for ( ConcreteFormula *cf : m_cformulas )
+		{
+			delete cf;
+		}
+		m_cformulas.clear();
+	}
+
+	const std::string & BasicNts::get_name () const
+	{
+		return m_name;
 	}
 
 	const Variable * BasicNts::getRetVar(void) const
@@ -171,12 +180,18 @@ namespace NTS
 		return arg;
 	}
 
-	void BasicNts::addTransition(
-			const State * from,
-			const State * to,
-			const ConcreteFormula &guard)	
+	void BasicNts::add_concrete_formula ( const ConcreteFormula & cf )
 	{
-		m_transitions.emplace_back(from, to, guard);
+		ConcreteFormula *f = new ConcreteFormula ( cf );
+		m_cformulas.push_back ( f );
+	}
+
+	void BasicNts::addTransition(
+			const State          * from,
+			const State          * to,
+			const TransitionRule * rule )
+	{
+		m_transitions.emplace_back(from, to, rule);
 	}
 
 	void BasicNts::print(std::ostream &o) const

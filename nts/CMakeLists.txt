@@ -11,6 +11,8 @@ add_library(ntslib SHARED
 	Formula.cpp
 	ConcreteCtx.cpp
 	VariableIdentifier.cpp
+	ConcreteFormula.cpp
+	Call.cpp
 )
 
 include_directories ( "../nts" )

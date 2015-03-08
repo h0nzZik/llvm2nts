@@ -1,8 +1,17 @@
 #include <ostream>
 #include <vector>
 
-template < typename T >
-std::ostream & to_csv ( std::ostream &o, const std::vector<T *> & list )
+namespace {
+	template < typename T>
+	std::ostream & default_print ( std::ostream &o, const T & x )
+	{
+		o << *x;
+		return o;
+	}
+}
+
+template < typename T, std::ostream & (*Print) ( std::ostream &, const T &) = default_print<T> >
+std::ostream & to_csv ( std::ostream &o, const std::vector<T> & list )
 {
 	if ( list.empty() )
 		return o;
@@ -12,9 +21,10 @@ std::ostream & to_csv ( std::ostream &o, const std::vector<T *> & list )
 
 	for ( auto it = list.cbegin(); it != last; it++	)
 	{
-		o << **it << ", ";
+		Print ( o, *it ) << ", ";
 	}
-	o << **last;
+	Print ( o, *last );
+	//o << **last;
 
 	return o;
 }
