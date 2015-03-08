@@ -1,5 +1,6 @@
-#include <ostream>
+#include <iostream>
 #include <sstream>
+#include <stdexcept>
 
 #include <catch.hpp>
 
@@ -10,35 +11,47 @@
 
 #include <nts/NTS.hpp>
 
-#include <llvm2nts/FunctionMapping.hpp>
+#include <llvm2nts/llvm2nts.hpp>
 
 
 
 using namespace NTS;
 using namespace llvm;
 
-
-TEST_CASE( "Trivial", "Tests nothing")
+static void do_file_compare_test ( const char *llfile, const char *ntsfile )
 {
-	BasicNts nts ( "unnamed" );
-	ModuleMapping modmap;
-	FunctionMapping map ( nts, modmap );
-
-	const State * s = nts.addState ( 0, 0 );
-
-	auto buf = MemoryBuffer::getMemBuffer(StringRef(""));
-	auto bufref = buf->getMemBufferRef();
 	llvm::SMDiagnostic diag;
-	LLVMContext ctx;
-	std::unique_ptr<llvm::Module> m = llvm::parseIR(bufref, diag, ctx);
-	
-	REQUIRE(m);
-	if (m)
-	{
+	LLVMContext        ctx;
 
+	std::unique_ptr<llvm::Module> m = llvm::parseIRFile ( llfile, diag, ctx );
+
+	if ( !m )
+	{
+		std::cerr << "Error on line " << diag.getLineNo() << ":\n";
+		std::cerr << diag.getMessage().str();
+		throw std::runtime_error ( "Can not parse given llvm IR file" );
 	}
 
+	std::stringstream oss;
+	llvm2nts conv;
+	try {
+		conv.process_module ( *m );
+		conv.print ( oss );
+	} catch ( std::exception &e ) {
+		std::cerr << "An exception was thrown while processing:\n" << e.what();
+		FAIL ("An exception was thrown while processing");
+	}
+	std::cout << oss.str();
 
-	REQUIRE(0 == 0);
+}
+
+TEST_CASE ( "LoadStoreAlloca", "Tests basic load/store/alloca instructions" )
+{
+	do_file_compare_test ( "test_cases/01_load_store_alloca.ll", nullptr );
+}
+
+TEST_CASE ( "VoidFunction", "Simple void function")
+{
+
 }
 
