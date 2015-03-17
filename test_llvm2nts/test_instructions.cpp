@@ -10,7 +10,7 @@
 #include <llvm/IR/Module.h>
 #include <llvm/IRReader/IRReader.h>
 
-#include <nts/NTS.hpp>
+#include <nts/NtsModule.hpp>
 
 #include <llvm2nts/llvm2nts.hpp>
 
@@ -36,10 +36,11 @@ static void do_file_compare_test ( const char *llfile,
 	}
 
 	std::stringstream gen_ss;
-	llvm2nts conv;
+	NtsModule nm;
+	llvm2nts conv ( nm, *m);
 	try {
-		conv.process_module ( *m );
-		conv.print ( gen_ss );
+		conv.process();
+		nm.print ( gen_ss );
 		if ( print )
 			std::cout << gen_ss.str();
 	} catch ( std::exception &e ) {

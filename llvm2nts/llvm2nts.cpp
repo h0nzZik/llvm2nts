@@ -14,10 +14,11 @@
 #include <ostream>
 #include <sstream>
 
-#include "nts/NTS.hpp"
-#include "nts/VariableIdentifier.hpp"
-#include "nts/AtomicRelation.hpp"
-#include "nts/Havoc.hpp"
+#include "nts/NtsModule.hpp"
+//#include "nts/NTS.hpp"
+//#include "nts/VariableIdentifier.hpp"
+//#include "nts/AtomicRelation.hpp"
+//#include "nts/Havoc.hpp"
 
 
 
@@ -27,44 +28,74 @@ using namespace llvm;
 using namespace NTS;
 
 
-void llvm2nts::process_module ( const Module &m )
+llvm2nts::llvm2nts ( NTS::NtsModule &nts_module, const llvm::Module & llvm_module ) :
+		m_nts_module ( nts_module ),
+		m_llvm_module ( llvm_module )
 {
-	m_name = m.getName().str().c_str();
+
+}
+
+void llvm2nts::process (  )
+{
+	m_nts_module.name = m_llvm_module.getName().str().c_str();
+
+	// Reserve space for global variables and constants
+	{
+		size_t vars = 0;
+		size_t consts = 0;
+		for ( auto &g : m_llvm_module.getGlobalList() )
+		{
+			if ( g.isConstant() )
+				consts++;
+			else
+				vars++;
+		}
+
+		m_nts_module.consts.clear();
+		m_nts_module.consts.reserve ( consts );
+		m_nts_module.vars.clear();
+		m_nts_module.vars.reserve ( vars );
+	}
+
+	// Create NTS symbols from global variables and constants
+	for ( auto &g : m_llvm_module.getGlobalList() )
+	{
+		if ( g.isConstant() )
+		{
+			throw std::logic_error ("Global constants are not supported yet");
+		} else {
+			m_nts_module.vars.emplace_back ( "g_" + g.getName().str() );
+			m_modmap.ins_iprint ( &g, &m_nts_module.vars.back() );
+		}
+	}
+
 
 	// Reserve the space now, because appending may invalidate
 	// all iterators and reference.
-	m_bnts.reserve ( m.getFunctionList().size() );
-
+	m_nts_module.bnts.reserve ( m_llvm_module.getFunctionList().size() );
 
 	// Create one NTS for each function
 	// and map each function to corresponding NTS
-	for ( const Function & f : m)
+	for ( const Function & f : m_llvm_module)
 	{
-		m_bnts.emplace_back ( f.getName().str() );
-		m_modmap.ins_function ( &f, &m_bnts.back() );
+		m_nts_module.bnts.emplace_back ( f.getName().str() );
+		m_modmap.ins_function ( &f, &m_nts_module.bnts.back() );
 	}
+
 
 	// From now do not insert elements.
 
 	// Convert function to NTS
 	// Note that the processing requires valid mapping 'Function -> BasicNts'
 	unsigned int id = 0;
-	for ( const Function &f : m )
+	for ( const Function &f : m_llvm_module )
 	{
-		llvmFunction2nts conv ( f, m_bnts[id], m_modmap );
+		llvmFunction2nts conv ( f, m_nts_module.bnts[id], m_modmap );
 		conv.process();
 		id++;
 	}
 }
 
-void llvm2nts::print(std::ostream &o) const
-{
-	o << "NTS " << m_name << ";\n";
-	for (const BasicNts & n : m_bnts)
-	{
-		n.print ( o );
-	}
-}
 
 
 

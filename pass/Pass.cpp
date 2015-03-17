@@ -11,7 +11,7 @@
 #include <iostream>
 #include <fstream>
 
-//#include <nts/NTS.hpp>
+#include <nts/NtsModule.hpp>
 #include <llvm2nts/llvm2nts.hpp>
 
 using namespace llvm;
@@ -44,10 +44,11 @@ namespace {
 				std::ofstream ofs;
 				ofs.open(OutputFilename.c_str());
 
-				llvm2nts l2n;
-				l2n.process_module ( M );
+				NTS::NtsModule n;
+				llvm2nts l2n ( n, M);
+				l2n.process();
 
-				l2n.print ( ofs );
+				n.print ( ofs );
 				ofs.close();
 
 				return false;

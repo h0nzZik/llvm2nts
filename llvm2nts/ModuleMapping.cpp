@@ -15,3 +15,16 @@ const NTS::BasicNts * ModuleMapping::get_nts ( const llvm::Function *fun ) const
 	return nts;
 }
 
+void ModuleMapping::ins_iprint ( const llvm::GlobalValue *llval, const NTS::IPrint * ipr )
+{
+	m_values.insert ( std::make_pair ( llval, ipr ) );
+}
+
+const NTS::IPrint * ModuleMapping::get_iprint ( const llvm::GlobalValue *llval ) const
+{
+	const NTS::IPrint * ip = m_values.lookup ( llval );
+	if ( !ip )
+		throw std::logic_error ( "Global value not found" );
+	return ip;
+}
+

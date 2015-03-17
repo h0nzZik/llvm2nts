@@ -11,23 +11,31 @@
 #include <llvm/IR/ValueMap.h>
 #include <llvm/IR/BasicBlock.h>
 
+// NTS headers
 #include <nts/NTS.hpp>
 #include <nts/AbstractArithmetic.hpp>
+#include <nts/Variable.hpp>
+#include <nts/NtsModule.hpp>
 
 #include "ModuleMapping.hpp"
+
+// TODO: Split this into two parts: converter and NTS module
+// NTS module will consist of name, NTSs and global variables
+// Converter will provide mapping llvm -> nts symbols
 
 class llvm2nts
 {
 	private:
-		std::string m_name;
-		std::vector<NTS::BasicNts> m_bnts;
-		ModuleMapping m_modmap;
+		NTS::NtsModule     & m_nts_module;
+		const llvm::Module & m_llvm_module;
+		ModuleMapping        m_modmap;
+
 
 	public:
-		llvm2nts() { ; }
+		llvm2nts ( NTS::NtsModule &nts_module, const llvm::Module & llvm_module );
 		~llvm2nts() { ; }
 
-		void process_module ( const llvm::Module & m);
+		void process ( );
 		void print ( std::ostream &o ) const;
 };
 
