@@ -11,6 +11,7 @@
 #include "instructions/InstLoadStore.hpp"
 #include "instructions/InstBr.hpp"
 #include "instructions/InstIcmp.hpp"
+#include "instructions/InstCall.hpp"
 
 
 #include <sstream>
@@ -33,6 +34,7 @@ class Context
 		InstLoadStore m_ils;
 		InstBr        m_ibr;
 		InstIcmp      m_icmp;
+		InstCall      m_icall;
 };
 
 
@@ -107,16 +109,19 @@ const State * llvmFunction2nts::process_instruction (
 		case Instruction::Store:
 		case Instruction::Load:
 		case Instruction::Ret:
-			return ctx.m_ils.process  ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
+			return ctx.m_ils.process   ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
 
 		case Instruction::Add:
-			return ctx.m_ia.process   ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
+			return ctx.m_ia.process    ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
 
 		case Instruction::Br:
-			return ctx.m_ibr.process  ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
+			return ctx.m_ibr.process   ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
 
 		case Instruction::ICmp:
-			return ctx.m_icmp.process ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
+			return ctx.m_icmp.process  ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
+
+		case Instruction::Call:
+			return ctx.m_icall.process ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
 
 	}
 

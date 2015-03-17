@@ -19,7 +19,9 @@
 using namespace NTS;
 using namespace llvm;
 
-static void do_file_compare_test ( const char *llfile, const char *ntsfile )
+static void do_file_compare_test ( const char *llfile,
+		const char *ntsfile,
+		bool print = false)
 {
 	llvm::SMDiagnostic diag;
 	LLVMContext        ctx;
@@ -38,6 +40,8 @@ static void do_file_compare_test ( const char *llfile, const char *ntsfile )
 	try {
 		conv.process_module ( *m );
 		conv.print ( gen_ss );
+		if ( print )
+			std::cout << gen_ss.str();
 	} catch ( std::exception &e ) {
 		std::cerr << "An exception was thrown while processing:\n" << e.what();
 		FAIL ("An exception was thrown while processing");
@@ -87,3 +91,7 @@ TEST_CASE ( "VoidFunction", "Simple void function")
 	do_file_compare_test ( "test_cases/00_empty.ll", "test_cases/00_empty.nts");
 }
 
+TEST_CASE ( "Call", "Call void and nonvoid function with and without parameters")
+{
+	do_file_compare_test ( "test_cases/02_call.ll", "test_cases/02_call.nts");
+}

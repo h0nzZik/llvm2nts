@@ -76,7 +76,8 @@ const State * InstLoadStore::process(
 				{
 					// Our havoc accesses only 0th item
 					ConcreteFormula cf ( m_havoc, { dest } );
-					n.addTransition ( from, st_to, cf );
+					const TransitionRule *r = n.add_transition_rule ( cf );
+					n.add_transition ( from, st_to, r );
 					return st_to;
 				}
 
@@ -91,7 +92,8 @@ const State * InstLoadStore::process(
 
 	// assert(src && dest);
 	ConcreteFormula cf(m_f, {dest, src});
-	n.addTransition (from, st_to, cf);
+	const TransitionRule *r = n.add_transition_rule ( cf );
+	n.add_transition ( from, st_to, r );
 
 	return st_to;
 }

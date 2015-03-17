@@ -175,7 +175,8 @@ const State * InstIcmp::process(
 	const Constants::BitsizeGroup &g  = m_constants.get_bitsize_group ( width );
 
 	ConcreteFormula cf        = get_formula ( icmp.getPredicate(), result, left, right, g.signed_bound );
+	const TransitionRule *r   = n.add_transition_rule ( cf );
 	const NTS::State * st_to  = n.addState ( bb_id, inst_id );
-	n.addTransition ( from, st_to, cf );
+	n.add_transition ( from, st_to, r );
 	return st_to;
 }

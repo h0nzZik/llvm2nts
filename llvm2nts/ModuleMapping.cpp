@@ -7,7 +7,7 @@ void ModuleMapping::ins_function ( const llvm::Function *fun, const NTS::BasicNt
 	m_functions.insert ( std::make_pair ( fun, nts ) );
 }
 
-const NTS::BasicNts * ModuleMapping::get_nts ( const llvm::Function *fun )
+const NTS::BasicNts * ModuleMapping::get_nts ( const llvm::Function *fun ) const
 {
 	auto * nts = m_functions.lookup ( fun );
 	if ( !nts )

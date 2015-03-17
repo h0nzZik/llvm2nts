@@ -7,6 +7,7 @@
 #include "IPrint.hpp"
 #include "TransitionRule.hpp"
 #include "ConcreteFormula.hpp"
+#include "Call.hpp"
 
 namespace NTS
 {
@@ -54,6 +55,9 @@ namespace NTS
 	};
 
 
+	// Forward declaration
+	class Call;
+
 	class BasicNts
 	{
 		private:
@@ -63,6 +67,7 @@ namespace NTS
 			std::vector < Variable        * > m_arguments;
 			std::vector < CommonState     * > m_states;
 			std::vector < ConcreteFormula * > m_cformulas;
+			std::vector < Call            * > m_calls;
 			std::vector < Transition        > m_transitions;
 			FinalState                      * m_final_st;
 			Variable                        * m_retvar;
@@ -97,16 +102,17 @@ namespace NTS
 
 			const FinalState * final_state() const;
 
-			void add_concrete_formula ( const ConcreteFormula & cf );
+			const TransitionRule * add_transition_rule ( const ConcreteFormula & cf );
+
+			const TransitionRule * add_transition_rule ( const Call & call );
 	
-			void addTransition (
+			void add_transition (
 					const State          * from,
 					const State          * to,
 					const TransitionRule * rule
 					);
 
 			void print(std::ostream &o) const;
-
 	};
 
 

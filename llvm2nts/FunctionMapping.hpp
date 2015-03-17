@@ -16,6 +16,7 @@ class FunctionMapping
 
 		FunctionMapping ( NTS::BasicNts & nts, const ModuleMapping &mod );
 
+		const NTS::Variable * ins_variable ( const llvm::Value *llva );
 		void ins_iprint ( const llvm::Value *llva, const NTS::IPrint *var );
 		const NTS::IPrint * get_iprint ( const llvm::Value *value );
 

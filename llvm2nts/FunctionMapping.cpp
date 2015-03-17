@@ -15,6 +15,17 @@ FunctionMapping::FunctionMapping ( NTS::BasicNts & nts, const ModuleMapping &mod
 	;
 }
 
+const NTS::Variable * FunctionMapping::ins_variable ( const llvm::Value *llval )
+{
+	std::stringstream ss;
+	ss << "l_" << llval->getName().str();
+
+	const NTS::Variable * v = m_nts.add_variable ( ss.str() ) ;
+
+	ins_iprint ( llval, v );
+	return v;
+}
+
 const NTS::IPrint * FunctionMapping::get_iprint ( const llvm::Value *llval )
 {
 	const NTS::IPrint * found = m_values.lookup(llval);
@@ -40,20 +51,10 @@ const NTS::IPrint * FunctionMapping::get_iprint ( const llvm::Value *llval )
 	std::stringstream ss;
 	if (llvm::isa<llvm::GlobalValue>(llval))
 	{
-		throw std::logic_error ( "Access to global variables is not supported" );
-		ss << "g_";
-	} else {
-		ss << "l_";
+		throw std::logic_error ( "Access to global variables are not supported" );
 	}
 
-	std::string s = llval->getName().str();
-	//llvm::errs() << "name: " << s << "\n";
-	ss << llval->getName().str();
-
-	const NTS::Variable * v = m_nts.add_variable ( ss.str() ) ;
-
-	ins_iprint ( llval, v );
-	return v;
+	return ins_variable ( llval );
 }
 
 

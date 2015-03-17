@@ -1,0 +1,55 @@
+NTS test_cases/02_call.ll;
+a {
+	// Variables
+	_ret_var, _lbb_var : int;
+	in ( arg_arg );
+	out ( _ret_var );
+	initial s_0_0;
+	final st_final;
+	// Transitions:
+	s_0_0 -> st_final {havoc(_ret_var)}
+}
+b {
+	// Variables
+	_ret_var, _lbb_var : int;
+	in (  );
+	out ( _ret_var );
+	initial s_0_0;
+	final st_final;
+	// Transitions:
+	s_0_0 -> st_final {havoc(_ret_var)}
+}
+c {
+	// Variables
+	_ret_var, _lbb_var : int;
+	in (  );
+	out ( _ret_var );
+	initial s_0_0;
+	final st_final;
+	// Transitions:
+	s_0_0 -> st_final {(_ret_var' = 15) && havoc(_ret_var)}
+}
+d {
+	// Variables
+	_ret_var, _lbb_var : int;
+	in ( arg_arg );
+	out ( _ret_var );
+	initial s_0_0;
+	final st_final;
+	// Transitions:
+	s_0_0 -> st_final {(_ret_var' = arg_arg) && havoc(_ret_var)}
+}
+calee {
+	// Variables
+	_ret_var, _lbb_var, l_v1, l_v2 : int;
+	in (  );
+	out ( _ret_var );
+	initial s_0_0;
+	final st_final;
+	// Transitions:
+	s_0_0 -> s_0_1 {a ( 7 )}
+	s_0_1 -> s_0_2 {b (  )}
+	s_0_2 -> s_0_3 {( l_v1' ) = c (  )}
+	s_0_3 -> s_0_4 {( l_v2' ) = d ( l_v1 )}
+	s_0_4 -> st_final {havoc(_ret_var)}
+}

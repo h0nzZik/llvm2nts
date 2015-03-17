@@ -74,6 +74,7 @@ namespace NTS
 		m_arguments   ( std::move ( old.m_arguments   ) ),
 		m_states      ( std::move ( old.m_states      ) ),
 		m_cformulas   ( std::move ( old.m_cformulas   ) ),
+		m_calls       ( std::move ( old.m_calls       ) ),
 		m_transitions ( std::move ( old.m_transitions ) ),
 		m_final_st    ( std::move ( old.m_final_st    ) ),
 		m_retvar      ( std::move ( old.m_retvar      ) ),
@@ -120,6 +121,12 @@ namespace NTS
 			delete cf;
 		}
 		m_cformulas.clear();
+
+		for ( Call * c : m_calls )
+		{
+			delete c;
+		}
+		m_calls.clear();
 	}
 
 	const std::string & BasicNts::get_name () const
@@ -180,13 +187,21 @@ namespace NTS
 		return arg;
 	}
 
-	void BasicNts::add_concrete_formula ( const ConcreteFormula & cf )
+	const TransitionRule * BasicNts::add_transition_rule ( const ConcreteFormula & cf )
 	{
 		ConcreteFormula *f = new ConcreteFormula ( cf );
 		m_cformulas.push_back ( f );
+		return f;
 	}
 
-	void BasicNts::addTransition(
+	const TransitionRule * BasicNts::add_transition_rule ( const Call & call )
+	{
+		Call *c = new Call ( call );
+		m_calls.push_back ( c );
+		return c;
+	}
+
+	void BasicNts::add_transition(
 			const State          * from,
 			const State          * to,
 			const TransitionRule * rule )

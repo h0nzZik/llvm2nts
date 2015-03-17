@@ -116,6 +116,8 @@ const State * InstAdd::process(
 	const NTS::State * to =  n.addState ( bb_id, inst_id );
 	const auto &cf        = NTS::ConcreteFormula ( f,
 			{result, left, right, g.unsigned_bound, g.signed_bound} );
-	n.addTransition ( from, to, cf );
+	const TransitionRule *r = n.add_transition_rule ( cf );
+
+	n.add_transition ( from, to, r );
 	return to;
 }

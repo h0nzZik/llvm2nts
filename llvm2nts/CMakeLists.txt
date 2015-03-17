@@ -7,6 +7,7 @@ add_library(llvm2nts SHARED
 	"instructions/InstLoadStore.cpp"
 	"instructions/InstBr.cpp"
 	"instructions/InstIcmp.cpp"
+	"instructions/InstCall.cpp"
 	"instructions/Constants.cpp"
 )
 

@@ -59,7 +59,8 @@ const State * InstBr::process(
 	const IPrint *val = n.add_constant ( bb_id );
 	
 	ConcreteFormula cf ( m_formula, { lbb, val } );
-	n.addTransition ( from, to, cf );
+	const TransitionRule * r = n.add_transition_rule ( cf );
+	n.add_transition ( from, to, r );
 
 	return NULL;
 }

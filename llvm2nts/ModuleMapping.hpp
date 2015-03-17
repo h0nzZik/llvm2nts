@@ -10,7 +10,7 @@ class ModuleMapping
 {
 	public:
 		void ins_function ( const llvm::Function *fun, const NTS::BasicNts *nts );
-		const NTS::BasicNts * get_nts ( const llvm::Function *fun );
+		const NTS::BasicNts * get_nts ( const llvm::Function *fun ) const;
 
 	private:
 		llvm::DenseMap < const llvm::Function *, const NTS::BasicNts * >

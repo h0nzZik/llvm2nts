@@ -13,9 +13,9 @@ using std::ostream;
 namespace NTS
 {
 	Call::Call ( const BasicNts            * nts,
-				 const std::initializer_list
+				 const std::vector
 				 	 < const Variable * >  & outs,
-				 const std::initializer_list
+				 const std::vector
 					 < const IPrint   * >  & ins) :
 		m_nts  ( nts ),
 		m_ins  ( ins ),
