@@ -1,0 +1,14 @@
+NTS test_cases/03_global.ll;
+g_G : int;
+tester {
+	// Variables
+	_ret_var, _lbb_var, l_v1 : int;
+	in (  );
+	out ( _ret_var );
+	initial s_0_0;
+	final st_final;
+	// Transitions:
+	s_0_0 -> s_0_1 {(l_v1' = g_G) && havoc(l_v1)}
+	s_0_1 -> s_0_2 {(g_G' = 3) && havoc(g_G)}
+	s_0_2 -> st_final {havoc(_ret_var)}
+}

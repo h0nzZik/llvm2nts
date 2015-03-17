@@ -32,6 +32,10 @@ const NTS::IPrint * FunctionMapping::get_iprint ( const llvm::Value *llval )
 	if ( found )
 		return found;
 
+
+	if (llvm::isa<llvm::GlobalValue>(llval))
+		return m_modmap.get_iprint ( llvm:: cast<llvm::GlobalValue> ( llval ) );
+
 	if (llvm::isa<llvm::ConstantInt>(llval))
 	{
 		const auto *c = llvm:: cast<llvm::ConstantInt>(llval);

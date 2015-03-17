@@ -20,7 +20,7 @@ using namespace NTS;
 using namespace llvm;
 
 static void do_file_compare_test ( const char *llfile,
-		const char *ntsfile,
+		const char *ntsfile = NULL,
 		bool print = false)
 {
 	llvm::SMDiagnostic diag;
@@ -95,4 +95,9 @@ TEST_CASE ( "VoidFunction", "Simple void function")
 TEST_CASE ( "Call", "Call void and nonvoid function with and without parameters")
 {
 	do_file_compare_test ( "test_cases/02_call.ll", "test_cases/02_call.nts");
+}
+
+TEST_CASE ( "GlobalVars", "Read / write from / to global variables" )
+{
+	do_file_compare_test ( "test_cases/03_global.ll", "test_cases/03_global.nts");
 }

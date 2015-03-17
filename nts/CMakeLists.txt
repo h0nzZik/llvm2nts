@@ -1,5 +1,6 @@
 add_library(ntslib SHARED
 	NTS.cpp
+	NtsModule.cpp
 	Printable.cpp
 	BinaryOpBase.cpp
 	BooleanTerm.cpp

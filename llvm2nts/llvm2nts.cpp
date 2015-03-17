@@ -40,43 +40,25 @@ void llvm2nts::process (  )
 	m_nts_module.name = m_llvm_module.getName().str().c_str();
 
 	// Reserve space for global variables and constants
-	{
-		size_t vars = 0;
-		size_t consts = 0;
-		for ( auto &g : m_llvm_module.getGlobalList() )
-		{
-			if ( g.isConstant() )
-				consts++;
-			else
-				vars++;
-		}
-
-		m_nts_module.consts.clear();
-		m_nts_module.consts.reserve ( consts );
-		m_nts_module.vars.clear();
-		m_nts_module.vars.reserve ( vars );
-	}
+	const auto &gl = m_llvm_module.getGlobalList();
+	m_nts_module.vars.reserve ( gl.size() );
 
 	// Create NTS symbols from global variables and constants
-	for ( auto &g : m_llvm_module.getGlobalList() )
+	for ( auto &g : gl )
 	{
-		if ( g.isConstant() )
-		{
-			throw std::logic_error ("Global constants are not supported yet");
-		} else {
-			m_nts_module.vars.emplace_back ( "g_" + g.getName().str() );
-			m_modmap.ins_iprint ( &g, &m_nts_module.vars.back() );
-		}
+		m_nts_module.vars.emplace_back ( "g_" + g.getName().str() );
+		m_modmap.ins_iprint ( &g, &m_nts_module.vars.back() );
 	}
 
 
+	const auto &fl = m_llvm_module.getFunctionList();
 	// Reserve the space now, because appending may invalidate
 	// all iterators and reference.
-	m_nts_module.bnts.reserve ( m_llvm_module.getFunctionList().size() );
+	m_nts_module.bnts.reserve ( fl.size() );
 
 	// Create one NTS for each function
 	// and map each function to corresponding NTS
-	for ( const Function & f : m_llvm_module)
+	for ( const Function & f : fl)
 	{
 		m_nts_module.bnts.emplace_back ( f.getName().str() );
 		m_modmap.ins_function ( &f, &m_nts_module.bnts.back() );
