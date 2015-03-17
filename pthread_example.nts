@@ -1,0 +1,84 @@
+// BTW it is not possible to mix call rule with some other.
+
+par __THREAD_POOL_N : int;
+
+__thread_pool_lock : int; // -1 if unlocked, $tid if locked by thread $tid
+__thread_pool_selected [ __THREAD_POOL_N ]
+
+init	forall i : int[0, __THREAD_POOL_N - 1]
+
+instances __thread_pool_routine [ __THREAD_POOL_N ], main[1];
+
+
+
+__thread_pool_routine {
+	initial s_idle;
+
+	s_idle      -> s_idle      { __thread_poll_selected[tid] <= 0 && havoc()}
+
+	s_idle      -> s_running_1 { __thread_poll_selected[tid] = 1  && havoc() }
+	s_idle      -> s_running_2 { __thread_poll_selected[tid] = 2  && havoc() }
+	s_idle      -> s_running_3 { __thread_poll_selected[tid] = 3  && havoc() }
+
+	s_running_1 -> s_stopped_1 { thread_start_routine_1() && havoc() }
+	s_running_2 -> s_stopped_2 { thread_start_routine_2() && havoc() }
+	s_running_3 -> s_stopped_3 { thread_start_routine_3() && havoc() }
+
+	s_stopped_1 -> s_idle      { __thread_poll_selected'[tid] = 0 &&
+	                             havoc(__thread_poll_selected)        }
+	s_stopped_2 -> s_idle      { __thread_poll_selected'[tid] = 0 && 
+	                             havoc(__thread_poll_selected)        }
+	s_stopped_3 -> s_idle      { __thread_poll_selected'[tid] = 0 && 
+	                             havoc(__thread_poll_selected)        }
+}
+
+
+// Functions which can be used as thread main ( see pthread_create(3))
+
+thread_start_routine_1 {
+
+}
+
+thread_start_routine_2 {
+
+}
+
+thread_start_routine_3 {
+
+}
+
+__thread_create {
+	in function_id : int;
+	initial si;
+	final   sf;
+	err     se;
+
+	idle_thread_id : int;
+
+	// Waiting for lock. This is probably not necessary
+	si -> si       { __thread_pool_lock >= 0 && havoc() }
+	// Acquire lock
+	si -> s_locked { __thread_pool_lock = -1      &&
+	                 __thread_pool_lock' = tid    &&
+					 havoc ( __thread_pool_lock )    }
+	
+	// Find some idle thread
+	s_locked -> s_id { idle_thread_id' >= 0                        &&
+	                   idle_thread_id' <  __THREAD_POOL_N          &&
+					   __thread_pool_selected[idle_thread_id'] < 0 &&
+					   havoc ( idle_thread_id )                       }
+	
+	// Can not find an idle thread
+	s_locked -> s_e { forall i : int . 
+	                  (
+					    i <= 0 && i < __THREAD_POOL_N
+					  ) => (
+					    __thread_pool_selected[i] >= 0
+					  ) && havoc() }
+	
+	s_id -> s_create { __thread_selected'[idle_thread_id] = function_id &&
+	                   havoc ( __thread_selected )                         }
+
+	// Release lock
+	s_create -> sf { __thread_pool_lock' = -1 && havoc ( __thread_pool_lock ) }
+}
