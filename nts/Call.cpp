@@ -12,7 +12,7 @@ using std::ostream;
 
 namespace NTS
 {
-	Call::Call ( const BasicNts            * nts,
+	Call::Call ( const NtsRef              * nts,
 				 const std::vector
 				 	 < const Variable * >  & outs,
 				 const std::vector

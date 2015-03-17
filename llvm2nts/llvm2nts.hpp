@@ -16,6 +16,7 @@
 #include <nts/AbstractArithmetic.hpp>
 #include <nts/Variable.hpp>
 #include <nts/NtsModule.hpp>
+#include <nts/NtsDeclaration.hpp>
 
 #include "ModuleMapping.hpp"
 
@@ -30,10 +31,16 @@ class llvm2nts
 		const llvm::Module & m_llvm_module;
 		ModuleMapping        m_modmap;
 
+		std::vector< NTS::NtsDeclaration * >
+			                 m_extern_nts;
+
+		bool                 m_use_pthreads;
+
+		void process_pthreads ();
 
 	public:
 		llvm2nts ( NTS::NtsModule &nts_module, const llvm::Module & llvm_module );
-		~llvm2nts() { ; }
+		~llvm2nts();
 
 		void process ( );
 		void print ( std::ostream &o ) const;

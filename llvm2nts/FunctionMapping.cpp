@@ -26,6 +26,11 @@ const NTS::Variable * FunctionMapping::ins_variable ( const llvm::Value *llval )
 	return v;
 }
 
+const NTS::IPrint * FunctionMapping::get_iprint ( int n )
+{
+	return m_nts.add_constant ( n );
+}
+
 const NTS::IPrint * FunctionMapping::get_iprint ( const llvm::Value *llval )
 {
 	const NTS::IPrint * found = m_values.lookup(llval);

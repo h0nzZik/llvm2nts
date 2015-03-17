@@ -8,6 +8,7 @@
 #include "TransitionRule.hpp"
 #include "ConcreteFormula.hpp"
 #include "Call.hpp"
+#include "NtsRef.hpp"
 
 namespace NTS
 {
@@ -54,11 +55,10 @@ namespace NTS
 			void print(std::ostream &o) const;
 	};
 
-
 	// Forward declaration
 	class Call;
 
-	class BasicNts
+	class BasicNts : public NtsRef
 	{
 		private:
 			std::string                       m_name;
@@ -83,7 +83,7 @@ namespace NTS
 
 			BasicNts & operator= ( const BasicNts & orig) = delete;
 
-			const std::string & get_name () const;
+			virtual const std::string & get_name () const override;
 
 
 			void set_lbb_var ( const Variable * var );

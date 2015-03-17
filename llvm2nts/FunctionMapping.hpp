@@ -18,6 +18,8 @@ class FunctionMapping
 
 		const NTS::Variable * ins_variable ( const llvm::Value *llva );
 		void ins_iprint ( const llvm::Value *llva, const NTS::IPrint *var );
+		
+		const NTS::IPrint * get_iprint ( int n );
 		const NTS::IPrint * get_iprint ( const llvm::Value *value );
 
 		void ins_bb_start ( const llvm::BasicBlock *block,

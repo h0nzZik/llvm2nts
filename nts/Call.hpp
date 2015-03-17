@@ -12,17 +12,17 @@
 #include <vector>
 
 #include "TransitionRule.hpp"
-#include "NTS.hpp"
+#include "NtsRef.hpp"
 #include "Variable.hpp"
 
 namespace NTS
 {
-	class BasicNts; // Forward declaration
+	//class BasicNts; // Forward declaration
 
 	class Call final : public TransitionRule
 	{
 		public:
-			Call ( const BasicNts            * nts,
+			Call ( const NtsRef             * nts,
 				   const std::vector
 				   	   < const Variable * > &  outs,
 				   const std::vector
@@ -33,7 +33,7 @@ namespace NTS
 			virtual void print ( std::ostream &o ) const override;
 
 		private:
-			const BasicNts                 * m_nts;
+			const NtsRef                   * m_nts;
 			std::vector < const IPrint   * > m_ins;
 			std::vector < const Variable * > m_outs;
 

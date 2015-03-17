@@ -101,3 +101,9 @@ TEST_CASE ( "GlobalVars", "Read / write from / to global variables" )
 {
 	do_file_compare_test ( "test_cases/03_global.ll", "test_cases/03_global.nts");
 }
+
+TEST_CASE ( "PthreadCreate", "Process calls to pthread_create(3)" )
+{
+	do_file_compare_test ( "./test_cases/04_pthread_create.ll",
+			               "./test_cases/04_pthread_create.nts" );
+}

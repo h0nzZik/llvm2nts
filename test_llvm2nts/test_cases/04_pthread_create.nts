@@ -1,0 +1,22 @@
+NTS ./test_cases/04_pthread_create.ll;
+thread_func {
+	// Variables
+	_ret_var, _lbb_var, l_ : int;
+	in ( arg_data );
+	out ( _ret_var );
+	initial s_0_0;
+	final st_final;
+	// Transitions:
+	s_0_0 -> st_final {(_ret_var' = l_) && havoc(_ret_var)}
+}
+calee {
+	// Variables
+	_ret_var, _lbb_var : int;
+	in (  );
+	out ( _ret_var );
+	initial s_0_0;
+	final st_final;
+	// Transitions:
+	s_0_0 -> s_0_1 {__thread_create ( 0 )}
+	s_0_1 -> st_final {havoc(_ret_var)}
+}
