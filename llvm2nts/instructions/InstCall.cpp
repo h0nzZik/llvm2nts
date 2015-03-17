@@ -50,6 +50,12 @@ const State * InstCall::process(
 	const llvm::Function * dest_function = call.getCalledFunction();
 	if (!dest_function)
 		throw std::logic_error ( "Indirect function call is not supported" );
+
+	if ( dest_function->getName().equals ( "pthread_create" ) )
+	{
+
+	}
+
 	const NTS::BasicNts * dest_nts = map.m_modmap.get_nts ( dest_function );
 
 	// Return variables

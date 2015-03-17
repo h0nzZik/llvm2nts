@@ -61,7 +61,12 @@ void llvm2nts::process (  )
 	for ( const Function & f : fl)
 	{
 		m_nts_module.bnts.emplace_back ( f.getName().str() );
-		m_modmap.ins_function ( &f, &m_nts_module.bnts.back() );
+		BasicNts *n = &m_nts_module.bnts.back();
+		const Variable *v = n->add_variable ( "_ret_var" );
+		n->add_return_variable ( v );
+		v = n->add_variable ( "_lbb_var" );
+		n->set_lbb_var ( v );
+		m_modmap.ins_function ( &f, n );
 	}
 
 

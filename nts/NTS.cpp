@@ -60,11 +60,6 @@ namespace NTS
 		m_name ( name )
 	{
 		m_final_st = new FinalState ();
-		m_retvar   = new Variable ( "_ret_var" ); // Return value
-		m_var_lbb  = new Variable ( "_lbb_var" ); // Last basic block
-
-		m_variables.push_back ( m_retvar );
-		m_variables.push_back ( m_var_lbb );
 	}
 
 	BasicNts::BasicNts ( BasicNts && old ) :
@@ -77,11 +72,10 @@ namespace NTS
 		m_calls       ( std::move ( old.m_calls       ) ),
 		m_transitions ( std::move ( old.m_transitions ) ),
 		m_final_st    ( std::move ( old.m_final_st    ) ),
-		m_retvar      ( std::move ( old.m_retvar      ) ),
+		m_retvars     ( std::move ( old.m_retvars     ) ),
 		m_var_lbb     ( std::move ( old.m_var_lbb     ) )
 	{
 		old.m_final_st = nullptr;
-		old.m_retvar = nullptr;
 		old.m_var_lbb = nullptr;
 	}
 
@@ -89,7 +83,6 @@ namespace NTS
 	{
 		delete m_final_st;
 		m_final_st = nullptr;
-		m_retvar = nullptr;
 		m_var_lbb = nullptr;
 
 		for ( CommonState * st : m_states )
@@ -134,9 +127,14 @@ namespace NTS
 		return m_name;
 	}
 
-	const Variable * BasicNts::getRetVar(void) const
+	const Variable * BasicNts::get_return_variable ( size_t id ) const
 	{
-		return m_retvar;
+		return m_retvars.at(id);
+	}
+
+	void BasicNts::set_lbb_var ( const Variable *var )
+	{
+		m_var_lbb = var;
 	}
 
 	const Variable * BasicNts::get_lbb_var() const
@@ -166,6 +164,12 @@ namespace NTS
 		Variable *v = new Variable ( name );
 		m_variables.push_back ( v );
 		return v;
+	}
+
+	size_t BasicNts::add_return_variable ( const Variable * var )
+	{
+		m_retvars.push_back ( var );
+		return m_retvars.size();
 	}
 
 	const Constant * BasicNts::add_constant ( int value )
@@ -219,12 +223,16 @@ namespace NTS
 			o << " : int;\n";
 		}
 
-		// TODO add types
 		o << "\tin ( ";
 		to_csv ( o, m_arguments );
 		o << " );\n";
 
-		o << "\tout ( " << *m_retvar << " );\n";
+		if ( !m_retvars.empty() )
+		{
+			o << "\tout ( ";
+			to_csv ( o, m_retvars );
+			o << " );\n";
+		}
 
 		if ( !m_states.empty() )
 		{

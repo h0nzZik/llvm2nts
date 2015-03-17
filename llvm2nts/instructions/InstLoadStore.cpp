@@ -69,7 +69,7 @@ const State * InstLoadStore::process(
 			{
 				const auto &rt = llvm::cast<llvm::ReturnInst>(i);
 				st_to = n.final_state();
-				dest  = n.getRetVar ( );
+				dest  = n.get_return_variable ( 0 );
 
 				// If there is no return value, just havoc()
 				if ( !rt.getReturnValue() )

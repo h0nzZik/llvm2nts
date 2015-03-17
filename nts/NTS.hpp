@@ -70,8 +70,8 @@ namespace NTS
 			std::vector < Call            * > m_calls;
 			std::vector < Transition        > m_transitions;
 			FinalState                      * m_final_st;
-			Variable                        * m_retvar;
-			Variable                        * m_var_lbb;
+			std::vector < const Variable  * > m_retvars;
+			const Variable                  * m_var_lbb;
 	
 		public:
 
@@ -85,11 +85,16 @@ namespace NTS
 
 			const std::string & get_name () const;
 
-			const Variable * getRetVar(void) const;
 
+			void set_lbb_var ( const Variable * var );
 			const Variable * get_lbb_var () const;
 
 			const Variable * add_variable ( const std::string & name );
+
+			size_t add_return_variable ( const Variable * var );
+
+			const Variable * get_return_variable ( size_t id = 0) const;
+
 
 			const Variable * add_argument ( const std::string & name );
 
