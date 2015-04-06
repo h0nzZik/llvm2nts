@@ -5,3 +5,7 @@
 [submodule "externals/nts-examples"]
 	path = externals/nts-examples
 	url = git@github.com:h0nzZik/nts-examples.git
+
+[submodule "libNTS"]
+	path = libNTS
+	url = /home/jenda/Documents/School-current/BP/nts/
