@@ -8,4 +8,4 @@
 
 [submodule "libNTS"]
 	path = libNTS
-	url = /home/jenda/Documents/School-current/BP/nts/
+	url = git@github.com:h0nzZik/libNTS_cpp.git
