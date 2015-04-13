@@ -2,31 +2,77 @@
 #define LLVM2NTS_MODULE_MAPPING_H_
 
 #include <vector>
+#include <memory>
 
 #include <llvm/IR/Function.h>
 #include <llvm/ADT/DenseMap.h>
 
-#include <nts/NtsRef.hpp>
-#include <nts/NTS.hpp>
+#include <libNTS/nts.hpp>
+
+struct BasicNtsInfo
+{
+	nts::BasicNts & bn;
+	// following may be null
+	const llvm::Function * orig_function;
+	nts::Variable  * ret_var;
+	nts::Variable  * lbb_var;
+
+	llvm::DenseMap <
+		const llvm::Argument *,
+		nts::Variable *         > args;
+
+	BasicNtsInfo ( nts::BasicNts & bn ) :
+		bn            ( bn      ),
+		orig_function ( nullptr ),
+		ret_var       ( nullptr ),
+		lbb_var       ( nullptr )
+	{
+		;
+	}
+};
+
+struct VariableInfo
+{
+	nts::Variable & var;
+	// may be null
+	const llvm::Value * val;
+
+	VariableInfo ( nts::Variable & var ) :
+		var ( var     ),
+		val ( nullptr )
+	{
+		;
+	}
+};
 
 class ModuleMapping
 {
+	using Functions = llvm::DenseMap < const llvm::Function *, BasicNtsInfo * >;
+
 	public:
-		void ins_function ( const llvm::Function *fun, const NTS::NtsRef *nts );
-		const NTS::NtsRef * get_nts ( const llvm::Function *fun ) const;
+		void ins_function (
+				const llvm::Function & fun,
+				std::unique_ptr<BasicNtsInfo> bni
+		);
+		BasicNtsInfo & get_nts ( const llvm::Function & fun ) const;
 
-		void ins_iprint ( const llvm::GlobalValue *llval, const NTS::IPrint * ip );
-		const NTS::IPrint * get_iprint ( const llvm::GlobalValue *llval ) const;
+		const Functions & ntses() const { return m_functions; }
 
-		void ins_pthread_function ( const llvm::Function *f );
-		unsigned int get_pthread_function_id ( const llvm::Function * f ) const;
+		void ins_variable (
+				const llvm::GlobalValue & llval,
+				std::unique_ptr<VariableInfo> var
+		);
+		VariableInfo & get_variable ( const llvm::GlobalValue & llval ) const;
+
+		void ins_pthread_function ( const llvm::Function & f );
+		unsigned int get_pthread_function_id ( const llvm::Function & f ) const;
 
 	private:
-		llvm::DenseMap < const llvm::Function *, const NTS::NtsRef * >
+		llvm::DenseMap < const llvm::Function *, BasicNtsInfo * >
 			m_functions;
 
-		llvm::DenseMap < const llvm::GlobalValue *, const NTS::IPrint * >
-			m_values;
+		llvm::DenseMap < const llvm::GlobalValue *, VariableInfo * >
+			m_vars;
 
 		// Maps Pthread function to identifier
 		llvm::DenseMap < const llvm::Function *, unsigned int >

@@ -1,6 +1,7 @@
 #include "InstLoadStore.hpp"
 
-using namespace NTS;
+using namespace nts;
+using namespace llvm;
 
 InstLoadStore::InstLoadStore()
 	:
@@ -29,6 +30,27 @@ bool InstLoadStore::supports(unsigned int opcode) const
 
 		default:
 			return false;
+	}
+}
+
+void InstLoadStore::process (	
+		StateInfo         & sti,
+		FunctionMapping   & map,
+		const Instruction & i    )
+{
+	switch ( i.getOpcode() )
+	{
+		case llvm::Instruction::Store:
+		{
+			auto &st          = cast < StoreInst > ( i );
+			const auto & dest = map.get_variable ( *st.getPointerOperand() );
+			auto leaf         = map.new_leaf ( *st.getValueOperand() );
+			break;
+		}
+
+		default:
+
+			break;
 	}
 }
 

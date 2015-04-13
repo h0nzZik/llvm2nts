@@ -2,41 +2,51 @@
 
 #include "ModuleMapping.hpp"
 
-void ModuleMapping::ins_function ( const llvm::Function *fun, const NTS::NtsRef *nts )
+using namespace nts;
+
+void ModuleMapping::ins_function (
+		const llvm::Function &fun,
+		std::unique_ptr<BasicNtsInfo> i )
 {
-	m_functions.insert ( std::make_pair ( fun, nts ) );
+	m_functions.insert ( std::make_pair ( &fun, i.release() ) );
 }
 
-const NTS::NtsRef * ModuleMapping::get_nts ( const llvm::Function *fun ) const
+BasicNtsInfo & ModuleMapping::get_nts ( const llvm::Function &fun ) const
 {
-	auto * nts = m_functions.lookup ( fun );
-	if ( !nts )
-		throw std::logic_error ( "Nts not found" );
-	return nts;
+	auto * bn = m_functions.lookup ( &fun );
+	if ( !bn )
+		throw std::logic_error ( "BasicNts not found" );
+	return *bn;
 }
 
-void ModuleMapping::ins_iprint ( const llvm::GlobalValue *llval, const NTS::IPrint * ipr )
+void ModuleMapping::ins_variable (
+		const llvm::GlobalValue & llval,
+		std::unique_ptr<VariableInfo> v )
 {
-	m_values.insert ( std::make_pair ( llval, ipr ) );
+	m_vars.insert ( std::make_pair ( &llval, v.release() ) );
 }
 
-const NTS::IPrint * ModuleMapping::get_iprint ( const llvm::GlobalValue *llval ) const
+VariableInfo & ModuleMapping::get_variable ( const llvm::GlobalValue & llval ) const
 {
-	const NTS::IPrint * ip = m_values.lookup ( llval );
-	if ( !ip )
+	auto v = m_vars.lookup ( &llval );
+	if ( !v )
 		throw std::logic_error ( "Global value not found" );
-	return ip;
+	return *v;
 }
 
-void ModuleMapping::ins_pthread_function ( const llvm::Function *f )
+void ModuleMapping::ins_pthread_function ( const llvm::Function & f )
 {
-	m_ptf_id.insert ( std::make_pair ( f, m_ptf.size() ) );
-	m_ptf.push_back ( f );
+	auto it = m_ptf_id.find ( & f );
+	if ( it != m_ptf_id.end() )
+		return;
+
+	m_ptf_id.insert ( std::make_pair ( &f, m_ptf.size() ) );
+	m_ptf.push_back ( &f );
 }
 
-unsigned int ModuleMapping::get_pthread_function_id ( const llvm::Function * f ) const
+unsigned int ModuleMapping::get_pthread_function_id ( const llvm::Function & f ) const
 {
-	auto it = m_ptf_id.find ( f );
+	auto it = m_ptf_id.find ( &f );
 	if ( it == m_ptf_id.end() )
 		throw std::logic_error ( "Thread main not found" );
 

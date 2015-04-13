@@ -14,21 +14,15 @@ instances __thread_pool_routine [ __THREAD_POOL_N ], main[1];
 __thread_pool_routine {
 	initial s_idle;
 
-	s_idle      -> s_idle      { __thread_poll_selected[tid] <= 0 && havoc()}
-
 	s_idle      -> s_running_1 { __thread_poll_selected[tid] = 1  && havoc() }
 	s_idle      -> s_running_2 { __thread_poll_selected[tid] = 2  && havoc() }
 	s_idle      -> s_running_3 { __thread_poll_selected[tid] = 3  && havoc() }
 
-	s_running_1 -> s_stopped_1 { thread_start_routine_1() && havoc() }
-	s_running_2 -> s_stopped_2 { thread_start_routine_2() && havoc() }
-	s_running_3 -> s_stopped_3 { thread_start_routine_3() && havoc() }
+	s_running_1 -> s_stopped { thread_start_routine_1() && havoc() }
+	s_running_2 -> s_stopped { thread_start_routine_2() && havoc() }
+	s_running_3 -> s_stopped { thread_start_routine_3() && havoc() }
 
-	s_stopped_1 -> s_idle      { __thread_poll_selected'[tid] = 0 &&
-	                             havoc(__thread_poll_selected)        }
-	s_stopped_2 -> s_idle      { __thread_poll_selected'[tid] = 0 && 
-	                             havoc(__thread_poll_selected)        }
-	s_stopped_3 -> s_idle      { __thread_poll_selected'[tid] = 0 && 
+	s_stopped   -> s_idle      { __thread_poll_selected'[tid] = 0 &&
 	                             havoc(__thread_poll_selected)        }
 }
 

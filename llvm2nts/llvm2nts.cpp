@@ -13,41 +13,95 @@
 #include <stdexcept>
 #include <ostream>
 #include <sstream>
-
-#include "nts/NtsModule.hpp"
-//#include "nts/NTS.hpp"
-//#include "nts/VariableIdentifier.hpp"
-//#include "nts/AtomicRelation.hpp"
-//#include "nts/Havoc.hpp"
-
-
+#include <utility>
 
 #include "llvmFunction2nts.hpp"
+#include "types.hpp"
 
 using namespace llvm;
-using namespace NTS;
+using namespace nts;
+using std::string;
+using std::make_pair;
 
-
-llvm2nts::llvm2nts ( NTS::NtsModule &nts_module, const llvm::Module & llvm_module ) :
-		m_nts_module ( nts_module ),
-		m_llvm_module ( llvm_module )
+struct llvm_2_nts
 {
+	const Module  & llvm_module;
+	Nts           & nts;
+	ModuleMapping   modmap;
 
-}
-
-llvm2nts::~llvm2nts ()
-{
-	for ( auto & r : m_extern_nts )
+	llvm_2_nts ( const Module & lm, Nts & n ) :
+		llvm_module ( lm ),
+		nts         ( n  )
 	{
-		delete r;
-		r = nullptr;
+		;
 	}
+
+	/*
+	 * For each function creates simple BasicNts with no logic.
+	 */
+	void create_function_prototypes();
+
+	/*
+	 * Creates global variables related to llvm global variables
+	 */
+	void create_global_variables();
+
+	/*
+	 * If pthreads are used, creates __thread_create
+	 * Numbers thread functions
+	 */
+	void process_pthreads();
+
+	void convert_functions();
+};
+
+void llvm_2_nts::create_function_prototypes ()
+{
+	for ( const Function & f : llvm_module)
+	{
+		// Skip declarations without actual body
+		if ( f.getBasicBlockList().size() == 0 )
+			continue;
+
+		auto *bn = new BasicNts ( f.getName().str() );
+		auto *i  = new BasicNtsInfo ( *bn );
+		i->orig_function = &f;
+
+		if ( ! f.getReturnType()->isVoidTy() )
+		{
+			auto *v = new Variable (
+					llvm_type_to_nts_type ( *f.getReturnType() ),
+					"_ret_var"
+			);
+			v->insert_param_out_to ( *bn );
+			i->ret_var = v;
+		}
+
+		// Function parameters
+		for ( auto &p : f.getArgumentList() )
+		{
+			auto *v = new Variable (
+					llvm_type_to_nts_type ( *p.getType() ),
+					string ( "arg_" ) + p.getName().str() );
+			v->insert_param_in_to ( *bn );
+			i->args.insert ( make_pair ( &p, v ) );
+		}
+		
+
+		// FIXME: We assume there are only a few basicblocks
+		auto *v = new Variable ( DataType::BitVector(16), "_lbb_var" );
+		v->insert_to ( *bn );
+		i->lbb_var = v;
+
+		modmap.ins_function ( f, std::unique_ptr<BasicNtsInfo>(i) );
+	}
+
 }
 
-void llvm2nts::process_pthreads()
+void llvm_2_nts::process_pthreads()
 {
 	// Find function 'pthread_create()' (if it is declared)
-	const Function * ptc = m_llvm_module.getFunction ( "pthread_create" );
+	const Function * ptc = llvm_module.getFunction ( "pthread_create" );
 	if ( !ptc )
 		return;
 
@@ -58,14 +112,20 @@ void llvm2nts::process_pthreads()
 	if ( ptc->getArgumentList().size() != 4 )
 		return;
 
-	if ( !ptc->use_empty() )
+	if ( ptc->use_empty() )
+		return;
+
+	auto * thread_create = new BasicNts ( "__thread_create" );
 	{
-		auto * decl = new NtsDeclaration ( "__thread_create" );
-		m_extern_nts.push_back ( decl );
-		m_modmap.ins_function ( ptc, decl );
-		m_use_pthreads = true;
+		auto * param_func_id = new Variable (
+				DataType::BitVector ( 16 ), // FIXME
+				"func_id" );
+		param_func_id->insert_param_in_to ( *thread_create );
 	}
 
+	thread_create->insert_to ( nts );
+
+	
 	// Find all users of function 'pthread_create()'
 	for ( const auto &u : ptc->users() )
 	{
@@ -78,65 +138,50 @@ void llvm2nts::process_pthreads()
 			continue;
 
 		const Function *callback = cast<Function> ( arg );
-		this->m_modmap.ins_pthread_function ( callback );
+		modmap.ins_pthread_function ( *callback );
 	}
 }
 
-void llvm2nts::process (  )
+void llvm_2_nts::create_global_variables()
 {
-	m_nts_module.name = m_llvm_module.getName().str().c_str();
-
-	// Reserve space for global variables and constants
-	const auto &gl = m_llvm_module.getGlobalList();
-	m_nts_module.vars.reserve ( gl.size() );
-
-	// Create NTS symbols from global variables and constants
-	for ( auto &g : gl )
+	for ( auto &g : llvm_module.getGlobalList() )
 	{
-		m_nts_module.vars.emplace_back ( "g_" + g.getName().str() );
-		m_modmap.ins_iprint ( &g, &m_nts_module.vars.back() );
-	}
-
-
-	// TODO: What to do with function declarations?
-	const auto &fl = m_llvm_module.getFunctionList();
-	// Reserve the space now, because appending may invalidate
-	// all iterators and reference.
-	m_nts_module.bnts.reserve ( fl.size() );
-
-	// Create one NTS for each function
-	// and map each function to corresponding NTS
-	for ( const Function & f : fl)
-	{
-		if ( f.getBasicBlockList().size() == 0 )
+		if ( !g.getType() || g.getType()->isVoidTy() )
 			continue;
 
-		m_nts_module.bnts.emplace_back ( f.getName().str() );
-		BasicNts *n = &m_nts_module.bnts.back();
-		const Variable *v = n->add_variable ( "_ret_var" );
-		n->add_return_variable ( v );
-		v = n->add_variable ( "_lbb_var" );
-		n->set_lbb_var ( v );
-		m_modmap.ins_function ( &f, n );
+		auto *v = new Variable (
+				llvm_type_to_nts_type ( *g.getType() ),
+				std::string( "g_" ) + g.getName().str()
+		);
+		v->insert_to ( nts );
+
+		auto *i = new VariableInfo ( *v );
+		i->val = &g;
+
+		modmap.ins_variable ( g, std::unique_ptr<VariableInfo>(i) );
 	}
+}
 
-	process_pthreads();
 
-
-	// From now do not insert elements.
-
-	// Convert function to NTS
-	// Note that the processing requires valid mapping 'Function -> BasicNts'
-	unsigned int id = 0;
-	for ( const Function &f : m_llvm_module )
+void llvm_2_nts::convert_functions()
+{
+	for ( auto & p : modmap.ntses() )
 	{
-		if ( f.getBasicBlockList().size() == 0 )
-			continue;
-
-		llvmFunction2nts conv ( f, m_nts_module.bnts[id], m_modmap );
-		conv.process();
-		id++;
+		convert_function ( *p.getFirst(), *p.getSecond() );
 	}
+}
+
+std::unique_ptr<Nts> llvm_to_nts ( const llvm::Module & llvm_module )
+{
+
+	Nts *n = new Nts ( "unnamed" );
+	llvm_2_nts l2n ( llvm_module, *n );
+	l2n.create_function_prototypes();
+	l2n.create_global_variables();
+	l2n.process_pthreads();
+	l2n.convert_functions();
+
+	return std::unique_ptr<Nts>(n);
 }
 
 

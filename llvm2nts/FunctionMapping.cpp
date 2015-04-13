@@ -5,27 +5,53 @@
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/IR/Constants.h"
 
-
 #include "FunctionMapping.hpp"
+#include "types.hpp"
 
-FunctionMapping::FunctionMapping ( NTS::BasicNts & nts, const ModuleMapping &mod ) :
-	m_modmap ( mod ),
-	m_nts    ( nts )
+using namespace llvm;
+using namespace nts;
+using std::make_pair;
+using std::unique_ptr;
+
+FunctionMapping::FunctionMapping ( BasicNts & nts, const ModuleMapping &mod ) :
+	m_nts    ( nts ),
+	m_modmap ( mod )
 {
 	;
 }
 
-const NTS::Variable * FunctionMapping::ins_variable ( const llvm::Value *llval )
+unique_ptr<Variable> FunctionMapping::new_variable ( const Value &llval )
 {
 	std::stringstream ss;
-	ss << "l_" << llval->getName().str();
+	ss << "l_" << llval.getName().str();
 
-	const NTS::Variable * v = m_nts.add_variable ( ss.str() ) ;
+	auto *v = new Variable (
+			llvm_type_to_nts_type ( *llval.getType() ),
+			ss.str()
+	);
 
-	ins_iprint ( llval, v );
-	return v;
+	m_vars.insert ( make_pair ( &llval, v ) );
+	return unique_ptr<Variable> ( v );
 }
 
+void FunctionMapping::ins_variable ( const Value & llval, Variable & var )
+{
+	m_vars.insert ( make_pair ( &llval, &var ) );
+}
+
+Variable & FunctionMapping::get_variable ( const Value & value ) const
+{
+	if ( isa<GlobalValue> ( value ) )
+		return m_modmap.get_variable ( cast<GlobalValue> ( value ) ).var;
+
+	auto * found = m_vars.lookup ( & value );
+	if ( found )
+		return * found;
+
+	throw std::logic_error ( "No such variable exists" );
+}
+
+#if 0
 const NTS::IPrint * FunctionMapping::get_iprint ( int n )
 {
 	return m_nts.add_constant ( n );
@@ -71,6 +97,7 @@ void FunctionMapping::ins_iprint ( const llvm::Value *llval, const NTS::IPrint *
 {
 	m_values.insert ( std::make_pair ( llval, var ) );
 }
+#endif
 
 void FunctionMapping::ins_bb_start ( const llvm::BasicBlock *block, const NTS::State *s )
 {
@@ -83,5 +110,22 @@ const NTS::State * FunctionMapping::get_bb_start ( const llvm::BasicBlock * bloc
 	if ( !s )
 		throw std::logic_error ( "Start of basic block not found" );
 	return s;
+}
+
+unique_ptr < Leaf > FunctionMapping::new_leaf ( const Value & value ) const
+{
+	// We use variables for both arguments and results of instructions
+	if ( isa < Argument >  ( value ) || isa < Instruction > ( value ) )
+	{
+		return nullptr;
+	}
+
+	if ( isa < User > ( value ) )
+	{
+
+		return nullptr;
+	}
+
+	throw std::domain_error ( "Given type is not supported as a leaf" );
 }
 

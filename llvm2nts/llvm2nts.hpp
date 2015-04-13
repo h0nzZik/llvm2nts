@@ -4,6 +4,7 @@
 // C++ STL headers
 #include <ostream>
 #include <vector>
+#include <memory>
 
 // LLVM headers
 #include <llvm/ADT/DenseMap.h>
@@ -17,6 +18,9 @@
 #include <nts/Variable.hpp>
 #include <nts/NtsModule.hpp>
 #include <nts/NtsDeclaration.hpp>
+
+// libNTS
+#include <libNTS/nts.hpp>
 
 #include "ModuleMapping.hpp"
 
@@ -46,5 +50,6 @@ class llvm2nts
 		void print ( std::ostream &o ) const;
 };
 
+std::unique_ptr<nts::Nts> llvm_to_nts ( const llvm::Module & llvm_module );
 
 #endif // _LLVM2NTS_HPP_

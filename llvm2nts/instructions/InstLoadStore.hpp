@@ -28,13 +28,10 @@ class InstLoadStore : public IInst
 
 		virtual bool supports(unsigned int opcode) const;
 
-		virtual const NTS::State * process(
-				const NTS::State        * from    ,
-				const llvm::Instruction & i       ,
-				FunctionMapping         & map     ,
-				NTS::BasicNts           & n       ,
-				int                       bb_id   ,
-				int                       inst_id );
+		virtual void process (
+				StateInfo               & sti,
+				FunctionMapping         & map,
+				const llvm::Instruction & i    ) override;
 };
 
 

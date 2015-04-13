@@ -3,6 +3,7 @@ add_library(llvm2nts SHARED
 	"llvmFunction2nts.cpp"
 	"FunctionMapping.cpp"
 	"ModuleMapping.cpp"
+	"types.cpp"
 	"instructions/InstAdd.cpp"
 	"instructions/InstLoadStore.cpp"
 	"instructions/InstBr.cpp"
@@ -14,5 +15,5 @@ add_library(llvm2nts SHARED
 include_directories(${LLVM_INCLUDE_DIRS})
 include_directories ( ".." )
 
-target_link_libraries ( llvm2nts ntslib )
+target_link_libraries ( llvm2nts NTS_cpp )
 

@@ -39,5 +39,7 @@ class llvmFunction2nts
 
 };
 
+void convert_function ( const llvm::Function & f, BasicNtsInfo & bni );
+
 #endif // SRC_LLVM_FUNCTION_TO_NTS_HPP
 
