@@ -4,31 +4,19 @@
 // LLVM headers
 #include <llvm/IR/Instructions.h>
 
-// NTS headers
-#include <nts/AbstractArithmetic.hpp>
-#include <nts/ConcreteArithmetic.hpp>
-#include <nts/AtomicRelation.hpp>
-#include <nts/Havoc.hpp>
-
 // Project headers
 #include "IInst.hpp"
 
 class InstLoadStore : public IInst
 {
-	private:
-		NTS::AbstArithValue m_dst;
-		NTS::AbstArithValue m_src;
-		NTS::AtomicRelation m_assign;
-		NTS::Havoc m_havoc;
-		NTS::FormulaBop m_f;
-
 	public:
-		InstLoadStore();
-		~InstLoadStore() {;}
+		InstLoadStore() = default;
+		virtual ~InstLoadStore() = default;
 
-		virtual bool supports(unsigned int opcode) const;
+		virtual bool supports(unsigned int opcode) const override;
 
 		virtual void process (
+				const BasicNtsInfo      & bntsi,
 				StateInfo               & sti,
 				FunctionMapping         & map,
 				const llvm::Instruction & i    ) override;

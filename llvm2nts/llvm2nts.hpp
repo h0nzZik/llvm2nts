@@ -12,43 +12,8 @@
 #include <llvm/IR/ValueMap.h>
 #include <llvm/IR/BasicBlock.h>
 
-// NTS headers
-#include <nts/NTS.hpp>
-#include <nts/AbstractArithmetic.hpp>
-#include <nts/Variable.hpp>
-#include <nts/NtsModule.hpp>
-#include <nts/NtsDeclaration.hpp>
-
 // libNTS
 #include <libNTS/nts.hpp>
-
-#include "ModuleMapping.hpp"
-
-// TODO: Split this into two parts: converter and NTS module
-// NTS module will consist of name, NTSs and global variables
-// Converter will provide mapping llvm -> nts symbols
-
-class llvm2nts
-{
-	private:
-		NTS::NtsModule     & m_nts_module;
-		const llvm::Module & m_llvm_module;
-		ModuleMapping        m_modmap;
-
-		std::vector< NTS::NtsDeclaration * >
-			                 m_extern_nts;
-
-		bool                 m_use_pthreads;
-
-		void process_pthreads ();
-
-	public:
-		llvm2nts ( NTS::NtsModule &nts_module, const llvm::Module & llvm_module );
-		~llvm2nts();
-
-		void process ( );
-		void print ( std::ostream &o ) const;
-};
 
 std::unique_ptr<nts::Nts> llvm_to_nts ( const llvm::Module & llvm_module );
 

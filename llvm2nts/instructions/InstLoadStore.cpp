@@ -1,19 +1,19 @@
+#include <memory>
+#include <string>
+
+#include <libNTS/logic.hpp>
+
+
 #include "InstLoadStore.hpp"
+
 
 using namespace nts;
 using namespace llvm;
-
-InstLoadStore::InstLoadStore()
-	:
-		m_dst(0, true),
-		m_src(1, false),
-		m_assign(AtomicRelation::Relation::Eq, &m_dst, &m_src),
-		m_havoc({0}),
-		m_f(BoolOp::And, &m_assign, &m_havoc)
-
-{
-	;
-}
+using std::unique_ptr;
+using std::make_unique;
+using std::move;
+using std::string;
+using std::to_string;
 
 bool InstLoadStore::supports(unsigned int opcode) const
 {
@@ -33,90 +33,85 @@ bool InstLoadStore::supports(unsigned int opcode) const
 	}
 }
 
-void InstLoadStore::process (	
-		StateInfo         & sti,
-		FunctionMapping   & map,
-		const Instruction & i    )
+void InstLoadStore::process (
+		const BasicNtsInfo & bntsi,
+		StateInfo          & sti,
+		FunctionMapping    & map,
+		const Instruction  & i    )
 {
+	auto st_next = new State (
+			string ( "st_" ) +
+			to_string ( sti.bb_id ) +
+			string ( "_" ) +
+			to_string ( sti.inst_id )
+	);
+
+	st_next->insert_after ( *sti.st );
+
+	unique_ptr < Leaf >  src;
+	Variable           * dest_var = nullptr;
+
 	switch ( i.getOpcode() )
 	{
 		case llvm::Instruction::Store:
 		{
-			auto &st          = cast < StoreInst > ( i );
-			const auto & dest = map.get_variable ( *st.getPointerOperand() );
-			auto leaf         = map.new_leaf ( *st.getValueOperand() );
+			auto & st  = cast < StoreInst > ( i );
+			dest_var   = & map.get_variable ( * st.getPointerOperand() );
+			src        = map.new_leaf ( *st.getValueOperand() );
 			break;
 		}
 
-		default:
-
-			break;
-	}
-}
-
-const State * InstLoadStore::process(
-		const NTS::State        * from    ,
-		const llvm::Instruction & i       ,
-		FunctionMapping         & map     ,
-		NTS::BasicNts           & n       ,
-		int                       bb_id   ,
-		int                       inst_id )
-{
-	const NTS::IPrint * src = NULL;
-	const NTS::IPrint * dest = NULL;
-
-	const NTS::State * st_to;
-
-	switch(i.getOpcode())
-	{
-		case llvm::Instruction::Store:
-			{
-				const auto &st = llvm::cast<llvm::StoreInst>(i);
-				src   = map.get_iprint ( st.getValueOperand() );
-				dest  = map.get_iprint ( st.getPointerOperand() );
-				st_to = n.addState ( bb_id, inst_id );
-			}
-			break;
-
 		case llvm::Instruction::Load:
-			{
-				const auto &ld = llvm::cast<llvm::LoadInst>(i);
-				src   = map.get_iprint ( ld.getPointerOperand() );
-				dest  = map.get_iprint ( &i );
-				st_to = n.addState ( bb_id, inst_id );
-			}
+		{
+			auto &ld = cast < LoadInst > ( i );
+			src      = map.new_leaf ( * ld.getPointerOperand() );
+			auto var = map.new_variable ( ld );
+			var->insert_to ( bntsi.bn );
+			dest_var = var.release() ;
 			break;
+		}
 
 		case llvm::Instruction::Ret:
+		{
+			auto & ret = cast < ReturnInst > ( i );
+			dest_var = bntsi.ret_var;
+
+			if ( ret.getReturnValue() )
 			{
-				const auto &rt = llvm::cast<llvm::ReturnInst>(i);
-				st_to = n.final_state();
-				dest  = n.get_return_variable ( 0 );
-
-				// If there is no return value, just havoc()
-				if ( !rt.getReturnValue() )
-				{
-					// Our havoc accesses only 0th item
-					ConcreteFormula cf ( m_havoc, { dest } );
-					const TransitionRule *r = n.add_transition_rule ( cf );
-					n.add_transition ( from, st_to, r );
-					return st_to;
-				}
-
-				// Else move the return value to coresponding variable
-				src   = map.get_iprint ( rt.getReturnValue() );
+				dest_var = bntsi.ret_var;
+				src      = map.new_leaf ( ret );
 			}
 			break;
+		}
 
 		default:
 			throw std::invalid_argument("Unsupported llvm instruction");
 	}
 
-	// assert(src && dest);
-	ConcreteFormula cf(m_f, {dest, src});
-	const TransitionRule *r = n.add_transition_rule ( cf );
-	n.add_transition ( from, st_to, r );
+	unique_ptr < Formula > formula;
+	
+	if ( dest_var && src )
+	{
+		auto i1      = { (const Variable *)dest_var };
+		auto havoc   = std::make_unique < Havoc > ( i1 );
+		auto dest    = std::make_unique < VariableReference > ( *dest_var, true );
+		auto assign  = std::make_unique < Relation > (
+						RelationOp::eq, move ( src ), move ( dest ) );
+		formula      = std::make_unique < FormulaBop > (
+						BoolOp::And, move ( assign ), move ( havoc ) );
+	}
+	else if ( !dest_var && !src )
+	{
+		auto i1 = std::initializer_list < const Variable *> {};
+		formula = std::make_unique < Havoc > ( i1 );
+	} else {
+		throw std::logic_error ( "condition does not hold: dest_var <==> src" );
+	}
 
-	return st_to;
+	auto rule = std::make_unique < FormulaTransitionRule > ( move ( formula ) );
+
+	auto transition = new Transition ( move ( rule ), *sti.st, *st_next );
+	(void)transition;
+	sti.st = st_next;
 }
 

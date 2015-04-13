@@ -13,6 +13,7 @@ class IInst
 		virtual bool supports(unsigned int opcode) const = 0;
 
 		virtual void process (
+				const BasicNtsInfo      & bntsi,
 				StateInfo               & sti,
 				FunctionMapping         & map,
 				const llvm::Instruction & i    ) = 0;

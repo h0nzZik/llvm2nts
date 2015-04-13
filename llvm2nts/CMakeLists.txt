@@ -4,12 +4,12 @@ add_library(llvm2nts SHARED
 	"FunctionMapping.cpp"
 	"ModuleMapping.cpp"
 	"types.cpp"
-	"instructions/InstAdd.cpp"
+	#	"instructions/InstAdd.cpp"
 	"instructions/InstLoadStore.cpp"
-	"instructions/InstBr.cpp"
-	"instructions/InstIcmp.cpp"
-	"instructions/InstCall.cpp"
-	"instructions/Constants.cpp"
+	#	"instructions/InstBr.cpp"
+	#	"instructions/InstIcmp.cpp"
+	#	"instructions/InstCall.cpp"
+	#	"instructions/Constants.cpp"
 )
 
 include_directories(${LLVM_INCLUDE_DIRS})

@@ -50,17 +50,19 @@ class FunctionMapping
 {
 	private:
 		nts::BasicNts & m_nts;
-		llvm::DenseMap <const llvm::BasicBlock *, 
-			std::unique_ptr<StateInfo> > m_block_start;
+		llvm::DenseMap <const llvm::BasicBlock *, StateInfo * > m_block_start;
 
 		llvm::DenseMap <
 			const llvm::Value *,
 			nts::Variable * > m_vars;
 
+		nts::Variable * get_variable_noexcept ( const llvm::Value & value ) const noexcept;
+
 	public:
 		const ModuleMapping & m_modmap;
 
 		FunctionMapping ( nts::BasicNts & nts, const ModuleMapping &mod );
+		~FunctionMapping();
 
 		/**
 		 * @brief Creates new variable and inserts it into mapping.
@@ -80,12 +82,16 @@ class FunctionMapping
 		void ins_bb_start ( const llvm::BasicBlock & block,
 						    std::unique_ptr<StateInfo> s );
 
-		StateInfo & get_bb_start ( const llvm::BasicBlock & block );
+		StateInfo & get_bb_start ( const llvm::BasicBlock & block ) const;
 
 		const decltype ( m_block_start ) & bbinfo() const { return m_block_start; }
 
 		// Creates new read-only Leaf (Constant or VariableReference)
 		std::unique_ptr < nts::Leaf > new_leaf ( const llvm::Value & value ) const;
+
+		// New primed variable reference
+		std::unique_ptr < nts::VariableReference >
+			new_primed ( const llvm::Value & value ) const;
 };
 
 

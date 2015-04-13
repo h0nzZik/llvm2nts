@@ -20,6 +20,15 @@ FunctionMapping::FunctionMapping ( BasicNts & nts, const ModuleMapping &mod ) :
 	;
 }
 
+FunctionMapping::~FunctionMapping()
+{
+	for ( auto &p : m_block_start )
+	{
+		delete p.getSecond();
+		p.getSecond() = nullptr;
+	}
+}
+
 unique_ptr<Variable> FunctionMapping::new_variable ( const Value &llval )
 {
 	std::stringstream ss;
@@ -39,17 +48,39 @@ void FunctionMapping::ins_variable ( const Value & llval, Variable & var )
 	m_vars.insert ( make_pair ( &llval, &var ) );
 }
 
-Variable & FunctionMapping::get_variable ( const Value & value ) const
+nts::Variable * FunctionMapping::get_variable_noexcept
+( const llvm::Value & value ) const noexcept
 {
 	if ( isa<GlobalValue> ( value ) )
-		return m_modmap.get_variable ( cast<GlobalValue> ( value ) ).var;
+		return & m_modmap.get_variable ( cast<GlobalValue> ( value ) ).var;
 
 	auto * found = m_vars.lookup ( & value );
 	if ( found )
-		return * found;
+		return  found;
+
+	return nullptr;
+}
+
+Variable & FunctionMapping::get_variable ( const Value & value ) const
+{
+	auto v = get_variable_noexcept ( value );
+	if ( v )
+		return *v;
 
 	throw std::logic_error ( "No such variable exists" );
 }
+
+unique_ptr < VariableReference >
+FunctionMapping::new_primed ( const Value & value ) const
+{
+	return unique_ptr < VariableReference > (
+			new VariableReference (
+				get_variable ( value ),
+				true
+			)
+	);
+}
+
 
 #if 0
 const NTS::IPrint * FunctionMapping::get_iprint ( int n )
@@ -99,33 +130,40 @@ void FunctionMapping::ins_iprint ( const llvm::Value *llval, const NTS::IPrint *
 }
 #endif
 
-void FunctionMapping::ins_bb_start ( const llvm::BasicBlock *block, const NTS::State *s )
+void FunctionMapping::ins_bb_start (
+		const BasicBlock         & block,
+		unique_ptr < StateInfo >   s     )
 {
-	m_block_start.insert ( std::make_pair ( block, s ) );
+	m_block_start.insert ( std::make_pair ( &block, s.release() ) );
 }
 
-const NTS::State * FunctionMapping::get_bb_start ( const llvm::BasicBlock * block )
+StateInfo & FunctionMapping::get_bb_start ( const BasicBlock & block ) const
 {
-	auto * s = m_block_start.lookup ( block );
+	const auto & s = m_block_start.lookup ( & block );
 	if ( !s )
 		throw std::logic_error ( "Start of basic block not found" );
-	return s;
+	return *s;
 }
 
 unique_ptr < Leaf > FunctionMapping::new_leaf ( const Value & value ) const
 {
-	// We use variables for both arguments and results of instructions
-	if ( isa < Argument >  ( value ) || isa < Instruction > ( value ) )
+	if ( isa < llvm::ConstantInt > ( value ) )
 	{
-		return nullptr;
-	}
+		auto & ci = cast < llvm::ConstantInt > ( value );
+		std::string s;
+		llvm::raw_string_ostream os ( s );
+		os << ci.getValue();
+		auto * leaf = new nts::UserConstant (
+				DataType::Integral(),
+				os.str() );
+		return unique_ptr < Leaf > ( leaf );
+	};
 
-	if ( isa < User > ( value ) )
-	{
+	auto var = get_variable_noexcept ( value );
+	if ( !var )
+		throw std::domain_error ( "Can not create a leaf" );
 
-		return nullptr;
-	}
-
-	throw std::domain_error ( "Given type is not supported as a leaf" );
+	auto * ref = new VariableReference ( *var, false );
+	return std::unique_ptr < Leaf > ( ref );
 }
 

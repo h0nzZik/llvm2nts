@@ -167,7 +167,7 @@ void llvm_2_nts::convert_functions()
 {
 	for ( auto & p : modmap.ntses() )
 	{
-		convert_function ( *p.getFirst(), *p.getSecond() );
+		convert_function ( *p.getFirst(), *p.getSecond(), modmap );
 	}
 }
 
