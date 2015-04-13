@@ -3,7 +3,7 @@ project(llvm2nts)
 
 set( CMAKE_EXPORT_COMPILE_COMMANDS 1 )
 
-list( APPEND CMAKE_CXX_FLAGS "-std=c++11 -g -Wall -Wextra -fno-rtti")
+list( APPEND CMAKE_CXX_FLAGS "-std=c++14 -g -Wall -Wextra -fno-rtti")
 
 find_package(LLVM REQUIRED CONFIG)
 
