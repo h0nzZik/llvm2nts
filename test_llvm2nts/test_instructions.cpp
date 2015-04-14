@@ -80,23 +80,30 @@ static void do_file_compare_test ( const char *llfile,
 
 }
 
+TEST_CASE ( "VoidFunction", "Simple void function")
+{
+	do_file_compare_test (
+			"test_cases/00_empty.ll",
+			"test_cases/00_empty.nts"
+	);
+}
+
 TEST_CASE ( "LoadStoreAlloca", "Tests basic load/store/alloca instructions" )
 {
 	do_file_compare_test (
 			"test_cases/01_load_store_alloca.ll",
-			"test_cases/01_load_store_alloca.nts",
-			true
+			"test_cases/01_load_store_alloca.nts"
 	);
 }
 
-TEST_CASE ( "VoidFunction", "Simple void function")
-{
-	do_file_compare_test ( "test_cases/00_empty.ll", "test_cases/00_empty.nts");
-}
 
 TEST_CASE ( "Call", "Call void and nonvoid function with and without parameters")
 {
-	do_file_compare_test ( "test_cases/02_call.ll", "test_cases/02_call.nts");
+	do_file_compare_test (
+			"test_cases/02_call.ll",
+			"test_cases/02_call.nts",
+			true
+	);
 }
 
 TEST_CASE ( "GlobalVars", "Read / write from / to global variables" )
