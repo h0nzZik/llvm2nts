@@ -1,4 +1,4 @@
-NTS ./test_cases/04_pthread_create.ll;
+nts ./test_cases/04_pthread_create.ll;
 thread_func {
 	// Variables
 	_ret_var, _lbb_var, l_ : int;

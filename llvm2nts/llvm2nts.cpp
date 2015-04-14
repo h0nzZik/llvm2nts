@@ -94,6 +94,9 @@ void llvm_2_nts::create_function_prototypes ()
 		i->lbb_var = v;
 
 		modmap.ins_function ( f, std::unique_ptr<BasicNtsInfo>(i) );
+
+
+		bn->insert_to ( nts );
 	}
 
 }
@@ -174,7 +177,7 @@ void llvm_2_nts::convert_functions()
 std::unique_ptr<Nts> llvm_to_nts ( const llvm::Module & llvm_module )
 {
 
-	Nts *n = new Nts ( "unnamed" );
+	Nts *n = new Nts ( llvm_module.getModuleIdentifier() );
 	llvm_2_nts l2n ( llvm_module, *n );
 	l2n.create_function_prototypes();
 	l2n.create_global_variables();

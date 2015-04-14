@@ -10,8 +10,6 @@ class IInst
 	public:
 		virtual ~IInst() {};
 
-		virtual bool supports(unsigned int opcode) const = 0;
-
 		virtual void process (
 				const BasicNtsInfo      & bntsi,
 				StateInfo               & sti,

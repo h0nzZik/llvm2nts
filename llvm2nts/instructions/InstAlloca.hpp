@@ -1,5 +1,5 @@
-#ifndef _INSTRUCTION_INST_LOAD_STORE_HPP_
-#define _INSTRUCTION_INST_LOAD_STORE_HPP_
+#ifndef INSTRUCTIONS_INST_ALLOCA_HPP_
+#define INSTRUCTIONS_INST_ALLOCA_HPP_
 
 // LLVM headers
 #include <llvm/IR/Instructions.h>
@@ -7,11 +7,11 @@
 // Project headers
 #include "IInst.hpp"
 
-class InstLoadStore : public IInst
+class InstAlloca : public IInst
 {
 	public:
-		InstLoadStore() = default;
-		virtual ~InstLoadStore() = default;
+		InstAlloca() = default;
+		virtual ~InstAlloca() = default;
 
 		virtual void process (
 				const BasicNtsInfo      & bntsi,
@@ -21,5 +21,5 @@ class InstLoadStore : public IInst
 };
 
 
-#endif // _INSTRUCTION_INST_LOAD_STORE_HPP_
+#endif // INSTRUCTIONS_INST_ALLOCA_HPP_
 

@@ -8,9 +8,13 @@ nts::DataType llvm_type_to_nts_type ( const llvm::Type & t )
 	{
 		auto & it = llvm::cast<llvm::IntegerType> ( t );
 		return nts::DataType::BitVector ( it.getBitWidth() );
-	} else if ( t.isPointerTy() ) {
+	}
+	/*else if ( t.isPointerTy() ) {
 		return nts::DataType::BitVector ( 64 ); // 64 bit pointers
-	} else {
+	}
+	*/
+	else
+	{
 		throw std::logic_error ( "Only integer types are supported" );
 	}
 }

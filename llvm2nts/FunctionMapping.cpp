@@ -45,18 +45,39 @@ unique_ptr<Variable> FunctionMapping::new_variable ( const Value &llval )
 
 void FunctionMapping::ins_variable ( const Value & llval, Variable & var )
 {
+	if ( ! llval.getType()->isIntegerTy() )
+		throw std::logic_error ( "Value must be of integer type" );
+
 	m_vars.insert ( make_pair ( &llval, &var ) );
+}
+
+void FunctionMapping::ins_pointer ( const Value & llval, Variable & var )
+{
+	if ( ! llval.getType()->isPointerTy() )
+		throw std::logic_error ( "Value must be of pointer type" );
+
+	m_pointers.insert ( make_pair ( &llval, &var ) );
 }
 
 nts::Variable * FunctionMapping::get_variable_noexcept
 ( const llvm::Value & value ) const noexcept
 {
-	if ( isa<GlobalValue> ( value ) )
-		return & m_modmap.get_variable ( cast<GlobalValue> ( value ) ).var;
-
 	auto * found = m_vars.lookup ( & value );
 	if ( found )
 		return  found;
+
+	return nullptr;
+}
+
+Variable * FunctionMapping::get_variable_by_pointer_noexcept
+( const Value & value ) const noexcept
+{
+	if ( isa<GlobalValue> ( value ) )
+		return & m_modmap.get_variable ( cast<GlobalValue> ( value ) ).var;
+
+	auto * found = m_pointers.lookup ( & value );
+	if ( found )
+		return found;
 
 	return nullptr;
 }
@@ -70,6 +91,20 @@ Variable & FunctionMapping::get_variable ( const Value & value ) const
 	throw std::logic_error ( "No such variable exists" );
 }
 
+Variable & FunctionMapping::get_variable_by_pointer ( const Value & value ) const
+{
+	if ( ! value.getType()->isPointerTy() )
+		throw std::logic_error ( "Not a pointer type" );
+
+	auto * found = get_variable_by_pointer_noexcept ( value );
+	if ( found )
+		return *found;
+
+	throw std::logic_error ( "Pointer does not point to any known variable" );
+}
+
+
+
 unique_ptr < VariableReference >
 FunctionMapping::new_primed ( const Value & value ) const
 {
@@ -81,55 +116,6 @@ FunctionMapping::new_primed ( const Value & value ) const
 	);
 }
 
-
-#if 0
-const NTS::IPrint * FunctionMapping::get_iprint ( int n )
-{
-	return m_nts.add_constant ( n );
-}
-
-const NTS::IPrint * FunctionMapping::get_iprint ( const llvm::Value *llval )
-{
-	const NTS::IPrint * found = m_values.lookup(llval);
-	if ( found )
-		return found;
-
-
-	if (llvm::isa<llvm::GlobalValue>(llval))
-		return m_modmap.get_iprint ( llvm:: cast<llvm::GlobalValue> ( llval ) );
-
-	if (llvm::isa<llvm::ConstantInt>(llval))
-	{
-		const auto *c = llvm:: cast<llvm::ConstantInt>(llval);
-		const auto &v = c->getValue();
-
-		// TODO: Make this more elegant
-		std::string s;
-		llvm::raw_string_ostream os(s);
-		os << v;
-
-		const NTS::Constant * co = m_nts.add_constant ( os.str() );
-		ins_iprint ( llval, co );
-		return co;
-	}
-
-
-	std::stringstream ss;
-	if (llvm::isa<llvm::GlobalValue>(llval))
-	{
-		throw std::logic_error ( "Access to global variables are not supported" );
-	}
-
-	return ins_variable ( llval );
-}
-
-
-void FunctionMapping::ins_iprint ( const llvm::Value *llval, const NTS::IPrint *var )
-{
-	m_values.insert ( std::make_pair ( llval, var ) );
-}
-#endif
-
 void FunctionMapping::ins_bb_start (
 		const BasicBlock         & block,
 		unique_ptr < StateInfo >   s     )
@@ -139,9 +125,10 @@ void FunctionMapping::ins_bb_start (
 
 StateInfo & FunctionMapping::get_bb_start ( const BasicBlock & block ) const
 {
-	const auto & s = m_block_start.lookup ( & block );
+	const auto s = m_block_start.lookup ( & block );
 	if ( !s )
 		throw std::logic_error ( "Start of basic block not found" );
+
 	return *s;
 }
 

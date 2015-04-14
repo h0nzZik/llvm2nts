@@ -1,4 +1,4 @@
-NTS test_cases/02_call.ll;
+nts test_cases/02_call.ll;
 a {
 	// Variables
 	_ret_var, _lbb_var : int;

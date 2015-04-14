@@ -14,6 +14,7 @@
 //#include "instructions/Constants.hpp"
 //#include "instructions/InstAdd.hpp"
 #include "instructions/InstLoadStore.hpp"
+#include "instructions/InstAlloca.hpp"
 //#include "instructions/InstBr.hpp"
 //#include "instructions/InstIcmp.hpp"
 //#include "instructions/InstCall.hpp"
@@ -40,6 +41,7 @@ class Context
 		//Constants     m_constants;
 		//InstAdd       m_ia;
 		InstLoadStore m_ils;
+		InstAlloca    m_alloca;
 		//InstBr        m_ibr;
 		//InstIcmp      m_icmp;
 		//InstCall      m_icall;
@@ -156,12 +158,19 @@ void fun_llvm_2_nts::process_instruction ( const llvm::Instruction & i, StateInf
 	switch ( i.getOpcode() )
 	{
 		case Instruction::Alloca:
+			return ctx.m_alloca.process ( bni, st, funmap, i );
 			break;
 
 		case Instruction::Store:
 		case Instruction::Load:
 		case Instruction::Ret:
-			return ctx.m_ils.process ( bni, st,  funmap, i );
+			return ctx.m_ils.process ( bni, st, funmap, i );
+
+		default:
+		{
+			string s ( "Instruction not implemented: " );
+			throw std::domain_error ( ( s + to_string ( i.getOpcode() ) ).c_str() );
+		}
 
 	}
 }

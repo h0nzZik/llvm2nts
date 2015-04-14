@@ -3,9 +3,7 @@
 
 #include <libNTS/logic.hpp>
 
-
 #include "InstLoadStore.hpp"
-
 
 using namespace nts;
 using namespace llvm;
@@ -14,24 +12,6 @@ using std::make_unique;
 using std::move;
 using std::string;
 using std::to_string;
-
-bool InstLoadStore::supports(unsigned int opcode) const
-{
-	switch(opcode)
-	{
-		case llvm::Instruction::Store:
-			return true;
-
-		case llvm::Instruction::Load:
-			return true;
-
-		case llvm::Instruction::Ret:
-			return true;
-
-		default:
-			return false;
-	}
-}
 
 void InstLoadStore::process (
 		const BasicNtsInfo & bntsi,
@@ -56,30 +36,31 @@ void InstLoadStore::process (
 		case llvm::Instruction::Store:
 		{
 			auto & st  = cast < StoreInst > ( i );
-			dest_var   = & map.get_variable ( * st.getPointerOperand() );
+			dest_var   = & map.get_variable_by_pointer ( * st.getPointerOperand() );
 			src        = map.new_leaf ( *st.getValueOperand() );
 			break;
 		}
 
 		case llvm::Instruction::Load:
 		{
-			auto &ld = cast < LoadInst > ( i );
-			src      = map.new_leaf ( * ld.getPointerOperand() );
-			auto var = map.new_variable ( ld );
+			auto &ld      = cast < LoadInst > ( i );
+			auto &src_var = map.get_variable_by_pointer ( * ld.getPointerOperand() );
+			src           = std::make_unique < VariableReference > ( src_var, false );
+			auto var      = map.new_variable ( ld );
 			var->insert_to ( bntsi.bn );
-			dest_var = var.release() ;
+			dest_var      = var.release() ;
 			break;
 		}
 
 		case llvm::Instruction::Ret:
 		{
 			auto & ret = cast < ReturnInst > ( i );
-			dest_var = bntsi.ret_var;
+			dest_var   = bntsi.ret_var;
 
 			if ( ret.getReturnValue() )
 			{
 				dest_var = bntsi.ret_var;
-				src      = map.new_leaf ( ret );
+				src      = map.new_leaf ( *ret.getReturnValue() );
 			}
 			break;
 		}

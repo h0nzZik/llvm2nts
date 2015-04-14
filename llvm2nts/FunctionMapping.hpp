@@ -56,7 +56,15 @@ class FunctionMapping
 			const llvm::Value *,
 			nts::Variable * > m_vars;
 
+		// Maps (local) values of pointer types
+		// to local variables.
+		llvm::DenseMap <
+			const llvm::Value *,
+			nts::Variable * > m_pointers;
+
 		nts::Variable * get_variable_noexcept ( const llvm::Value & value ) const noexcept;
+		nts::Variable * get_variable_by_pointer_noexcept
+			( const llvm::Value & value ) const noexcept;
 
 	public:
 		const ModuleMapping & m_modmap;
@@ -73,7 +81,11 @@ class FunctionMapping
 		std::unique_ptr<nts::Variable> new_variable ( const llvm::Value & llval );
 		void ins_variable ( const llvm::Value & llval, nts::Variable & var );
 
+		// must be pointer type
+		void ins_pointer ( const llvm::Value & value, nts::Variable & var );
+
 		nts::Variable & get_variable ( const llvm::Value & value ) const;
+		nts::Variable & get_variable_by_pointer ( const llvm::Value & value ) const;
 
 		
 		//const NTS::IPrint * get_iprint ( int n );
@@ -86,7 +98,14 @@ class FunctionMapping
 
 		const decltype ( m_block_start ) & bbinfo() const { return m_block_start; }
 
-		// Creates new read-only Leaf (Constant or VariableReference)
+		/*
+		 * @brief Creates new read-only Leaf (Constant or VariableReference)
+		 * @param value - llvm value, interpreted as normal non-pointer value.
+		 *                Currently can be only of Integer type.
+		 *                Leafs from pointer types (e.g. alloca )
+		 *                can be created using get_variable_by_pointer()
+		 *                and VariableReference.
+		 */
 		std::unique_ptr < nts::Leaf > new_leaf ( const llvm::Value & value ) const;
 
 		// New primed variable reference

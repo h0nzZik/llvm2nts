@@ -1,4 +1,4 @@
-NTS test_cases/01_load_store_alloca.ll;
+nts test_cases/01_load_store_alloca.ll;
 test_load_store_alloca {
 	// Variables
 	_ret_var, _lbb_var, l_ptr, l_value : int;

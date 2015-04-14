@@ -1,4 +1,4 @@
-NTS test_cases/00_empty.ll;
+nts test_cases/00_empty.ll;
 test_empty {
 	// Variables
 	_ret_var, _lbb_var : int;

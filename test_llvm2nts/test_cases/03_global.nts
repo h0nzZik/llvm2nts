@@ -1,4 +1,4 @@
-NTS test_cases/03_global.ll;
+nts test_cases/03_global.ll;
 g_G : int;
 tester {
 	// Variables

@@ -40,10 +40,10 @@ static void do_file_compare_test ( const char *llfile,
 		auto nts = llvm_to_nts ( *m );
 		gen_ss << *nts;
 		if ( print )
-			std::cout << gen_ss.str();
+			std::cout << gen_ss.str() << std::endl;
 	} catch ( std::exception &e ) {
-		std::cerr << "An exception was thrown while processing:\n" << e.what();
-		FAIL ("An exception was thrown while processing");
+		auto s = std::string ( "An exception was thrown while processing:\n" ) +  e.what();
+		FAIL (s);
 	}
 
 	if ( !ntsfile )
@@ -82,7 +82,11 @@ static void do_file_compare_test ( const char *llfile,
 
 TEST_CASE ( "LoadStoreAlloca", "Tests basic load/store/alloca instructions" )
 {
-	do_file_compare_test ( "test_cases/01_load_store_alloca.ll", "test_cases/01_load_store_alloca.nts" );
+	do_file_compare_test (
+			"test_cases/01_load_store_alloca.ll",
+			"test_cases/01_load_store_alloca.nts",
+			true
+	);
 }
 
 TEST_CASE ( "VoidFunction", "Simple void function")
