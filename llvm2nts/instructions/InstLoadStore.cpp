@@ -56,6 +56,7 @@ void InstLoadStore::process (
 		{
 			auto & ret = cast < ReturnInst > ( i );
 			dest_var   = bntsi.ret_var;
+			st_next->is_final() = true;
 
 			if ( ret.getReturnValue() )
 			{
@@ -77,7 +78,7 @@ void InstLoadStore::process (
 		auto havoc   = std::make_unique < Havoc > ( i1 );
 		auto dest    = std::make_unique < VariableReference > ( *dest_var, true );
 		auto assign  = std::make_unique < Relation > (
-						RelationOp::eq, move ( src ), move ( dest ) );
+						RelationOp::eq, move ( dest ), move ( src ) );
 		formula      = std::make_unique < FormulaBop > (
 						BoolOp::And, move ( assign ), move ( havoc ) );
 	}

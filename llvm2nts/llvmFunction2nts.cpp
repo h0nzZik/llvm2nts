@@ -146,6 +146,7 @@ void fun_llvm_2_nts::process_basic_block ( const StateInfo & bbi )
 {
 	StateInfo st = bbi;
 	st.inst_id = 1;
+	st.st->is_initial() = true;
 	for ( const auto &i : bbi.bb->getInstList() )
 	{
 		process_instruction ( i, st );
