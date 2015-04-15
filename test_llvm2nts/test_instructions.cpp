@@ -101,14 +101,16 @@ TEST_CASE ( "Call", "Call void and nonvoid function with and without parameters"
 {
 	do_file_compare_test (
 			"test_cases/02_call.ll",
-			"test_cases/02_call.nts",
-			true
+			"test_cases/02_call.nts"
 	);
 }
 
 TEST_CASE ( "GlobalVars", "Read / write from / to global variables" )
 {
-	do_file_compare_test ( "test_cases/03_global.ll", "test_cases/03_global.nts");
+	do_file_compare_test (
+			"test_cases/03_global.ll",
+			"test_cases/03_global.nts"
+	);
 }
 
 TEST_CASE ( "PthreadCreate", "Process calls to pthread_create(3)" )

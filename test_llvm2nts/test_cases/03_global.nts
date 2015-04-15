@@ -1,14 +1,13 @@
 nts test_cases/03_global.ll;
-g_G : int;
+g_G : BitVector<32>
+init	( g_G = 17 );
 tester {
-	// Variables
-	_ret_var, _lbb_var, l_v1 : int;
-	in (  );
-	out ( _ret_var );
-	initial s_0_0;
-	final st_final;
-	// Transitions:
-	s_0_0 -> s_0_1 {(l_v1' = g_G) && havoc(l_v1)}
-	s_0_1 -> s_0_2 {(g_G' = 3) && havoc(g_G)}
-	s_0_2 -> st_final {havoc(_ret_var)}
+	_lbb_var : BitVector<16>;
+	l_v1 : BitVector<32>;
+	initial	st_0_0;
+	final	st_0_3;
+	st_0_0 -> st_0_1 { ( ( l_v1' = g_G ) && havoc ( l_v1 ) ) }
+	st_0_1 -> st_0_2 { ( ( g_G' = 3 ) && havoc ( g_G ) ) }
+	st_0_2 -> st_0_3 { havoc (  ) }
 }
+

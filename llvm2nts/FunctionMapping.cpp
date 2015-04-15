@@ -7,6 +7,7 @@
 
 #include "FunctionMapping.hpp"
 #include "types.hpp"
+#include "util.hpp"
 
 using namespace llvm;
 using namespace nts;
@@ -134,17 +135,13 @@ StateInfo & FunctionMapping::get_bb_start ( const BasicBlock & block ) const
 
 unique_ptr < Leaf > FunctionMapping::new_leaf ( const Value & value ) const
 {
-	if ( isa < llvm::ConstantInt > ( value ) )
+	if ( isa < llvm::Constant > ( value ) )
 	{
-		auto & ci = cast < llvm::ConstantInt > ( value );
-		std::string s;
-		llvm::raw_string_ostream os ( s );
-		os << ci.getValue();
-		auto * leaf = new nts::UserConstant (
-				DataType::Integral(),
-				os.str() );
-		return unique_ptr < Leaf > ( leaf );
-	};
+		auto * leaf = new_constant (  cast < llvm::Constant > ( value ) );
+		if ( leaf )
+			return unique_ptr < Leaf > ( leaf );
+		throw std::domain_error ( "Unsupported subtype of llvm::Constant" );
+	}
 
 	auto var = get_variable_noexcept ( value );
 	if ( !var )
