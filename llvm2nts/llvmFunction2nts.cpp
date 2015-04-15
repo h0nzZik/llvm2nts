@@ -173,7 +173,7 @@ void fun_llvm_2_nts::process_instruction ( const llvm::Instruction & i, StateInf
 		default:
 		{
 			string s ( "Instruction not implemented: " );
-			throw std::domain_error ( ( s + to_string ( i.getOpcode() ) ).c_str() );
+			throw std::domain_error ( ( s + i.getOpcodeName() ).c_str() );
 		}
 
 	}
