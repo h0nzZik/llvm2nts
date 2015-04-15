@@ -12,28 +12,22 @@
 // LLVM headers
 #include <llvm/IR/Instructions.h>
 
-// NTS headers
-#include <nts/Havoc.hpp>
-#include <nts/AtomicRelation.hpp>
-
 // Project headers
+#include "../FunctionMapping.hpp"
 #include "IInst.hpp"
 
 class InstCall : public IInst
 {
 	public:
-		InstCall ( );
-		virtual ~InstCall();
+		InstCall ( ) = default;
+		virtual ~InstCall() = default;
 
-		virtual bool supports(unsigned int opcode) const;
 
-		virtual const NTS::State * process(
-				const NTS::State        * from    ,
-				const llvm::Instruction & i       ,
-				FunctionMapping         & map     ,
-				NTS::BasicNts           & n       ,
-				int                       bb_id   ,
-				int                       inst_id );
+		virtual void process (
+				const BasicNtsInfo      & bntsi,
+				StateInfo               & sti,
+				FunctionMapping         & map,
+				const llvm::Instruction & i    ) override;
 };
 
 #endif /* SRC_INSTRUCTIONS_INSTCALL_HPP_ */

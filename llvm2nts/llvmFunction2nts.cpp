@@ -17,7 +17,7 @@
 #include "instructions/InstAlloca.hpp"
 //#include "instructions/InstBr.hpp"
 //#include "instructions/InstIcmp.hpp"
-//#include "instructions/InstCall.hpp"
+#include "instructions/InstCall.hpp"
 
 
 
@@ -44,7 +44,7 @@ class Context
 		InstAlloca    m_alloca;
 		//InstBr        m_ibr;
 		//InstIcmp      m_icmp;
-		//InstCall      m_icall;
+		InstCall      m_icall;
 };
 
 
@@ -161,6 +161,9 @@ void fun_llvm_2_nts::process_instruction ( const llvm::Instruction & i, StateInf
 		case Instruction::Alloca:
 			return ctx.m_alloca.process ( bni, st, funmap, i );
 			break;
+
+		case Instruction::Call:
+			return ctx.m_icall.process ( bni, st, funmap, i );
 
 		case Instruction::Store:
 		case Instruction::Load:

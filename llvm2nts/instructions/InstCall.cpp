@@ -7,56 +7,44 @@
  */
 
 #include <stdexcept>
+#include <llvm/IR/Instructions.h>
+#include <libNTS/nts.hpp>
+
+#include "../util.hpp"
 #include "InstCall.hpp"
 
-using namespace NTS;
+using namespace nts;
+using namespace llvm;
 
-InstCall::InstCall (  )
+void InstCall::process (
+				const BasicNtsInfo & bntsi,
+				StateInfo          & sti,
+				FunctionMapping    & map,
+				const Instruction  & i    )
 {
-
-}
-
-InstCall::~InstCall()
-{
-	
-}
-
-bool InstCall::supports(unsigned int opcode) const
-{
-	return opcode == llvm::Instruction::Call;
-}
-
-const State * InstCall::process(
-		const NTS::State        * from    ,
-		const llvm::Instruction & i       ,
-		FunctionMapping         & map     ,
-		NTS::BasicNts           & n       ,
-		int                       bb_id   ,
-		int                       inst_id )
-{
-	if (i.getOpcode() != llvm::Instruction::Call)
-		throw std::invalid_argument("Unsupported llvm instruction");
+	auto st_next = new_state ( sti.bb_id, sti.inst_id );
+	st_next->insert_after ( *sti.st );
 
 	const auto &call     = llvm::cast < llvm::CallInst > ( i );
 
-
-
 	// Called function
-	const llvm::Function * dest_function = call.getCalledFunction();
+	const Function * dest_function = call.getCalledFunction();
 	if (!dest_function)
 		throw std::logic_error ( "Indirect function call is not supported" );
 
-	const NTS::NtsRef * dest_nts = map.m_modmap.get_nts ( dest_function );
-
+	const BasicNtsInfo & dest_ntsi = map.m_modmap.get_nts ( *dest_function );
+	
 	// Call operands
-	std::vector < const NTS::IPrint * > args;
-	// Return variables
-	std::vector < const NTS::Variable *> results ;
+	std::vector < Term * > args;
 
 	bool is_ptc = dest_function->getName().equals ( "pthread_create" );
 
+	Variable * ret_var = nullptr;
+
 	if ( is_ptc )
 	{
+		throw std::domain_error ( "pthread_create() not implemented" );
+#if 0
 		// now dest_nts points to "__thread_create" NTS 
 		const auto * arg = call.getArgOperand ( 2 );
 		if ( !llvm::isa<llvm::Function> ( arg ) )
@@ -69,24 +57,31 @@ const State * InstCall::process(
 
 		const auto * ip = map.get_iprint ( (int)id );
 		args.push_back ( ip );
+#endif
 	}
 	else
 	{
 		if ( !dest_function->getReturnType()->isVoidTy() )
 		{
-			const NTS::Variable *result = map.ins_variable ( &llvm::cast<llvm::Value>(i) );
-			results.push_back ( result );
+			ret_var = map.new_variable ( call ).release();
+			ret_var->insert_to ( bntsi.bn );
 		}
 
 		for (const llvm::Value * a : call.arg_operands())
 		{
-			args.push_back ( map.get_iprint ( a ) );
+			args.push_back ( map.new_leaf ( *a ).release() );
 		}
 	}
 
-	NTS::Call c ( dest_nts, results, args );
-	const TransitionRule *r  = n.add_transition_rule ( c );
-	const NTS::State * st_to = n.addState ( bb_id, inst_id );
-	n.add_transition ( from, st_to, r );
-	return st_to;
+	CallTransitionRule * ctr;
+	if ( ret_var )
+		ctr = new CallTransitionRule ( dest_ntsi.bn, args, { ret_var } );
+	else
+		ctr = new CallTransitionRule ( dest_ntsi.bn, args, {} );
+
+	auto transition = new Transition
+		( std::unique_ptr < TransitionRule > ( ctr ),
+			*sti.st, *st_next );
+
+	transition->insert_to ( bntsi.bn );
 }

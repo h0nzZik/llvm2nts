@@ -3,6 +3,7 @@
 
 #include <libNTS/logic.hpp>
 
+#include "../util.hpp"
 #include "InstLoadStore.hpp"
 
 using namespace nts;
@@ -19,12 +20,7 @@ void InstLoadStore::process (
 		FunctionMapping    & map,
 		const Instruction  & i    )
 {
-	auto st_next = new State (
-			string ( "st_" ) +
-			to_string ( sti.bb_id ) +
-			string ( "_" ) +
-			to_string ( sti.inst_id )
-	);
+	auto st_next = new_state ( sti.bb_id, sti.inst_id );
 
 	st_next->insert_after ( *sti.st );
 
@@ -93,7 +89,7 @@ void InstLoadStore::process (
 	auto rule = std::make_unique < FormulaTransitionRule > ( move ( formula ) );
 
 	auto transition = new Transition ( move ( rule ), *sti.st, *st_next );
-	(void)transition;
+	transition->insert_to ( bntsi.bn );
 	sti.st = st_next;
 }
 
