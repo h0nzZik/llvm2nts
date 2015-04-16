@@ -5,7 +5,7 @@ add_library(llvm2nts SHARED
 	"ModuleMapping.cpp"
 	"types.cpp"
 	"util.cpp"
-	#	"instructions/InstAdd.cpp"
+	"instructions/InstAdd.cpp"
 	"instructions/InstLoadStore.cpp"
 	"instructions/InstAlloca.cpp"
 	#	"instructions/InstBr.cpp"

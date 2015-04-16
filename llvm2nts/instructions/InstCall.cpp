@@ -84,4 +84,5 @@ void InstCall::process (
 			*sti.st, *st_next );
 
 	transition->insert_to ( bntsi.bn );
+	sti.st = st_next;
 }

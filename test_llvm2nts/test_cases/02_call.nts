@@ -38,9 +38,9 @@ calee {
 	initial	st_0_0;
 	final	st_0_5;
 	st_0_0 -> st_0_1 { a ( 7 ) }
-	st_0_0 -> st_0_2 { b (  ) }
-	st_0_0 -> st_0_3 { l_v1' = c (  ) }
-	st_0_0 -> st_0_4 { l_v2' = d ( l_v1 ) }
-	st_0_0 -> st_0_5 { havoc (  ) }
+	st_0_1 -> st_0_2 { b (  ) }
+	st_0_2 -> st_0_3 { l_v1' = c (  ) }
+	st_0_3 -> st_0_4 { l_v2' = d ( l_v1 ) }
+	st_0_4 -> st_0_5 { havoc (  ) }
 }
 
