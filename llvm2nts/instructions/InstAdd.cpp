@@ -32,10 +32,10 @@ void InstAdd::process (
 			move ( right )
 	);
 
-	auto & dest_var = * map.new_variable ( bo );
-	dest_var.insert_to ( bntsi.bn );
+	Variable * dest_var =  map.new_variable ( bo ).release();
+	dest_var->insert_to ( bntsi.bn );
 	auto ref = std::make_unique < VariableReference > (
-			dest_var,
+			*dest_var,
 			true
 	);
 
@@ -45,7 +45,7 @@ void InstAdd::process (
 			move ( result )
 	);
 
-	auto havoc = new Havoc ( { &dest_var } );
+	auto havoc = new Havoc ( { dest_var } );
 
 	auto f = std::make_unique < FormulaBop > (
 			BoolOp::And,

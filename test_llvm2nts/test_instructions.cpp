@@ -118,3 +118,11 @@ TEST_CASE ( "PthreadCreate", "Process calls to pthread_create(3)" )
 	do_file_compare_test ( "./test_cases/04_pthread_create.ll",
 			               "./test_cases/04_pthread_create.nts" );
 }
+
+TEST_CASE ( "Add", "Add instruction)" )
+{
+	do_file_compare_test (
+			"./test_cases/05_add.ll",
+			"./test_cases/05_add.nts"
+	);
+}

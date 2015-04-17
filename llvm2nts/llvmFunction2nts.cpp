@@ -12,7 +12,7 @@
 #include "FunctionMapping.hpp"
 
 //#include "instructions/Constants.hpp"
-//#include "instructions/InstAdd.hpp"
+#include "instructions/InstAdd.hpp"
 #include "instructions/InstLoadStore.hpp"
 #include "instructions/InstAlloca.hpp"
 //#include "instructions/InstBr.hpp"
@@ -31,15 +31,7 @@ using std::to_string;
 class Context
 {
 	public:
-		Context ()// :
-//			m_ia   ( m_constants ),
-//			m_icmp ( m_constants )
-		{
-
-		}
-
-		//Constants     m_constants;
-		//InstAdd       m_ia;
+		InstAdd       m_ia;
 		InstLoadStore m_ils;
 		InstAlloca    m_alloca;
 		//InstBr        m_ibr;
@@ -49,39 +41,6 @@ class Context
 
 
 static Context ctx;
-
-#if 0
-const State * llvmFunction2nts::process_instruction (
-		const State       * st_from ,
-		const Instruction & i       )
-{
-	switch(i.getOpcode())
-	{
-		case Instruction::Alloca:
-			break;
-
-		case Instruction::Store:
-		case Instruction::Load:
-		case Instruction::Ret:
-			return ctx.m_ils.process   ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
-
-		case Instruction::Add:
-			return ctx.m_ia.process    ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
-
-		case Instruction::Br:
-			return ctx.m_ibr.process   ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
-
-		case Instruction::ICmp:
-			return ctx.m_icmp.process  ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
-
-		case Instruction::Call:
-			return ctx.m_icall.process ( st_from, i, m_map, m_nts, m_bb_id, m_inst_id );
-
-	}
-
-	return st_from;
-}
-#endif
 
 struct fun_llvm_2_nts
 {
@@ -169,6 +128,9 @@ void fun_llvm_2_nts::process_instruction ( const llvm::Instruction & i, StateInf
 		case Instruction::Load:
 		case Instruction::Ret:
 			return ctx.m_ils.process ( bni, st, funmap, i );
+
+		case Instruction::Add:
+			return ctx.m_ia.process ( bni, st, funmap, i );
 
 		default:
 		{

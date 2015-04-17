@@ -50,6 +50,8 @@ class ModuleMapping
 	using Functions = llvm::DenseMap < const llvm::Function *, BasicNtsInfo * >;
 
 	public:
+		~ModuleMapping();
+
 		void ins_function (
 				const llvm::Function & fun,
 				std::unique_ptr<BasicNtsInfo> bni

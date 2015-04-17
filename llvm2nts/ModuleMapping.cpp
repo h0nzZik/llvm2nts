@@ -4,6 +4,20 @@
 
 using namespace nts;
 
+
+ModuleMapping::~ModuleMapping()
+{
+	for ( auto &p : m_functions )
+	{
+		delete p.getSecond();
+	}
+
+	for ( auto &p : m_vars )
+	{
+		delete p.getSecond();
+	}
+}
+
 void ModuleMapping::ins_function (
 		const llvm::Function &fun,
 		std::unique_ptr<BasicNtsInfo> i )
