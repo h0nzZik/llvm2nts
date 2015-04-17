@@ -1,0 +1,14 @@
+nts ./test_cases/05_add.ll;
+addu {
+	_lbb_var : BitVector<16>;
+	p : BitVector<32>;
+	l_v : BitVector<32>;
+	l_sum : BitVector<32>;
+	initial	st_0_0;
+	final	st_0_5;
+	st_0_0 -> st_0_2 { ( ( p' = 7 ) && havoc ( p ) ) }
+	st_0_2 -> st_0_3 { ( ( l_v' = p ) && havoc ( l_v ) ) }
+	st_0_3 -> st_0_4 { ( ( l_sum' = ( 1 + l_v ) ) && havoc ( l_sum ) ) }
+	st_0_4 -> st_0_5 { havoc (  ) }
+}
+
