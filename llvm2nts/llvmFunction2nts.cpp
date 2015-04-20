@@ -16,7 +16,7 @@
 #include "instructions/InstLoadStore.hpp"
 #include "instructions/InstAlloca.hpp"
 //#include "instructions/InstBr.hpp"
-//#include "instructions/InstIcmp.hpp"
+#include "instructions/InstIcmp.hpp"
 #include "instructions/InstCall.hpp"
 
 
@@ -35,7 +35,7 @@ class Context
 		InstLoadStore m_ils;
 		InstAlloca    m_alloca;
 		//InstBr        m_ibr;
-		//InstIcmp      m_icmp;
+		InstIcmp      m_icmp;
 		InstCall      m_icall;
 };
 
@@ -131,6 +131,9 @@ void fun_llvm_2_nts::process_instruction ( const llvm::Instruction & i, StateInf
 
 		case Instruction::Add:
 			return ctx.m_ia.process ( bni, st, funmap, i );
+
+		case Instruction::ICmp:
+			return ctx.m_icmp.process ( bni, st, funmap, i );
 
 		default:
 		{

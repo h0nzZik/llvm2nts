@@ -5,17 +5,20 @@ add_library(llvm2nts SHARED
 	"ModuleMapping.cpp"
 	"types.cpp"
 	"util.cpp"
+	"sugar.cpp"
 	"instructions/InstAdd.cpp"
 	"instructions/InstLoadStore.cpp"
 	"instructions/InstAlloca.cpp"
 	#	"instructions/InstBr.cpp"
-	#	"instructions/InstIcmp.cpp"
+	"instructions/InstIcmp.cpp"
 	"instructions/InstCall.cpp"
-	#	"instructions/Constants.cpp"
 )
 
 include_directories(${LLVM_INCLUDE_DIRS})
-include_directories ( ".." )
+include_directories (
+	".."
+	"../externals"
+	)
 
 target_link_libraries ( llvm2nts NTS_cpp )
 

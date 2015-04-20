@@ -126,3 +126,11 @@ TEST_CASE ( "Add", "Add instruction)" )
 			"./test_cases/05_add.nts"
 	);
 }
+
+TEST_CASE ( "Icmp", "ICMP instruction" )
+{
+	do_file_compare_test (
+			"./test_cases/06_icmp.ll",
+			"./test_cases/06_icmp.nts"
+	);
+}

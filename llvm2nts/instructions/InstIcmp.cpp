@@ -7,89 +7,16 @@
  */
 
 #include <stdexcept>
+#include <llvm/Support/Casting.h> // llvm::cast
+#include <libNTS/logic.hpp>
+#include <libNTS/nts.hpp>
+
+#include "../util.hpp"
+#include "../sugar.hpp"
+
 #include "InstIcmp.hpp"
 
-using namespace NTS;
-
-InstIcmp::InstIcmp ( Constants & constants ) :
-	m_constants   ( constants ),
-	m_av_result   ( 0, true  ),
-	m_av_op1      ( 1, false ),
-	m_av_op2      ( 2, false ),
-	m_av_sigbound ( 3, false ),
-	m_av_true     ( 4, false ),
-	m_av_false    ( 5, false ),
-	m_havoc       ( {0} ),
-
-	m_op1_negative    ( AtomicRelation::Relation::Gt,  &m_av_op1, &m_av_sigbound ),
-	m_op1_nonnegative ( AtomicRelation::Relation::Le,  &m_av_op1, &m_av_sigbound ),
-	m_op2_negative    ( AtomicRelation::Relation::Gt,  &m_av_op2, &m_av_sigbound ),
-	m_op2_nonnegative ( AtomicRelation::Relation::Le,  &m_av_op2, &m_av_sigbound ),
-
-	m_neg_equiv          ( BoolOp::Equiv, &m_op1_negative, &m_op2_negative    ),
-	m_op1_neg_op2_nonneg ( BoolOp::And,   &m_op1_negative, &m_op2_nonnegative ),
-	m_op2_neg_op1_nonneg ( BoolOp::And,   &m_op2_negative, &m_op1_nonnegative ),
-
-	m_op1_eq_op2  ( AtomicRelation::Relation::Eq,  &m_av_op1, &m_av_op2 ),
-	m_op1_neq_op2 ( AtomicRelation::Relation::Neq, &m_av_op1, &m_av_op2 ),
-
-	m_op1_ult_op2 ( AtomicRelation::Relation::Lt,  &m_av_op1, &m_av_op2 ),
-	m_op1_ule_op2 ( AtomicRelation::Relation::Le,  &m_av_op1, &m_av_op2 ),
-	m_op1_uge_op2 ( AtomicRelation::Relation::Ge,  &m_av_op1, &m_av_op2 ),
-	m_op1_ugt_op2 ( AtomicRelation::Relation::Gt,  &m_av_op1, &m_av_op2 ),
-
-	m_neg_equiv_and_op1_lt_op2 ( BoolOp::And, &m_neg_equiv, &m_op1_ult_op2 ),
-	m_neg_equiv_and_op1_gt_op2 ( BoolOp::And, &m_neg_equiv, &m_op1_ugt_op2 ),
-
-	m_op1_slt_op2 ( BoolOp::Or, &m_neg_equiv_and_op1_lt_op2, &m_op1_neg_op2_nonneg ),
-	m_op1_sgt_op2 ( BoolOp::Or, &m_neg_equiv_and_op1_gt_op2, &m_op2_neg_op1_nonneg ),
-
-	m_op1_sle_op2 ( BoolOp::Or, &m_op1_slt_op2, &m_op1_eq_op2 ),
-	m_op1_sge_op2 ( BoolOp::Or, &m_op1_sgt_op2, &m_op1_eq_op2 ),
-
-	m_assign_true  ( AtomicRelation::Relation::Eq,  &m_av_result, &m_av_true  ),
-	m_assign_false ( AtomicRelation::Relation::Eq,  &m_av_result, &m_av_false ),
-
-	m_eq_assign_true   ( BoolOp::Impl, &m_op1_eq_op2,  &m_assign_true  ),
-	m_neq_assign_false ( BoolOp::Impl, &m_op1_neq_op2, &m_assign_false ),
-
-	m_ult_assign_true  ( BoolOp::Impl, &m_op1_ult_op2, &m_assign_true  ),
-	m_ule_assign_true  ( BoolOp::Impl, &m_op1_ule_op2, &m_assign_true  ),
-
-	m_ugt_assign_false ( BoolOp::Impl, &m_op1_ugt_op2, &m_assign_false ),
-	m_uge_assign_false ( BoolOp::Impl, &m_op1_uge_op2, &m_assign_false ),
-
-	m_slt_assign_true  ( BoolOp::Impl, &m_op1_slt_op2, &m_assign_true  ),
-	m_sle_assign_true  ( BoolOp::Impl, &m_op1_sle_op2, &m_assign_true  ),
-
-	m_sgt_assign_false ( BoolOp::Impl, &m_op1_sgt_op2, &m_assign_false  ),
-	m_sge_assign_false ( BoolOp::Impl, &m_op1_sge_op2, &m_assign_false  ),
-
-	m_f_eq  ( BoolOp::And, &m_eq_assign_true,  &m_neq_assign_false  ),
-	m_f_ult ( BoolOp::And, &m_ult_assign_true, &m_uge_assign_false  ),
-	m_f_ule ( BoolOp::And, &m_ule_assign_true, &m_ugt_assign_false  ),
-	m_f_slt ( BoolOp::And, &m_slt_assign_true, &m_sge_assign_false  ),
-	m_f_sle ( BoolOp::And, &m_sle_assign_true, &m_sgt_assign_false  ),
-
-	m_f_eq_havoc  ( BoolOp::And, &m_f_eq,  &m_havoc ),
-	m_f_ult_havoc ( BoolOp::And, &m_f_ult, &m_havoc ),
-	m_f_ule_havoc ( BoolOp::And, &m_f_ule, &m_havoc ),
-	m_f_slt_havoc ( BoolOp::And, &m_f_slt, &m_havoc ),
-	m_f_sle_havoc ( BoolOp::And, &m_f_sle, &m_havoc )
-{
-	;
-}
-
-InstIcmp::~InstIcmp()
-{
-	
-}
-
-bool InstIcmp::supports(unsigned int opcode) const
-{
-	return opcode == llvm::Instruction::ICmp;
-}
-
+#if 0
 ConcreteFormula InstIcmp::get_formula (
 		llvm::ICmpInst::Predicate   p,
 		const IPrint              * result,
@@ -155,6 +82,100 @@ ConcreteFormula InstIcmp::get_formula (
 	}
 }
 
+#endif
+
+using namespace nts;
+using namespace llvm;
+using std::unique_ptr;
+
+using namespace sugar;
+
+unique_ptr < Formula > InstIcmp::predicate (
+		CmpInst::Predicate p,
+		unique_ptr < Term > left,
+		unique_ptr < Term > right ) const
+{
+	// see sugar.hpp
+	switch ( p )
+	{
+		case ICmpInst::ICMP_EQ:
+			return left == right;
+
+		case ICmpInst::ICMP_ULT:
+			return left < right;
+
+		case ICmpInst::ICMP_ULE:
+			return left <= right;
+
+		case ICmpInst::ICMP_UGT:
+			return left > right;
+
+		case ICmpInst::ICMP_UGE:
+			return left >= right;
+
+		case ICmpInst::ICMP_NE:
+			return left != right;
+
+		case ICmpInst::ICMP_SGE:
+		case ICmpInst::ICMP_SLE:
+		case ICmpInst::ICMP_SGT:
+		case ICmpInst::ICMP_SLT:
+			throw std::domain_error ( "Signed comparison is not implemented" );
+
+		default:
+			throw std::domain_error ( "Unknown ICMP operator" );
+	}
+}
+
+void InstIcmp::process (
+		const BasicNtsInfo      & bntsi,
+		StateInfo               & sti,
+		FunctionMapping         & map,
+		const llvm::Instruction & i    )
+{
+	auto st_next = new_state ( sti.bb_id, sti.inst_id );
+	st_next->insert_after ( *sti.st );
+
+	if (i.getOpcode() != Instruction::ICmp)
+		throw std::invalid_argument("Unsupported llvm instruction");
+
+	const auto &icmp     = cast < llvm::ICmpInst > ( i );
+
+	unique_ptr < Leaf > left  = map.new_leaf ( * icmp.getOperand ( 0 ) );
+	unique_ptr < Leaf > right = map.new_leaf ( * icmp.getOperand ( 1 ) );
+
+
+
+	unique_ptr < Formula > condition = predicate (
+			icmp.getPredicate(),
+			move ( left  ),
+			move ( right )
+	);
+
+	Variable * result = map.new_variable( icmp ).release();
+	result->insert_to ( bntsi.bn );
+	Havoc &h = * new Havoc( { result } );
+
+	// Should be of type 'Bool' or 'BitVector<1>'
+	auto one = std::make_unique<IntConstant> ( 1 );
+	auto is_true = std::make_unique<Relation> (
+			RelationOp::eq,
+			std::make_unique<VariableReference> ( *result, true ),
+			move ( one )
+	);
+
+	Formula &eq = *(condition.release()) == *(is_true.release());
+
+	Formula &f = eq && h;
+
+	auto ftr = std::make_unique < FormulaTransitionRule >
+		( unique_ptr < Formula > ( &f ) );
+	auto * tr  = new Transition ( move ( ftr ), *sti.st, *st_next );
+	tr->insert_to ( bntsi.bn );
+	sti.st = st_next;
+}
+
+#if 0
 const State * InstIcmp::process(
 		const NTS::State        * from    ,
 		const llvm::Instruction & i       ,
@@ -180,3 +201,5 @@ const State * InstIcmp::process(
 	n.add_transition ( from, st_to, r );
 	return st_to;
 }
+
+#endif

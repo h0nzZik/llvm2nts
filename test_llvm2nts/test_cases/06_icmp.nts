@@ -1,0 +1,24 @@
+nts test_cases/06_icmp.ll;
+icmp_test {
+	_lbb_var : BitVector<16>;
+	p : BitVector<32>;
+	l_v : BitVector<32>;
+	l_fl_1 : BitVector<1>;
+	l_fl_2 : BitVector<1>;
+	l_fl_3 : BitVector<1>;
+	l_fl_4 : BitVector<1>;
+	l_fl_5 : BitVector<1>;
+	l_fl_6 : BitVector<1>;
+	initial	st_0_0;
+	final	st_0_10;
+	st_0_0 -> st_0_2 { ( ( p' = 7 ) && havoc ( p ) ) }
+	st_0_2 -> st_0_3 { ( ( l_v' = p ) && havoc ( l_v ) ) }
+	st_0_3 -> st_0_4 { ( ( ( l_v != 10 ) <=> ( l_fl_1' = 1 ) ) && havoc ( l_fl_1 ) ) }
+	st_0_4 -> st_0_5 { ( ( ( l_v = 10 ) <=> ( l_fl_2' = 1 ) ) && havoc ( l_fl_2 ) ) }
+	st_0_5 -> st_0_6 { ( ( ( l_v > 10 ) <=> ( l_fl_3' = 1 ) ) && havoc ( l_fl_3 ) ) }
+	st_0_6 -> st_0_7 { ( ( ( l_v >= 10 ) <=> ( l_fl_4' = 1 ) ) && havoc ( l_fl_4 ) ) }
+	st_0_7 -> st_0_8 { ( ( ( l_v <= 10 ) <=> ( l_fl_5' = 1 ) ) && havoc ( l_fl_5 ) ) }
+	st_0_8 -> st_0_9 { ( ( ( l_v < 10 ) <=> ( l_fl_6' = 1 ) ) && havoc ( l_fl_6 ) ) }
+	st_0_9 -> st_0_10 { havoc (  ) }
+}
+
