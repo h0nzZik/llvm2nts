@@ -27,7 +27,7 @@ nts::Constant * new_constant ( const llvm::Constant & c )
 		llvm::raw_string_ostream os ( s );
 		os << ci.getValue();
 		return new nts::UserConstant (
-				DataType::Integral(),
+				DataType ( ScalarType::Integral() ),
 				os.str() );
 	}
 

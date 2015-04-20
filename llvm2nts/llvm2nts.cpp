@@ -94,7 +94,10 @@ void llvm_2_nts::create_function_prototypes ()
 		
 
 		// FIXME: We assume there are only a few basicblocks
-		auto *v = new Variable ( DataType::BitVector(16), "_lbb_var" );
+		auto *v = new Variable (
+				DataType( ScalarType::BitVector(16) ),
+				"_lbb_var"
+		);
 		v->insert_to ( *bn );
 		i->lbb_var = v;
 
@@ -126,8 +129,9 @@ void llvm_2_nts::process_pthreads()
 	auto * thread_create = new BasicNts ( "__thread_create" );
 	{
 		auto * param_func_id = new Variable (
-				DataType::BitVector ( 16 ), // FIXME
-				"func_id" );
+				DataType ( ScalarType::BitVector ( 16 ) ), // FIXME
+				"func_id"
+		);
 		param_func_id->insert_param_in_to ( *thread_create );
 	}
 

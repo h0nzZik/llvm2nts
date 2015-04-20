@@ -90,9 +90,13 @@ unique_ptr < Relation > operator< (
 	if ( n != 0 )
 		throw domain_error ( "Only zero is supported" );
 
-	if ( t->type().is_bitvector() )
+	if ( ! t->type().is_scalar() )
+		throw domain_error ( "Only scalar types are supported" );
+
+	const ScalarType & sc = t->type().scalar_type();
+	if ( sc.is_bitvector() )
 	{
-		unsigned int w = t->type().bitwidth();
+		unsigned int w = sc.bitwidth();
 		if ( w < 1 || w > 8 * sizeof(int) )
 			throw domain_error ( "Bitwidth is too large" );
 
@@ -102,7 +106,7 @@ unique_ptr < Relation > operator< (
 		return t >= n;
 	}
 
-	if ( ( t->type() == DataType::Integer() ) || ( t->type() == DataType::Real() ) )
+	if ( ( sc == ScalarType::Integer() ) || ( sc == ScalarType::Real() ) )
 	{
 		unique_ptr < Term > n = std::make_unique < IntConstant > ( 0 );
 		return t < n;
