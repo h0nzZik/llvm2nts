@@ -46,33 +46,38 @@ __thread_create {
 	initial si;
 	final   sf;
 	err     se;
-
-	idle_thread_id : int;
-
-	// Waiting for lock. This is probably not necessary
-	si -> si       { __thread_pool_lock >= 0 && havoc() }
-	// Acquire lock
-	si -> s_locked { __thread_pool_lock = -1      &&
-	                 __thread_pool_lock' = tid    &&
-					 havoc ( __thread_pool_lock )    }
 	
-	// Find some idle thread
-	s_locked -> s_id { idle_thread_id' >= 0                        &&
-	                   idle_thread_id' <  __THREAD_POOL_N          &&
-					   __thread_pool_selected[idle_thread_id'] < 0 &&
-					   havoc ( idle_thread_id )                       }
-	
-	// Can not find an idle thread
-	s_locked -> s_e { forall i : int . 
-	                  (
-					    i <= 0 && i < __THREAD_POOL_N
-					  ) => (
-					    __thread_pool_selected[i] >= 0
-					  ) && havoc() }
-	
-	s_id -> s_create { __thread_selected'[idle_thread_id] = function_id &&
-	                   havoc ( __thread_selected )                         }
+	thread_id : int;
 
-	// Release lock
-	s_create -> sf { __thread_pool_lock' = -1 && havoc ( __thread_pool_lock ) }
+	si -> s_locked { __thread_pool_lock  = 0     &&
+	                 __thread_pool_lock' = ( 1 + tid )    &&
+	                 thread_id'          = 0      &&
+	                 havoc ( __thread_pool_lock, thread_id )
+	}
+	
+	// Is 'thread_id' thread empty? If so, use it
+	s_locked -> s_id {
+		__thread_pool_selected  [ thread_id ] = 0           &&
+		__thread_pool_selected' [ thread_id ] = ( 1 + function_id ) &&
+		havoc ( __thread_selected )
+	}
+	
+	// If not so, try another thread
+	s_locked -> s_locked {
+		__thread_pool_selected [ thread_id ] > 0  &&
+		thread_id < __THREAD_POOL_N - 1           &&
+		thread_id' = ( thread_id + 1 )            &&
+		havoc ( thread_id )
+	}
+	
+	// Can not find anything
+	s_locked -> se {
+		__thread_pool_selected [ thread_id ] > 0  &&
+		thread_id >= __THREAD_POOL_N - 1          &&
+		havoc()
+	}
+	
+	// unlock
+	s_id -> s_f { __thread_pool_lock' = 0 && havoc() }
 }
+
