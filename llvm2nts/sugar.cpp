@@ -333,6 +333,40 @@ ArrayTerm & ArrRead::operator [] ( Term & t )
 	);
 }
 
+ArrWriting::ArrWriting ( const Variable & arr_var, Term & t ) :
+	_arr_var ( arr_var ),
+	_idx     ( & t     )
+{
+	;
+}
+
+ArrayWrite & ArrWriting::operator== ( Term & value )
+{
+	if ( ! _idx )
+		throw std::logic_error ( "ArrWriting::operator== used twice!" );
+
+	Term * idx = _idx;
+	_idx = nullptr;
+
+	return * new nts::ArrayWrite ( _arr_var, {},  { idx }, { & value } );
+}
+
+ArrayWrite & ArrWriting::operator== ( int value )
+{
+	return operator== ( * new IntConstant ( value ) );
+}
+
+ArrWrite::ArrWrite ( const Variable & arr_var ) :
+	_arr_var ( arr_var )
+{
+	;
+}
+
+ArrWriting ArrWrite::operator[] ( Term & idx )
+{
+	return ArrWriting ( _arr_var, idx );
+}
+
 
 
 } // namespace sugar

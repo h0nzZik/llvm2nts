@@ -375,6 +375,14 @@ void llvm_2_nts::add_thread_pool_routine()
 				*s_stopped,
 				modmap.get_nts ( *funs[i] ).bn
 		);
+
+		// ( __thread_poll_selected'[tid] = 0 ) && havoc(__thread_poll_selected)
+		ArrWrite wr_tps ( *var_thread_pool_selected );
+		Formula & f_to_idle = ( wr_tps[tid()] == 0) && 
+			havoc ( { var_thread_pool_selected } );
+
+		Transition & t = ( *s_stopped ->* *s_idle ) ( f_to_idle );
+		t.insert_to ( *bnts_thread_pool_routine );
 	}
 
 	bnts_thread_pool_routine->insert_to ( nts );
@@ -386,7 +394,7 @@ void llvm_2_nts::add_thread_pool_variables()
 		return;
 
 	var_thread_pool_lock = new Variable (
-			DataType ( ScalarType::Integer() ),
+			DataType ( ScalarType::BitVector ( 32 ) ),
 			"__thread_pool_lock"
 	);
 	var_thread_pool_lock->insert_to ( nts );
@@ -512,6 +520,24 @@ void llvm_2_nts::add_instances()
 	{
 		Instance * i = new Instance ( bnts_thread_pool_routine, thread_pool_size );
 		i->insert_to ( nts );
+
+		// find main
+		BasicNts * main = nullptr;
+		for ( BasicNts * bn : nts.basic_ntses() )
+		{
+			if ( 0 == bn->name().compare ( "main" ) )
+			{
+				main = bn;
+				break;
+			}
+		}
+
+		// This could be checked sooner, but..
+		if ( !main )
+			throw std::runtime_error ( "BasicNts 'main' is missing" );
+
+		Instance * i_main = new Instance ( main, 1 );
+		i_main->insert_to ( nts );
 	}
 }
 

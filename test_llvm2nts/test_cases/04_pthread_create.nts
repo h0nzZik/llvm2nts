@@ -1,22 +1,40 @@
 nts ./test_cases/04_pthread_create.ll;
+__thread_pool_lock : BitVector<32>
+__thread_pool_selected[20] : BitVector<32>
+instances __thread_pool_routine[20], main[1];
 thread_func {
-	// Variables
-	_ret_var, _lbb_var, l_ : int;
-	in ( arg_data );
-	out ( _ret_var );
-	initial s_0_0;
-	final st_final;
-	// Transitions:
-	s_0_0 -> st_final {(_ret_var' = l_) && havoc(_ret_var)}
+	_lbb_var : BitVector<16>;
+	initial	st_0_0;
+	final	st_0_1;
+	st_0_0 -> st_0_1 { havoc (  ) }
 }
-calee {
-	// Variables
-	_ret_var, _lbb_var : int;
-	in (  );
-	out ( _ret_var );
-	initial s_0_0;
-	final st_final;
-	// Transitions:
-	s_0_0 -> s_0_1 {__thread_create ( 0 )}
-	s_0_1 -> st_final {havoc(_ret_var)}
+
+main {
+	_lbb_var : BitVector<16>;
+	initial	st_0_0;
+	final	st_0_2;
+	st_0_0 -> st_0_1 { __thread_create ( 0 ) }
+	st_0_1 -> st_0_2 { havoc (  ) }
 }
+
+__thread_pool_routine {
+	initial	s_idle;
+	s_idle -> s_running_1 { ( ( __thread_pool_selected[tid] = 1 ) && havoc (  ) ) }
+	s_running_1 -> s_stopped { thread_func (  ) }
+	s_stopped -> s_idle { ( __thread_pool_selected'[ tid ] = [0] && havoc ( __thread_pool_selected ) ) }
+}
+
+__thread_create {
+	in	func_id : BitVector<32>;
+	thread_id : BitVector<32>;
+	initial	si;
+	final	sf;
+	error	se;
+	si -> sl { ( ( ( __thread_pool_lock = 0 ) && ( __thread_pool_lock' = ( tid + 1 ) ) ) && ( ( thread_id' = 0 ) && havoc ( __thread_pool_lock, thread_id ) ) ) }
+	sl -> sh { ( ( __thread_pool_selected[thread_id] = 0 ) && ( __thread_pool_selected'[ thread_id ] = [( func_id + 1 )] && havoc ( __thread_pool_selected ) ) ) }
+	sl -> sn { ( ( __thread_pool_selected[thread_id] > 0 ) && havoc (  ) ) }
+	sn -> sl { ( ( thread_id < 19 ) && ( ( thread_id' = ( thread_id + 1 ) ) && havoc ( thread_id ) ) ) }
+	sn -> se { ( ( thread_id >= 19 ) && havoc (  ) ) }
+	sh -> sf { ( ( __thread_pool_lock' = 0 ) && havoc ( __thread_pool_lock ) ) }
+}
+

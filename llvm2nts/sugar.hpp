@@ -112,6 +112,32 @@ class ArrRead
 		nts::ArrayTerm & operator [] ( nts::Term & t );
 };
 
+// Use only as a temporary object
+class ArrWriting
+{
+	private:
+		const nts::Variable & _arr_var;
+		nts::Term * _idx;
+
+	public:
+		ArrWriting ( const nts::Variable & arr_var, nts::Term & idx );
+
+		// Use only once!
+		nts::ArrayWrite & operator== ( nts::Term & value );
+		nts::ArrayWrite & operator== ( int value );
+};
+
+class ArrWrite
+{
+	private:
+		const nts::Variable & _arr_var;
+
+	public:
+		ArrWrite ( const nts::Variable & arr_var );
+
+		ArrWriting operator [] ( nts::Term & idx );
+};
+
 };
 
 #endif // SUGAR_HPP_

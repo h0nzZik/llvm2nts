@@ -4,7 +4,7 @@ define i8* @thread_func ( i8* %data ) {
 	ret i8* null;
 }
 
-define void @calee () {
+define void @main () {
 	call i32 @pthread_create (
 			i64*                   null,
 			%union.pthread_attr_t* null,
