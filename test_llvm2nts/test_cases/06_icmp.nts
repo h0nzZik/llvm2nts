@@ -1,4 +1,4 @@
-nts test_cases/06_icmp.ll;
+nts ./test_cases/06_icmp.ll;
 icmp_test {
 	_lbb_var : BitVector<16>;
 	p : BitVector<32>;

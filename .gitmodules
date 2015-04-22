@@ -9,6 +9,3 @@
 [submodule "libNTS"]
 	path = libNTS
 	url = git@github.com:h0nzZik/libNTS_cpp.git
-[submodule "externals/named-operator"]
-	path = externals/named-operator
-	url = https://github.com/klmr/named-operator.git
