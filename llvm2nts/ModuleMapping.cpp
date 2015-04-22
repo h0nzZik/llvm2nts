@@ -67,3 +67,13 @@ unsigned int ModuleMapping::get_pthread_function_id ( const llvm::Function & f )
 	return it->getSecond();
 }
 
+bool ModuleMapping::is_thread_function ( const llvm::Function & f ) const
+{
+	auto it = m_ptf_id.find ( & f );
+	if ( it == m_ptf_id.end() )
+		return false;
+
+	return true;
+}
+
+

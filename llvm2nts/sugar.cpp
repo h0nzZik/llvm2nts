@@ -5,6 +5,7 @@
 using namespace nts;
 using std::unique_ptr;
 using std::domain_error;
+using std::move;
 
 #if 0
 std::unique_ptr < nts::Relation > sugar::op::eq (
@@ -164,23 +165,175 @@ unique_ptr < FormulaBop > equally_negative (
 	return ap1 == ap2;
 }
 
-}
-#if 0
-
-unique_ptr < FormulaBop > sign_lt (
-		unique_ptr < Term > & t1,
-		unique_ptr < Term > & t2 )
+Relation & operator== ( Term & t1, Term & t2 )
 {
-	unique_ptr < Term > t1_c ( t1->clone() );
-	unique_ptr < Term > t2_c ( t2->clone() );
-
-	unique_ptr < Formula > en = equally_negative ( t1_c, t2_c );
-
-
-
+	return * new Relation (
+			RelationOp::eq,
+			unique_ptr < Term > ( &t1 ),
+			unique_ptr < Term > ( &t2 )
+	);
 }
-#endif
+
+Relation & operator== ( Term & t1, int t2 )
+{
+	return ( t1 == *( new IntConstant ( t2 ) ) );
+}
+
+Relation & operator> ( Term & t1, Term & t2 )
+{
+	return * new Relation (
+			RelationOp::gt,
+			unique_ptr < Term > ( & t1 ),
+		   	unique_ptr < Term > ( & t2 )
+	);
+}
+
+nts::Relation & operator> ( nts::Term & t1, int t2 )
+{
+	return (  t1  > *( new IntConstant ( t2 )  ) );
+}
+
+Relation & operator>= ( Term & t1, Term & t2 )
+{
+	return * new Relation (
+			RelationOp::geq,
+			unique_ptr < Term > ( & t1 ),
+		   	unique_ptr < Term > ( & t2 )
+	);
+}
+
+nts::Relation & operator>= ( nts::Term & t1, int t2 )
+{
+	return (  t1  >= *( new IntConstant ( t2 )  ) );
+}
+
+Relation & operator< ( Term & t1, Term & t2 )
+{
+	return * new Relation (
+			RelationOp::lt,
+			unique_ptr < Term > ( & t1 ),
+		   	unique_ptr < Term > ( & t2 )
+	);
+}
+
+nts::Relation & operator< ( nts::Term & t1, int t2 )
+{
+	return ( t1 < *( new IntConstant ( t2 )  ) );
+}
+
+Relation & operator<= ( Term & t1, Term & t2 )
+{
+	return * new Relation (
+			RelationOp::leq,
+			unique_ptr < Term > ( & t1 ),
+		   	unique_ptr < Term > ( & t2 )
+	);
+}
+
+nts::Relation & operator<= ( nts::Term & t1, int t2 )
+{
+	return ( t1 <= *( new IntConstant ( t2 )  ) );
+}
+
+ArithmeticOperation & operator+ ( Term & t1, Term & t2 )
+{
+	return * new ArithmeticOperation (
+			ArithOp::Add,
+			unique_ptr < Term > ( & t1 ),
+			unique_ptr < Term > ( & t2 )
+	);
+}
+
+ArithmeticOperation & operator+ ( Term & t1, int t2 )
+{
+	return ( t1 + *( new IntConstant ( t2 ) ) );
+}
+
+ThreadID & tid()
+{
+	return * new ThreadID();
+}
+
+Havoc & havoc ()
+{
+	return * new Havoc ( {} );
+}
+
+Havoc & havoc ( std::initializer_list < const Variable *> vars )
+{
+	return * new Havoc ( vars );
+}
+
+VariableReference & CURR ( const Variable & var )
+{
+	return * new VariableReference ( var, false );
+}
+
+VariableReference & CURR ( const Variable * var )
+{
+	return CURR ( *var );
+}
+
+
+VariableReference & NEXT ( const Variable & var )
+{
+	return * new VariableReference ( var, true );
+}
+
+VariableReference & NEXT ( const Variable * var )
+{
+	return NEXT ( *var );
+}
+
+SugarTransitionStates::SugarTransitionStates ( State & from, State & to ) :
+	_from ( from ),
+	_to   ( to   )
+{
+	;
+}
+
+Transition & SugarTransitionStates::operator () ( Formula & f )
+{
+	return * new Transition (
+		std::make_unique < FormulaTransitionRule > (
+			unique_ptr < Formula > ( &f )
+		),
+		_from,
+		_to
+	);
+}
+
+Transition & SugarTransitionStates::operator () ( unique_ptr < Formula > f )
+{
+	return * new Transition (
+		std::make_unique < FormulaTransitionRule > (
+			move ( f )
+		),
+		_from,
+		_to
+	);
+}
+
+SugarTransitionStates operator ->* ( State & from, State & to )
+{
+	return SugarTransitionStates ( from, to );
+}
+
+ArrRead::ArrRead ( nts::Variable & arr_var ) :
+	_arr_var ( arr_var )
+{
+	;
+}
+
+ArrayTerm & ArrRead::operator [] ( Term & t )
+{
+	return * new ArrayTerm (
+			std::make_unique < VariableReference > ( _arr_var, false ),
+			{ & t }
+	);
+}
 
 
 
+} // namespace sugar
 

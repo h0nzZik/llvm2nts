@@ -32,7 +32,6 @@ void InstCall::process (
 	if (!dest_function)
 		throw std::logic_error ( "Indirect function call is not supported" );
 
-	const BasicNtsInfo & dest_ntsi = map.m_modmap.get_nts ( *dest_function );
 	
 	// Call operands
 	std::vector < Term * > args;
@@ -41,26 +40,39 @@ void InstCall::process (
 
 	Variable * ret_var = nullptr;
 
+	BasicNts * dest_nts;
+
 	if ( is_ptc )
 	{
-		throw std::domain_error ( "pthread_create() not implemented" );
-#if 0
-		// now dest_nts points to "__thread_create" NTS 
+		// int pthread_create (
+		// 		pthread_t *thread,
+		// 		const pthread_attr_t *attr,
+		// 		void *(*start_routine) (void *),
+		// 		void *arg
+		// );
+
+		// Find 'thread_create' BasicNts
+		if ( ! map.m_modmap.bnts_thread_create )
+			throw std::logic_error ( "BasicNts 'thread_create' does not exist" );
+		dest_nts = map.m_modmap.bnts_thread_create;
+
+		// Find ID of given thread function
 		const auto * arg = call.getArgOperand ( 2 );
 		if ( !llvm::isa<llvm::Function> ( arg ) )
 			throw std::logic_error ( "invalid argument type of pthread_create()" );
-		
 		const llvm::Function *thread_main = llvm::cast<llvm::Function> ( arg );
-		unsigned id = map.m_modmap.get_pthread_function_id ( thread_main );
+		unsigned id = map.m_modmap.get_pthread_function_id ( *thread_main );
 		if ( id > INT_MAX )
 			throw std::logic_error ( "thread_main function id too big" );
 
-		const auto * ip = map.get_iprint ( (int)id );
-		args.push_back ( ip );
-#endif
+		// thread_create takes one argument - id of thread function
+		args.push_back ( new nts::IntConstant ( id ) );
 	}
 	else
 	{
+		BasicNtsInfo & dest_ntsi = map.m_modmap.get_nts ( *dest_function );
+		dest_nts = & dest_ntsi.bn;
+
 		if ( !dest_function->getReturnType()->isVoidTy() )
 		{
 			ret_var = map.new_variable ( call ).release();
@@ -73,11 +85,13 @@ void InstCall::process (
 		}
 	}
 
+	// now dest_nts points to "__thread_create" BasicNts
+
 	CallTransitionRule * ctr;
 	if ( ret_var )
-		ctr = new CallTransitionRule ( dest_ntsi.bn, args, { ret_var } );
+		ctr = new CallTransitionRule ( *dest_nts, args, { ret_var } );
 	else
-		ctr = new CallTransitionRule ( dest_ntsi.bn, args, {} );
+		ctr = new CallTransitionRule ( *dest_nts, args, {} );
 
 	auto transition = new Transition
 		( std::unique_ptr < TransitionRule > ( ctr ),

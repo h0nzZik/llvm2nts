@@ -59,25 +59,24 @@ __thread_create {
 	s_locked -> s_id {
 		__thread_pool_selected  [ thread_id ] = 0           &&
 		__thread_pool_selected' [ thread_id ] = ( 1 + function_id ) &&
-		havoc ( __thread_selected )
+		havoc ( __thread_pool_selected )
 	}
 	
+	s_locked -> s_goto_next { __thread_pool_selected [ thread_id ] > 0 && havoc() }
 	// If not so, try another thread
-	s_locked -> s_locked {
-		__thread_pool_selected [ thread_id ] > 0  &&
+	s_goto_next -> s_locked {
 		thread_id < __THREAD_POOL_N - 1           &&
 		thread_id' = ( thread_id + 1 )            &&
 		havoc ( thread_id )
 	}
 	
 	// Can not find anything
-	s_locked -> se {
-		__thread_pool_selected [ thread_id ] > 0  &&
+	s_goto_next -> se {
 		thread_id >= __THREAD_POOL_N - 1          &&
 		havoc()
 	}
 	
 	// unlock
-	s_id -> s_f { __thread_pool_lock' = 0 && havoc() }
+	s_id -> s_f { __thread_pool_lock' = 0 && havoc(__thread_pool_lock) }
 }
 

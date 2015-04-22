@@ -1,6 +1,8 @@
 #include <memory>
 #include <string>
 
+#include <llvm/IR/Constants.h>
+
 #include <libNTS/logic.hpp>
 
 #include "../util.hpp"
@@ -56,8 +58,16 @@ void InstLoadStore::process (
 
 			if ( ret.getReturnValue() )
 			{
-				dest_var = bntsi.ret_var;
-				src      = map.new_leaf ( *ret.getReturnValue() );
+				// thread functions does not return value
+				// (i.e. they should always return null)
+				if ( bntsi.is_ptf )
+				{
+					if ( !isa < llvm::ConstantPointerNull> ( ret.getReturnValue() ) )
+						throw std::domain_error ( "Thread functions should return null" );
+				} else {
+					dest_var = bntsi.ret_var;
+					src      = map.new_leaf ( *ret.getReturnValue() );
+				}
 			}
 			break;
 		}

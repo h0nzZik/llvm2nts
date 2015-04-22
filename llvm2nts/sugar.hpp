@@ -4,23 +4,11 @@
 
 #include <memory>
 
-//#include <named-operator/include/base/named_operator.hpp>
 #include <libNTS/logic.hpp>
+#include <libNTS/nts.hpp>
 
 namespace sugar
 {
-
-#if 0
-namespace op
-{
-	std::unique_ptr < nts::Relation > eq (
-			std::unique_ptr < nts::Term > &,
-			std::unique_ptr < nts::Term > & 
-	);
-};
-
-auto eq = base::make_named_operator ( op::eq );
-#endif
 
 std::unique_ptr < nts::Relation > operator== (
 		std::unique_ptr < nts::Term > &,
@@ -52,23 +40,77 @@ std::unique_ptr < nts::Relation > operator< (
 		int );
 
 
+nts::Relation & operator== ( nts::Term & t1, nts::Term & t2 );
+nts::Relation & operator== ( nts::Term & t1, int t2 );
+
+nts::Relation & operator> ( nts::Term & t1, nts::Term & t2 );
+nts::Relation & operator> ( nts::Term & t1, int t2 );
+
+nts::Relation & operator>= ( nts::Term & t1, nts::Term & t2 );
+nts::Relation & operator>= ( nts::Term & t1, int t2 );
+
+nts::Relation & operator< ( nts::Term & t1, nts::Term & t2 );
+nts::Relation & operator< ( nts::Term & t1, int t2 );
+
+nts::Relation & operator<= ( nts::Term & t1, nts::Term & t2 );
+nts::Relation & operator<= ( nts::Term & t1, int t2 );
+
+nts::ArithmeticOperation & operator+ ( nts::Term & t1, nts::Term & t2 );
+nts::ArithmeticOperation & operator+ ( nts::Term & t1, int t2 );
+
 nts::FormulaBop & operator== ( nts::Formula & f1, nts::Formula &f2 );
 
 nts::FormulaBop & operator&& ( nts::Formula & f1, nts::Formula & f2 );
 
-std::unique_ptr < nts::FormulaBop > operator&& (
-		std::unique_ptr < nts::Formula > &&,
-		std::unique_ptr < nts::Formula > && );
+// new instance of ThreadID
+nts::ThreadID & tid();
 
-std::unique_ptr < nts::FormulaBop > operator== (
-		std::unique_ptr < nts::Formula > &&,
-		std::unique_ptr < nts::Formula > && );
+nts::Havoc & havoc ();
+nts::Havoc & havoc ( std::initializer_list < const nts::Variable *> vars );
 
 
+// Reading VariableReference
+nts::VariableReference & CURR ( const nts::Variable & var );
+nts::VariableReference & CURR ( const nts::Variable * var );
 
-std::unique_ptr < nts::FormulaBop > equally_negative (
-		std::unique_ptr < nts::Term > &,
-		std::unique_ptr < nts::Term > & );
+
+// Writing VariableReference
+nts::VariableReference & NEXT ( const nts::Variable & var );
+nts::VariableReference & NEXT ( const nts::Variable * var );
+
+
+
+
+class SugarTransitionStates
+{
+	private:
+		nts::State & _from;
+		nts::State & _to;
+
+	public:
+		SugarTransitionStates ( nts::State & from, nts::State & to );
+
+		// Returns newly created transition, which becomes
+		// an owner of given formula
+		nts::Transition & operator () ( nts::Formula & f );
+		nts::Transition & operator () ( std::unique_ptr < nts::Formula > f );
+};
+
+SugarTransitionStates operator ->* ( nts::State & from, nts::State & to );
+
+// Array reading reference
+class ArrRead
+{
+	private:
+		nts::Variable & _arr_var;
+
+	public:
+		// Does not own anything
+		ArrRead ( nts::Variable & arr_var );
+
+		// Returned ArrayTerm becomes an owner of given term t
+		nts::ArrayTerm & operator [] ( nts::Term & t );
+};
 
 };
 

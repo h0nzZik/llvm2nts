@@ -15,6 +15,7 @@
 #include "llvmFunction2nts.hpp"
 #include "types.hpp"
 #include "util.hpp"
+#include "sugar.hpp"
 
 #include "llvm2nts.hpp"
 
@@ -22,27 +23,51 @@ using namespace llvm;
 using namespace nts;
 using std::string;
 using std::make_pair;
+using std::to_string;
+using std::vector;
+using std::unique_ptr;
+
+using namespace sugar;
 
 struct llvm_2_nts
 {
 	const Module  & llvm_module;
 	Nts           & nts;
 	ModuleMapping   modmap;
+	bool need_threads;
+
+	// How many threads there can be in one time
+	unsigned int thread_pool_size;
+	// Which thread is running which function. Array variable
+	Variable * var_thread_pool_selected;
+	Variable * var_thread_pool_lock;
+	BasicNts * bnts_thread_pool_routine;
 
 	llvm_2_nts ( const Module & lm, Nts & n ) :
 		llvm_module ( lm ),
 		nts         ( n  )
 	{
-		;
+		need_threads             = false;
+		var_thread_pool_lock     = nullptr;
+		var_thread_pool_selected = nullptr;
+		bnts_thread_pool_routine = nullptr;
 	}
 
 	/*
 	 * For each function creates simple BasicNts with no logic.
+	 * @pre Thread functions must be found,
+	 *      because their parameters are removed (pointers).
+	 *      Also their return type should be changed to void
+	 *      ( and all ret instructions should return null,
+	 *        and all calls and pthread_create passing
+	 *        can use only null arguments ).
+	 *
 	 */
 	void create_function_prototypes();
 
 	/*
 	 * Creates global variables related to llvm global variables
+	 * @pre nothing
 	 */
 	void create_global_variables();
 
@@ -53,11 +78,36 @@ struct llvm_2_nts
 
 	/*
 	 * If pthreads are used, creates __thread_create
-	 * Numbers thread functions
+	 * Finds and numbers thread functions
 	 */
 	void process_pthreads();
 
+	/*
+	 * @pre 1. There must be some caller to 'pthread_create' function
+	 *         - process_pthreads() must be called first
+	 */
+	void add_thread_create();
+	void add_thread_pool_variables();
+	/*
+	 * @pre 1. Thread pool variables must be created
+	 *         - @see add_thread_pool_variables()
+	 *      2. Thread routines must have created their prototypes
+	 *         - @see create_function_prototypes
+	 */
+	void add_thread_pool_routine();
+
+	/*
+	 * @pre An array of running thread functions must be created.
+	 */
+	State & add_thread_poll_select_transition ( State & from, unsigned int fun_id );
+	void add_thread_poll_call_transition ( State & from, State & to, BasicNts & bn );
+
+	/*
+	 * @pre Needs function prototypes and global variables
+	 */
 	void convert_functions();
+
+	void add_instances();
 };
 
 void llvm_2_nts::create_function_prototypes ()
@@ -72,7 +122,10 @@ void llvm_2_nts::create_function_prototypes ()
 		auto *i  = new BasicNtsInfo ( *bn );
 		i->orig_function = &f;
 
-		if ( ! f.getReturnType()->isVoidTy() )
+		if ( modmap.is_thread_function ( f ) )
+			i->is_ptf = true;
+
+		if ( ( !f.getReturnType()->isVoidTy() ) && ( !i->is_ptf ) )
 		{
 			auto *v = new Variable (
 					llvm_type_to_nts_type ( *f.getReturnType() ),
@@ -82,14 +135,17 @@ void llvm_2_nts::create_function_prototypes ()
 			i->ret_var = v;
 		}
 
-		// Function parameters
-		for ( auto &p : f.getArgumentList() )
+		if ( !i->is_ptf )
 		{
-			auto *v = new Variable (
-					llvm_type_to_nts_type ( *p.getType() ),
-					string ( "arg_" ) + p.getName().str() );
-			v->insert_param_in_to ( *bn );
-			i->args.insert ( make_pair ( &p, v ) );
+			// Function parameters
+			for ( auto &p : f.getArgumentList() )
+			{
+				auto *v = new Variable (
+						llvm_type_to_nts_type ( *p.getType() ),
+						string ( "arg_" ) + p.getName().str() );
+				v->insert_param_in_to ( *bn );
+				i->args.insert ( make_pair ( &p, v ) );
+			}
 		}
 		
 
@@ -109,6 +165,245 @@ void llvm_2_nts::create_function_prototypes ()
 
 }
 
+void llvm_2_nts::add_thread_create()
+{
+	if ( ! need_threads )
+		return;
+
+	BasicNts * thread_create = new BasicNts ( "__thread_create" );
+	Variable * param_func_id = new Variable (
+			DataType ( ScalarType::BitVector ( 32 ) ),
+			"func_id"
+	);
+	param_func_id->insert_param_in_to ( *thread_create );
+	
+
+	State & si = * new State ( "si" ); // 'initial'
+	State & sf = * new State ( "sf" ); // 'final'
+	State & se = * new State ( "se" ); // 'error'
+	State & sl = * new State ( "sl" ); // 'locked'
+	State & sh = * new State ( "sh" ); // 'have'
+	State & sn = * new State ( "sn" ); // 'go to Next'
+
+	si.insert_to ( *thread_create );
+	sf.insert_to ( *thread_create );
+	se.insert_to ( *thread_create );
+	sl.insert_to ( *thread_create );
+	sh.insert_to ( *thread_create );
+	sn.insert_to ( *thread_create );
+
+	si.is_initial() = true;
+	sf.is_final()   = true;
+	se.is_error()   = true;
+
+	Variable * var_thread_id = new Variable (
+			DataType ( ScalarType::BitVector ( 32 ) ),
+			"thread_id"
+	);
+	var_thread_id->insert_to ( *thread_create );
+
+	ArrRead selected ( * var_thread_pool_selected );
+
+	Formula & si_to_locked_f = (
+	(
+			( CURR(var_thread_pool_lock) == 0)
+		&&
+			( NEXT(var_thread_pool_lock) == ( tid() + 1) )
+	)
+	&&
+	(
+	 		( NEXT(var_thread_id) == 0)
+		&&
+			( havoc ({ var_thread_pool_lock, var_thread_id }) )
+	));
+
+	Transition & si_to_locked = ( si ->* sl ) ( si_to_locked_f );
+
+	si_to_locked.insert_to ( *thread_create );
+
+	Formula & f_found = (
+	(
+	 	selected [ CURR(var_thread_id) ] == 0
+
+	)
+	&&
+	(
+		(
+			* new ArrayWrite (
+				*var_thread_pool_selected,
+				{},
+				{ & CURR (var_thread_id) },
+				{ &( CURR (param_func_id) + 1) }
+			)
+		)
+		&&
+			havoc ( { var_thread_pool_selected } )
+	)
+	);
+
+	Transition & t_found = ( sl ->* sh ) ( f_found );
+	t_found.insert_to ( *thread_create );
+
+	Formula & f_not_found =  (
+	 (
+	  	selected [ CURR(var_thread_id) ] > 0
+	)
+	&&
+	 	havoc()
+	);
+
+	Transition & t_not_found = ( sl ->* sn ) ( f_not_found );
+	t_not_found.insert_to ( *thread_create );
+
+	Formula & f_goto_next = (
+		( CURR(var_thread_id) < (thread_pool_size - 1))
+	&&
+	(		(NEXT(var_thread_id) == ( CURR(var_thread_id) + 1 ) )
+		&&
+	 		havoc ( { var_thread_id } )
+	)
+	);
+
+	Transition & t_goto_next = ( sn ->* sl ) ( f_goto_next );
+	t_goto_next.insert_to ( *thread_create );
+
+
+	Formula & f_error = (
+		( CURR(var_thread_id) >= ( thread_pool_size - 1 ))
+	&&
+		havoc()	
+	);
+
+	Transition & t_err = ( sn ->* se ) ( f_error );
+	t_err.insert_to ( *thread_create );
+
+	// If we have it, unlock
+	Formula & f_unlock = (
+		( NEXT(var_thread_pool_lock) == 0)
+	&& 
+		havoc({var_thread_pool_lock})
+	);
+
+	Transition & t_unlock = ( sh ->* sf ) ( f_unlock );
+	t_unlock.insert_to ( *thread_create );
+
+	thread_create->insert_to ( nts );
+
+	modmap.bnts_thread_create = thread_create;
+}
+
+
+// s_idle -> s_running_2 { __thread_pool_selected[tid] = 2 && havoc() }
+State & llvm_2_nts::add_thread_poll_select_transition ( State & from, unsigned int fun_id )
+{
+	auto * s_running = new State ( string ( "s_running_" ) + to_string ( fun_id ) );
+	s_running->insert_to ( *bnts_thread_pool_routine );
+
+	auto tr_select = new Transition (
+		std::make_unique < FormulaTransitionRule > (
+			std::make_unique < FormulaBop > (
+				BoolOp::And,
+				std::make_unique < Relation > (
+					RelationOp::eq,
+					std::make_unique < ArrayTerm > (
+						std::make_unique < VariableReference > (
+							*var_thread_pool_selected,
+							false
+						),
+						vector < Term * > {
+							new ThreadID()
+						}
+					),
+					make_unique < IntConstant > ( fun_id )
+				),
+				// </ Relation >
+				std::make_unique < Havoc > ( )
+			)
+			// </FormulaBop >
+		),
+		from,
+		*s_running
+	);
+	tr_select->insert_to ( *bnts_thread_pool_routine );
+
+
+	return *s_running;
+}
+
+// s_running_2 -> s_stopped { thread_start_routine_2()  }
+void llvm_2_nts::add_thread_poll_call_transition (
+		State & from,
+		State & to,
+		BasicNts & bn )
+{
+	auto tr_stop = new Transition (
+		std::make_unique < CallTransitionRule > (
+			bn,
+			vector < Term * > ( {} ),
+			vector < const Variable * > ( {} )
+		),
+		from,
+		to
+	);
+
+	tr_stop->insert_to ( *bnts_thread_pool_routine );
+}
+
+void llvm_2_nts::add_thread_pool_routine()
+{
+	if ( ! need_threads )
+		return;
+
+	bnts_thread_pool_routine = new BasicNts ( "__thread_pool_routine" );
+
+	auto * s_idle    = new State ( "s_idle" );
+	auto * s_stopped = new State ( "s_stopped" );
+
+	s_idle   ->insert_to ( *bnts_thread_pool_routine );
+	s_stopped->insert_to ( *bnts_thread_pool_routine );
+
+	s_idle->is_initial() = true;
+
+	const auto & funs = modmap.pt_funs();
+	for ( unsigned int i = 0; i < funs.size(); i++ )
+	{
+		unsigned int id = i + 1;
+
+		State & s_running = add_thread_poll_select_transition ( *s_idle, id );
+		add_thread_poll_call_transition (
+				s_running,
+				*s_stopped,
+				modmap.get_nts ( *funs[i] ).bn
+		);
+	}
+
+	bnts_thread_pool_routine->insert_to ( nts );
+}
+
+void llvm_2_nts::add_thread_pool_variables()
+{
+	if ( !need_threads )
+		return;
+
+	var_thread_pool_lock = new Variable (
+			DataType ( ScalarType::Integer() ),
+			"__thread_pool_lock"
+	);
+	var_thread_pool_lock->insert_to ( nts );
+
+	var_thread_pool_selected = new Variable (
+			DataType (
+				ScalarType::BitVector ( 32 ),
+				0,
+				std::vector < Term * > {
+					new IntConstant (thread_pool_size )
+				}
+			),
+			"__thread_pool_selected"
+	);
+	var_thread_pool_selected->insert_to ( nts );
+}
+
 void llvm_2_nts::process_pthreads()
 {
 	// Find function 'pthread_create()' (if it is declared)
@@ -126,17 +421,8 @@ void llvm_2_nts::process_pthreads()
 	if ( ptc->use_empty() )
 		return;
 
-	auto * thread_create = new BasicNts ( "__thread_create" );
-	{
-		auto * param_func_id = new Variable (
-				DataType ( ScalarType::BitVector ( 16 ) ), // FIXME
-				"func_id"
-		);
-		param_func_id->insert_param_in_to ( *thread_create );
-	}
-
-	thread_create->insert_to ( nts );
-
+	need_threads = true;
+	thread_pool_size = 20;
 	
 	// Find all users of function 'pthread_create()'
 	for ( const auto &u : ptc->users() )
@@ -220,14 +506,28 @@ void llvm_2_nts::convert_functions()
 	}
 }
 
+void llvm_2_nts::add_instances()
+{
+	if ( need_threads )
+	{
+		Instance * i = new Instance ( bnts_thread_pool_routine, thread_pool_size );
+		i->insert_to ( nts );
+	}
+}
+
 std::unique_ptr<Nts> llvm_to_nts ( const llvm::Module & llvm_module )
 {
 
 	Nts *n = new Nts ( llvm_module.getModuleIdentifier() );
 	llvm_2_nts l2n ( llvm_module, *n );
-	l2n.create_function_prototypes();
+	//l2n.create_function_prototypes();
 	l2n.create_global_variables();
 	l2n.process_pthreads();
+	l2n.create_function_prototypes();
+	l2n.add_thread_pool_variables();
+	l2n.add_thread_pool_routine();
+	l2n.add_thread_create();
+	l2n.add_instances();
 	l2n.convert_functions();
 
 	return std::unique_ptr<Nts>(n);

@@ -21,11 +21,13 @@ struct BasicNtsInfo
 		const llvm::Argument *,
 		nts::Variable *         > args;
 
+	bool is_ptf; // pthread function
 	BasicNtsInfo ( nts::BasicNts & bn ) :
 		bn            ( bn      ),
 		orig_function ( nullptr ),
 		ret_var       ( nullptr ),
-		lbb_var       ( nullptr )
+		lbb_var       ( nullptr ),
+		is_ptf        ( false   )
 	{
 		;
 	}
@@ -68,6 +70,11 @@ class ModuleMapping
 
 		void ins_pthread_function ( const llvm::Function & f );
 		unsigned int get_pthread_function_id ( const llvm::Function & f ) const;
+		bool is_thread_function ( const llvm::Function & f ) const;
+
+		const std::vector < const llvm::Function * > & pt_funs() const { return m_ptf; }
+
+		nts::BasicNts * bnts_thread_create;
 
 	private:
 		llvm::DenseMap < const llvm::Function *, BasicNtsInfo * >
