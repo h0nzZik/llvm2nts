@@ -5,7 +5,6 @@ add_library(llvm2nts SHARED
 	"ModuleMapping.cpp"
 	"types.cpp"
 	"util.cpp"
-	"sugar.cpp"
 	"instructions/InstAdd.cpp"
 	"instructions/InstLoadStore.cpp"
 	"instructions/InstAlloca.cpp"

@@ -12,22 +12,24 @@
 #include <llvm/IR/Instructions.h>
 #include <llvm/Support/raw_ostream.h>
 
+// libNTS
+#include <libNTS/sugar.hpp>
+
 #include "llvmFunction2nts.hpp"
 #include "types.hpp"
 #include "util.hpp"
-#include "sugar.hpp"
 
 #include "llvm2nts.hpp"
 
 using namespace llvm;
 using namespace nts;
+using namespace nts::sugar;
 using std::string;
 using std::make_pair;
 using std::to_string;
 using std::vector;
 using std::unique_ptr;
 
-using namespace sugar;
 
 struct llvm_2_nts
 {

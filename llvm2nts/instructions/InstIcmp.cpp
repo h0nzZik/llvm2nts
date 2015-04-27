@@ -8,81 +8,14 @@
 
 #include <stdexcept>
 #include <llvm/Support/Casting.h> // llvm::cast
+
 #include <libNTS/logic.hpp>
 #include <libNTS/nts.hpp>
+#include <libNTS/sugar.hpp>
 
 #include "../util.hpp"
-#include "../sugar.hpp"
-
 #include "InstIcmp.hpp"
 
-#if 0
-ConcreteFormula InstIcmp::get_formula (
-		llvm::ICmpInst::Predicate   p,
-		const IPrint              * result,
-		const IPrint              * op_1,
-		const IPrint              * op_2,
-		const IPrint              * signed_bound)
-{
-	const std::initializer_list<const IPrint *>  &il_1 =
-	{
-			result,
-			op_1,
-			op_2,
-			signed_bound,
-			&m_constants.bool_true,
-			&m_constants.bool_false
-	};
-
-	// Has swapped operands
-	const std::initializer_list<const IPrint *>  &il_2 =
-	{
-			result,
-			op_2,
-			op_1,
-			signed_bound,
-			&m_constants.bool_true,
-			&m_constants.bool_false
-	};
-
-	switch ( p )
-	{
-	case llvm::ICmpInst::ICMP_EQ:
-		return ConcreteFormula ( m_f_eq_havoc,  il_1 );
-
-	case llvm::ICmpInst::ICMP_ULE:
-		return ConcreteFormula ( m_f_ule_havoc, il_1 );
-
-	case llvm::ICmpInst::ICMP_SLE:
-		return ConcreteFormula ( m_f_sle_havoc, il_1 );
-
-	case llvm::ICmpInst::ICMP_ULT:
-		return ConcreteFormula ( m_f_ult_havoc, il_1 );
-
-	case llvm::ICmpInst::ICMP_SLT:
-		return ConcreteFormula ( m_f_slt_havoc, il_1 );
-
-	case llvm::ICmpInst::ICMP_NE:
-		return ConcreteFormula ( m_f_eq_havoc,  il_2 );
-
-	case llvm::ICmpInst::ICMP_UGT:
-		return ConcreteFormula ( m_f_ule_havoc, il_2 );
-
-	case llvm::ICmpInst::ICMP_UGE:
-		return ConcreteFormula ( m_f_ult_havoc, il_2 );
-
-	case llvm::ICmpInst::ICMP_SGT:
-		return ConcreteFormula ( m_f_sle_havoc, il_2 );
-
-	case llvm::ICmpInst::ICMP_SGE:
-		return ConcreteFormula ( m_f_slt_havoc, il_2 );
-
-	default:
-		throw std::logic_error ( "ICMP: unknown predicate" );
-	}
-}
-
-#endif
 
 using namespace nts;
 using namespace llvm;

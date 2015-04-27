@@ -4,12 +4,15 @@
 #include <llvm/IR/Constants.h>
 
 #include <libNTS/logic.hpp>
+#include <libNTS/sugar.hpp>
 
 #include "../util.hpp"
 #include "InstLoadStore.hpp"
 
 using namespace nts;
+using namespace nts::sugar;
 using namespace llvm;
+
 using std::unique_ptr;
 using std::make_unique;
 using std::move;
@@ -80,18 +83,12 @@ void InstLoadStore::process (
 	
 	if ( dest_var && src )
 	{
-		auto i1      = { (const Variable *)dest_var };
-		auto havoc   = std::make_unique < Havoc > ( i1 );
-		auto dest    = std::make_unique < VariableReference > ( *dest_var, true );
-		auto assign  = std::make_unique < Relation > (
-						RelationOp::eq, move ( dest ), move ( src ) );
-		formula      = std::make_unique < FormulaBop > (
-						BoolOp::And, move ( assign ), move ( havoc ) );
+		Formula & f = ( NEXT ( dest_var ) == *src.release() ) && havoc ( {dest_var} );
+		formula = unique_ptr < Formula > ( &f );
 	}
 	else if ( !dest_var && !src )
 	{
-		auto i1 = std::initializer_list < const Variable *> {};
-		formula = std::make_unique < Havoc > ( i1 );
+		formula = std::make_unique < Havoc > ( );
 	} else {
 		throw std::logic_error ( "condition does not hold: dest_var <==> src" );
 	}
