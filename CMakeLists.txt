@@ -10,7 +10,6 @@ find_package(LLVM REQUIRED CONFIG)
 add_definitions(${LLVM_DEFINITIONS})
 add_definitions(-D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS)
 
-add_subdirectory(pass)
 add_subdirectory(llvm2nts)
 add_subdirectory(test_llvm2nts)
 add_subdirectory(libNTS)
