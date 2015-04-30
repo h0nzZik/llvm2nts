@@ -8,10 +8,4 @@ include_directories(
 	".."
 )
 
-# Taken from http://llvm.org/docs/CMake.html
-#
-# Find the libraries that correspond to the LLVM components
-# that we wish to use
-llvm_map_components_to_libnames(llvm_libs core irreader)
-
-target_link_libraries ( test_llvm2nts llvm2nts ${llvm_libs})
+target_link_libraries ( test_llvm2nts llvm2nts )
