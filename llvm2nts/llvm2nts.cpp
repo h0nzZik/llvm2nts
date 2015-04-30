@@ -492,12 +492,12 @@ void llvm_2_nts::set_global_variable_initializer
 	);
 
 	std::unique_ptr < Formula > new_formula ;
-	if ( nts.init() )
+	if ( nts.initial_formula )
 	{
 		new_formula = std::make_unique < FormulaBop > (
 				BoolOp::And,
 				move ( eq ),
-				move ( nts.init() )
+				move ( nts.initial_formula )
 		);
 	}
 	else
@@ -505,7 +505,7 @@ void llvm_2_nts::set_global_variable_initializer
 		new_formula = move ( eq );
 	}
 
-	nts.init() = move ( new_formula );
+	nts.initial_formula = move ( new_formula );
 }
 
 void llvm_2_nts::convert_functions()
@@ -527,7 +527,7 @@ void llvm_2_nts::add_instances()
 		BasicNts * main = nullptr;
 		for ( BasicNts * bn : nts.basic_ntses() )
 		{
-			if ( 0 == bn->name().compare ( "main" ) )
+			if ( 0 == bn->name.compare ( "main" ) )
 			{
 				main = bn;
 				break;
