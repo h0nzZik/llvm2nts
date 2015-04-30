@@ -17,4 +17,6 @@
 
 std::unique_ptr<nts::Nts> llvm_to_nts ( const llvm::Module & llvm_module );
 
+std::unique_ptr<nts::Nts> llvm_file_to_nts ( const std::string filename );
+
 #endif // _LLVM2NTS_HPP_

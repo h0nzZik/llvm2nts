@@ -10,7 +10,10 @@
 #include <llvm/IR/Function.h>
 #include <llvm/IR/Constants.h>
 #include <llvm/IR/Instructions.h>
+#include <llvm/IR/LLVMContext.h>
 #include <llvm/Support/raw_ostream.h>
+#include <llvm/Support/SourceMgr.h>
+#include <llvm/IRReader/IRReader.h>
 
 // libNTS
 #include <libNTS/sugar.hpp>
@@ -562,5 +565,26 @@ std::unique_ptr<Nts> llvm_to_nts ( const llvm::Module & llvm_module )
 }
 
 
+std::unique_ptr<Nts> llvm_file_to_nts ( const string filename )
+{
+	llvm::SMDiagnostic diag;
+	llvm::LLVMContext  ctx;
 
+	unique_ptr<llvm::Module> m = llvm::parseIRFile ( filename, diag, ctx );
+
+	if ( !m )
+		return nullptr;
+
+
+	unique_ptr < nts::Nts > nts;
+	try {
+		nts = llvm_to_nts ( *m );
+	}
+	catch ( const std::exception & e )
+	{
+		return nullptr;
+	}
+
+	return nts;
+}
 
