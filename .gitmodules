@@ -1,3 +1,6 @@
 [submodule "libNTS"]
 	path = libNTS
 	url = git@github.com:h0nzZik/libNTS_cpp.git
+[submodule "externals/Catch"]
+	path = externals/Catch
+	url = https://github.com/philsquared/Catch.git

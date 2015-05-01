@@ -77,7 +77,7 @@ struct llvm_2_nts
 	void create_global_variables();
 
 	void set_global_variable_initializer (
-		const nts::Variable  & var,
+		nts::Variable  & var,
 		const llvm::Constant & init
 	);
 
@@ -479,7 +479,7 @@ void llvm_2_nts::create_global_variables()
 
 void llvm_2_nts::set_global_variable_initializer
 (
-		const nts::Variable  & var,
+		nts::Variable  & var,
 		const llvm::Constant & init
 )
 {
