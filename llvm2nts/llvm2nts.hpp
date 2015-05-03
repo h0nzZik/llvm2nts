@@ -15,8 +15,17 @@
 // libNTS
 #include <libNTS/nts.hpp>
 
-std::unique_ptr<nts::Nts> llvm_to_nts ( const llvm::Module & llvm_module );
+struct llvm2nts_options
+{
+	unsigned int thread_poll_size;
+};
 
-std::unique_ptr<nts::Nts> llvm_file_to_nts ( const std::string filename );
+std::unique_ptr<nts::Nts> llvm_to_nts (
+		const llvm::Module & llvm_module,
+		const llvm2nts_options * opts = nullptr );
+
+std::unique_ptr<nts::Nts> llvm_file_to_nts (
+		const std::string filename,
+		const llvm2nts_options * opts = nullptr );
 
 #endif // _LLVM2NTS_HPP_

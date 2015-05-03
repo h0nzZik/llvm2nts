@@ -37,7 +37,9 @@ using std::unique_ptr;
 struct llvm_2_nts
 {
 	const Module  & llvm_module;
-	Nts           & nts;
+	Nts             & nts;
+	const llvm2nts_options & opts;
+
 	ModuleMapping   modmap;
 	bool need_threads;
 
@@ -48,9 +50,10 @@ struct llvm_2_nts
 	Variable * var_thread_pool_lock;
 	BasicNts * bnts_thread_pool_routine;
 
-	llvm_2_nts ( const Module & lm, Nts & n ) :
-		llvm_module ( lm ),
-		nts         ( n  )
+	llvm_2_nts ( const Module & lm, Nts & n, const llvm2nts_options & opts ) :
+		llvm_module ( lm   ),
+		nts         ( n    ),
+		opts        ( opts )
 	{
 		need_threads             = false;
 		var_thread_pool_lock     = nullptr;
@@ -435,7 +438,7 @@ void llvm_2_nts::process_pthreads()
 		return;
 
 	need_threads = true;
-	thread_pool_size = 20;
+	thread_pool_size = opts.thread_poll_size;
 	
 	// Find all users of function 'pthread_create()'
 	for ( const auto &u : ptc->users() )
@@ -548,11 +551,19 @@ void llvm_2_nts::add_instances()
 	}
 }
 
-std::unique_ptr<Nts> llvm_to_nts ( const llvm::Module & llvm_module )
+
+std::unique_ptr<Nts> llvm_to_nts (
+		const llvm::Module & llvm_module,
+		const llvm2nts_options * opts )
 {
+	llvm2nts_options defaults;
+	defaults.thread_poll_size = 20;
+	if ( ! opts )
+		opts = & defaults;
+
 
 	Nts *n = new Nts ( llvm_module.getModuleIdentifier() );
-	llvm_2_nts l2n ( llvm_module, *n );
+	llvm_2_nts l2n ( llvm_module, *n, *opts );
 	//l2n.create_function_prototypes();
 	l2n.create_global_variables();
 	l2n.process_pthreads();
@@ -567,7 +578,9 @@ std::unique_ptr<Nts> llvm_to_nts ( const llvm::Module & llvm_module )
 }
 
 
-std::unique_ptr<Nts> llvm_file_to_nts ( const string filename )
+std::unique_ptr<Nts> llvm_file_to_nts (
+		const string filename,
+		const llvm2nts_options * opts )
 {
 	llvm::SMDiagnostic diag;
 	llvm::LLVMContext  ctx;
@@ -580,7 +593,7 @@ std::unique_ptr<Nts> llvm_file_to_nts ( const string filename )
 
 	unique_ptr < nts::Nts > nts;
 	try {
-		nts = llvm_to_nts ( *m );
+		nts = llvm_to_nts ( *m, opts );
 	}
 	catch ( const std::exception & e )
 	{
