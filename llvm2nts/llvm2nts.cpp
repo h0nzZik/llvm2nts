@@ -345,7 +345,7 @@ void llvm_2_nts::add_thread_poll_call_transition (
 		std::make_unique < CallTransitionRule > (
 			bn,
 			vector < Term * > ( {} ),
-			vector < const Variable * > ( {} )
+			vector < Variable * > ( {} )
 		),
 		from,
 		to
@@ -509,6 +509,8 @@ void llvm_2_nts::set_global_variable_initializer
 	}
 
 	nts.initial_formula = move ( new_formula );
+	nts.initial_formula->_parent_ptr.nts = & nts;
+	nts.initial_formula->_parent_type = Formula::ParentType::NtsInitialFormula;
 }
 
 void llvm_2_nts::convert_functions()
