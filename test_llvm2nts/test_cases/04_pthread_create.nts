@@ -1,4 +1,4 @@
-nts ./test_cases/04_pthread_create.ll;
+nts test_llvm2nts/test_cases/04_pthread_create.ll;
 __thread_pool_lock : BitVector<32>
 __thread_pool_selected[20] : BitVector<32>
 instances __thread_pool_routine[20], main[1];
@@ -11,10 +11,11 @@ thread_func {
 
 main {
 	_lbb_var : BitVector<16>;
+	id : BitVector<64>;
 	initial	st_0_0;
-	final	st_0_2;
-	st_0_0 -> st_0_1 { __thread_create ( 0 ) }
-	st_0_1 -> st_0_2 { havoc (  ) }
+	final	st_0_3;
+	st_0_0 -> st_0_2 { id' = __thread_create ( 0 ) }
+	st_0_2 -> st_0_3 { havoc (  ) }
 }
 
 __thread_pool_routine {
@@ -26,6 +27,7 @@ __thread_pool_routine {
 
 __thread_create {
 	in	func_id : BitVector<32>;
+	out	ret_tid : BitVector<64>;
 	thread_id : BitVector<32>;
 	initial	si;
 	final	sf;
@@ -35,6 +37,6 @@ __thread_create {
 	sl -> sn { ( ( __thread_pool_selected[thread_id] > 0 ) && havoc (  ) ) }
 	sn -> sl { ( ( thread_id < 19 ) && ( ( thread_id' = ( thread_id + 1 ) ) && havoc ( thread_id ) ) ) }
 	sn -> se { ( ( thread_id >= 19 ) && havoc (  ) ) }
-	sh -> sf { ( ( __thread_pool_lock' = 0 ) && havoc ( __thread_pool_lock ) ) }
+	sh -> sf { ( ( ( __thread_pool_lock' = 0 ) && ( ret_tid' = thread_id ) ) && havoc ( __thread_pool_lock ) ) }
 }
 
