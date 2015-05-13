@@ -1,5 +1,5 @@
 #include <sstream>
-
+#include <iostream>
 
 #include <llvm/IR/Module.h>
 #include <llvm/IR/Function.h>
@@ -94,9 +94,23 @@ void fun_llvm_2_nts::create_param_mapping()
 
 void fun_llvm_2_nts::process_basic_blocks()
 {
-	for ( const auto & bbi : funmap.bbinfo() )
+	// We need to process the basic blocks
+	// in 'natural' order, because later
+	// blocks may need variables
+	// defined in earlier blocks.
+	// For this reason, we can not iterate
+	// over funmap.bbinfo
+	//
+	// TODO: To support phi instructions,
+	// all registers must be mapped to variables
+	// before processing BasicBlocks.
+	// When that is met, we could iterate there
+	// over funmap.bbinfo.
+
+	for ( const BasicBlock & b : fun.getBasicBlockList() )
 	{
-		process_basic_block ( *bbi.getSecond());
+		auto it = funmap.bbinfo().find ( & b );
+		process_basic_block ( * it->getSecond() );
 	}
 }
 
@@ -107,7 +121,15 @@ void fun_llvm_2_nts::process_basic_block ( const StateInfo & bbi )
 	st.st->is_initial() = true;
 	for ( const auto &i : bbi.bb->getInstList() )
 	{
-		process_instruction ( i, st );
+		try {
+			process_instruction ( i, st );
+		} catch ( const std::exception & e ) {
+			errs() << "An exception was thrown while processing ";
+			i.print ( errs() );
+			errs() << "\n";
+			errs() << "what: " << string(e.what()) << "\n";
+			throw e;
+		}
 		st.inst_id++;
 	}
 }

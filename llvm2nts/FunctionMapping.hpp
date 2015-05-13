@@ -87,10 +87,6 @@ class FunctionMapping
 		nts::Variable & get_variable ( const llvm::Value & value ) const;
 		nts::Variable & get_variable_by_pointer ( const llvm::Value & value ) const;
 
-		
-		//const NTS::IPrint * get_iprint ( int n );
-		//const NTS::IPrint * get_iprint ( const llvm::Value *value );
-
 		void ins_bb_start ( const llvm::BasicBlock & block,
 						    std::unique_ptr<StateInfo> s );
 
