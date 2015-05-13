@@ -1,0 +1,11 @@
+nts ./test_cases/07_br.ll;
+main {
+	_lbb_var : BitVector<16>;
+	initial	st_0_0, st_1_0, st_2_0;
+	final	st_2_1;
+	st_0_0 -> st_1_0 { ( true && ( ( _lbb_var' = 0 ) && havoc ( _lbb_var ) ) ) }
+	st_0_0 -> st_2_0 { ( not true && ( ( _lbb_var' = 0 ) && havoc ( _lbb_var ) ) ) }
+	st_2_0 -> st_2_1 { havoc (  ) }
+	st_1_0 -> st_2_0 { ( ( _lbb_var' = 1 ) && havoc ( _lbb_var ) ) }
+}
+
