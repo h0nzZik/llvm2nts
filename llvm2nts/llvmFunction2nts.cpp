@@ -69,7 +69,8 @@ struct fun_llvm_2_nts
 void fun_llvm_2_nts::create_basicblock_mapping()
 {
 	unsigned int bb_id = 0;
-	for ( const auto & b : fun.getBasicBlockList() )
+	const auto & l = fun.getBasicBlockList();
+	for ( const auto & b : l )
 	{
 		auto name = string ( "st_" ) + to_string ( bb_id ) + "_0";
 		auto st   = new State ( std::move ( name ) );
@@ -81,7 +82,15 @@ void fun_llvm_2_nts::create_basicblock_mapping()
 
 		funmap.ins_bb_start ( b, std::move ( i ) );
 		bb_id++;
-	}	
+	}
+
+	// First basic block has initial state
+	if ( l.size() != 0 )
+	{
+		const BasicBlock * first = l.begin();
+		StateInfo & si = * funmap.bbinfo().find ( first )->getSecond();
+		si.st->is_initial() = true;
+	}
 }
 
 void fun_llvm_2_nts::create_param_mapping()
@@ -118,7 +127,6 @@ void fun_llvm_2_nts::process_basic_block ( const StateInfo & bbi )
 {
 	StateInfo st = bbi;
 	st.inst_id = 1;
-	st.st->is_initial() = true;
 	for ( const auto &i : bbi.bb->getInstList() )
 	{
 		try {

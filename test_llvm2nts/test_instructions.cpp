@@ -135,9 +135,6 @@ TEST_CASE ( "Icmp", "ICMP instruction" )
 	);
 }
 
-// Transitions are generated in unpredictable order,
-// so we do not test it
-#if 0
 TEST_CASE ( "Br", "Br instruction" )
 {
 	do_file_compare_test (
@@ -145,4 +142,3 @@ TEST_CASE ( "Br", "Br instruction" )
 			"./test_cases/07_br.nts"
 	);
 }
-#endif
