@@ -108,6 +108,12 @@ class FunctionMapping
 		 */
 		std::unique_ptr < nts::Leaf > new_leaf ( const llvm::Value & value ) const;
 
+		/**
+		 * @brief Create leaf with type BitVector<1> (aka Bool)
+		 */
+		std::unique_ptr < nts::Leaf > new_boolleaf ( const llvm::Value & value ) const;
+
+
 		// New primed variable reference
 		std::unique_ptr < nts::VariableReference >
 			new_primed ( const llvm::Value & value ) const;

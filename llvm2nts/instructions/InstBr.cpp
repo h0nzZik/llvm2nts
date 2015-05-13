@@ -5,62 +5,71 @@
  *      Author: jenda
  */
 
+#include <stdexcept>
+#include <libNTS/nts.hpp>
+#include <libNTS/logic.hpp>
+#include <libNTS/sugar.hpp>
 #include "InstBr.hpp"
 
-using namespace NTS;
+using std::invalid_argument;
+using std::logic_error;
+using namespace nts;
+using namespace nts::sugar;
 
-InstBr::InstBr() :
-	m_aval_lbb   ( 0, true  ),
-	m_aval_bbid  ( 1, false ),
-	m_assign_lbb ( AtomicRelation::Relation::Eq, &m_aval_lbb, &m_aval_bbid ),
-	m_havoc      ( { 0 } ),
-	m_formula    ( BoolOp::And, &m_assign_lbb, &m_havoc )
+Formula & InstBr::formula_lbb_havoc (
+		const BasicNtsInfo & bntsi,
+		StateInfo & sti )
 {
-
+	return ( NEXT ( bntsi.lbb_var ) == sti.bb_id ) && havoc ( { bntsi.lbb_var } );
 }
 
-InstBr::~InstBr()
+/**
+ * @pre Q1: All BasicBlocks in current function must have
+ *          their records and first states in given 'map' variable.
+ */
+void InstBr::process (
+		const BasicNtsInfo      & bntsi,
+		StateInfo               & sti,
+		FunctionMapping         & map,
+		const llvm::Instruction & i    )
 {
-	
-}
-
-bool InstBr::supports(unsigned int opcode) const
-{
-	return opcode == llvm::Instruction::Br;
-}
-
-const State * InstBr::process(
-		const NTS::State        * from    ,
-		const llvm::Instruction & i       ,
-		FunctionMapping         & map     ,
-		NTS::BasicNts           & n       ,
-		int                       bb_id   ,
-		int                       inst_id )
-{
-	(void) inst_id;
-
 	if (i.getOpcode() != llvm::Instruction::Br)
-		throw std::invalid_argument("Unsupported llvm instruction");
+		throw invalid_argument("Not a branch instruction");
 
 	const auto &br = llvm::cast<llvm::BranchInst>(i);
-	const NTS::State * to;
-	if (br.isConditional())
+
+	auto flh = [ & bntsi, & sti ] () -> Formula & {
+		return formula_lbb_havoc ( bntsi, sti );
+	};
+
+	if ( br.isConditional() )
 	{
-		return from; // TODO implement
-		throw std::logic_error("Conditional branch is not implemented");
-	} else {
-		const llvm::BasicBlock *b = br.getSuccessor ( 0 );
-		to = map.get_bb_start ( b );
+		llvm::BasicBlock * bb1 = br.getSuccessor ( 0 );
+		llvm::BasicBlock * bb2 = br.getSuccessor ( 1 );
+		if ( !bb1 || !bb2 )
+			throw logic_error ( "Conditional 'br' should have two successors" );
+
+		StateInfo & next_state_1 = map.get_bb_start ( *bb1 );
+		StateInfo & next_state_2 = map.get_bb_start ( *bb2 );
+
+		const llvm::Value & v = * br.getCondition();
+		Formula & guard_1 = ( boolterm ( map.new_boolleaf ( v ) ) && flh() );
+		Formula & guard_2 = ( ( !boolterm ( map.new_boolleaf ( v ) ) ) && flh() );
+
+		Transition & tr_1 = ( *sti.st ->* *next_state_1.st ) ( guard_1 );
+		Transition & tr_2 = ( *sti.st ->* *next_state_2.st ) ( guard_2 );
+
+		tr_1.insert_to ( bntsi.bn );
+		tr_2.insert_to ( bntsi.bn );
 	}
-
-	// Variable in which id of last visited basic block is stored
-	const IPrint *lbb = n.get_lbb_var();
-	// Constant with this basic block id
-	const IPrint *val = n.add_constant ( bb_id );
-	
-	ConcreteFormula cf ( m_formula, { lbb, val } );
-	const TransitionRule * r = n.add_transition_rule ( cf );
-	n.add_transition ( from, to, r );
-
-	return NULL;
+	else
+	{
+		llvm::BasicBlock * bb = br.getSuccessor ( 0 );
+		if ( !bb )
+			throw logic_error ( "Unconditional 'br' should have one successor" );
+		StateInfo & next_state = map.get_bb_start ( *bb );
+		Transition & tr = ( *sti.st ->* *next_state.st ) ( flh() );
+		tr.insert_to ( bntsi.bn );
+	}
 }
+

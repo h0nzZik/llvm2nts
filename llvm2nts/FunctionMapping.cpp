@@ -11,6 +11,7 @@
 
 using namespace llvm;
 using namespace nts;
+using std::logic_error;
 using std::make_pair;
 using std::unique_ptr;
 
@@ -47,7 +48,7 @@ unique_ptr<Variable> FunctionMapping::new_variable ( const Value &llval )
 void FunctionMapping::ins_variable ( const Value & llval, Variable & var )
 {
 	if ( ! llval.getType()->isIntegerTy() )
-		throw std::logic_error ( "Value must be of integer type" );
+		throw logic_error ( "Value must be of integer type" );
 
 	m_vars.insert ( make_pair ( &llval, &var ) );
 }
@@ -55,7 +56,7 @@ void FunctionMapping::ins_variable ( const Value & llval, Variable & var )
 void FunctionMapping::ins_pointer ( const Value & llval, Variable & var )
 {
 	if ( ! llval.getType()->isPointerTy() )
-		throw std::logic_error ( "Value must be of pointer type" );
+		throw logic_error ( "Value must be of pointer type" );
 
 	m_pointers.insert ( make_pair ( &llval, &var ) );
 }
@@ -89,19 +90,19 @@ Variable & FunctionMapping::get_variable ( const Value & value ) const
 	if ( v )
 		return *v;
 
-	throw std::logic_error ( "No such variable exists" );
+	throw logic_error ( "No such variable exists" );
 }
 
 Variable & FunctionMapping::get_variable_by_pointer ( const Value & value ) const
 {
 	if ( ! value.getType()->isPointerTy() )
-		throw std::logic_error ( "Not a pointer type" );
+		throw logic_error ( "Not a pointer type" );
 
 	auto * found = get_variable_by_pointer_noexcept ( value );
 	if ( found )
 		return *found;
 
-	throw std::logic_error ( "Pointer does not point to any known variable" );
+	throw logic_error ( "Pointer does not point to any known variable" );
 }
 
 
@@ -128,7 +129,7 @@ StateInfo & FunctionMapping::get_bb_start ( const BasicBlock & block ) const
 {
 	const auto s = m_block_start.lookup ( & block );
 	if ( !s )
-		throw std::logic_error ( "Start of basic block not found" );
+		throw logic_error ( "Start of basic block not found" );
 
 	return *s;
 }
@@ -146,6 +147,23 @@ unique_ptr < Leaf > FunctionMapping::new_leaf ( const Value & value ) const
 	auto var = get_variable_noexcept ( value );
 	if ( !var )
 		throw std::domain_error ( "Can not create a leaf" );
+
+	auto * ref = new VariableReference ( *var, false );
+	return std::unique_ptr < Leaf > ( ref );
+}
+
+unique_ptr < Leaf > FunctionMapping::new_boolleaf ( const Value & value ) const
+{
+	if ( isa < llvm::Constant > ( value ) )
+		return unique_ptr < Leaf > (
+				new_bool_constant ( cast < llvm::Constant > ( value ) ) );
+
+	auto var = get_variable_noexcept ( value );
+	if ( !var )
+		throw std::domain_error ( "No such variable" );
+
+	if ( !var->type().is_scalar() || var->type().scalar_type() != ScalarType::Bool() )
+		throw TypeError();
 
 	auto * ref = new VariableReference ( *var, false );
 	return std::unique_ptr < Leaf > ( ref );

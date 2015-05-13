@@ -5,6 +5,7 @@
 #include "util.hpp"
 
 using namespace nts;
+using std::logic_error;
 using std::string;
 using std::to_string;
 
@@ -18,7 +19,7 @@ State *  new_state ( unsigned int bb_id, unsigned int inst_id )
 	);
 }
 
-nts::Constant * new_constant ( const llvm::Constant & c )
+Constant * new_constant ( const llvm::Constant & c )
 {
 	if ( llvm::isa < llvm::ConstantInt > ( c ) )
 	{
@@ -32,4 +33,17 @@ nts::Constant * new_constant ( const llvm::Constant & c )
 	}
 
 	return 	nullptr;
+}
+
+BoolConstant * new_bool_constant ( const llvm::Constant & c )
+{
+	if ( !c.getType()->isIntegerTy ( 1 ) )
+		throw logic_error ( "Not an i1 type" );
+
+	if ( !llvm::isa < llvm::ConstantInt > ( c ) )
+		throw logic_error ( "Not a ConstantInt" );
+
+	auto & ci = llvm::cast < llvm::ConstantInt > ( c );
+	bool b = ci.getValue().getBoolValue();
+	return new BoolConstant ( b );
 }

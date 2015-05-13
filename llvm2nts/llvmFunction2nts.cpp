@@ -11,11 +11,10 @@
 #include "ModuleMapping.hpp"
 #include "FunctionMapping.hpp"
 
-//#include "instructions/Constants.hpp"
 #include "instructions/InstAdd.hpp"
 #include "instructions/InstLoadStore.hpp"
 #include "instructions/InstAlloca.hpp"
-//#include "instructions/InstBr.hpp"
+#include "instructions/InstBr.hpp"
 #include "instructions/InstIcmp.hpp"
 #include "instructions/InstCall.hpp"
 
@@ -34,7 +33,7 @@ class Context
 		InstAdd       m_ia;
 		InstLoadStore m_ils;
 		InstAlloca    m_alloca;
-		//InstBr        m_ibr;
+		InstBr        m_ibr;
 		InstIcmp      m_icmp;
 		InstCall      m_icall;
 };
@@ -77,7 +76,7 @@ void fun_llvm_2_nts::create_basicblock_mapping()
 		st->insert_to ( bni.bn );
 		// I am not the owner of st anymore
 		auto i     = unique_ptr<StateInfo> ( new StateInfo ( *st, b ) );
-		i->bb_id   = 0;
+		i->bb_id   = bb_id;
 		i->inst_id = 0;
 
 		funmap.ins_bb_start ( b, std::move ( i ) );
@@ -119,7 +118,6 @@ void fun_llvm_2_nts::process_instruction ( const llvm::Instruction & i, StateInf
 	{
 		case Instruction::Alloca:
 			return ctx.m_alloca.process ( bni, st, funmap, i );
-			break;
 
 		case Instruction::Call:
 			return ctx.m_icall.process ( bni, st, funmap, i );
@@ -134,6 +132,9 @@ void fun_llvm_2_nts::process_instruction ( const llvm::Instruction & i, StateInf
 
 		case Instruction::ICmp:
 			return ctx.m_icmp.process ( bni, st, funmap, i );
+
+		case Instruction::Br:
+			return ctx.m_ibr.process ( bni, st, funmap, i );
 
 		default:
 		{
