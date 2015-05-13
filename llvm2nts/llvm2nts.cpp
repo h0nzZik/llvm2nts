@@ -184,6 +184,12 @@ void llvm_2_nts::add_thread_create()
 			"func_id"
 	);
 	param_func_id->insert_param_in_to ( *thread_create );
+
+	Variable * out_thread_id = new Variable (
+			DataType ( ScalarType::BitVector ( 64 ) ),
+			"ret_tid"
+	);
+	out_thread_id->insert_param_out_to ( *thread_create );
 	
 
 	State & si = * new State ( "si" ); // 'initial'
@@ -203,6 +209,12 @@ void llvm_2_nts::add_thread_create()
 	si.is_initial() = true;
 	sf.is_final()   = true;
 	se.is_error()   = true;
+
+
+	// We use 64bit variables there, because
+	// pthread_t is typed typed to 64bit integer
+	// on 64bit platforms. Thus, we support only
+	// 64bit programs.
 
 	Variable * var_thread_id = new Variable (
 			DataType ( ScalarType::BitVector ( 32 ) ),
@@ -232,7 +244,6 @@ void llvm_2_nts::add_thread_create()
 	Formula & f_found = (
 	(
 	 	selected [ CURR(var_thread_id) ] == 0
-
 	)
 	&&
 	(
@@ -285,9 +296,13 @@ void llvm_2_nts::add_thread_create()
 	Transition & t_err = ( sn ->* se ) ( f_error );
 	t_err.insert_to ( *thread_create );
 
-	// If we have it, unlock
+	// If we have it, unlock (and return identifier)
 	Formula & f_unlock = (
-		( NEXT(var_thread_pool_lock) == 0)
+		(
+			( NEXT(var_thread_pool_lock) == 0 )
+		&&
+			( NEXT(out_thread_id) == CURR(var_thread_id) )
+		)
 	&& 
 		havoc({var_thread_pool_lock})
 	);

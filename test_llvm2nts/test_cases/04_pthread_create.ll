@@ -5,8 +5,9 @@ define i8* @thread_func ( i8* %data ) {
 }
 
 define void @main () {
+	%id = alloca i64, align 64
 	call i32 @pthread_create (
-			i64*                   null,
+			i64*                   %id,
 			%union.pthread_attr_t* null,
 			i8* (i8*)*             @thread_func,
 			i8*                    null );

@@ -67,6 +67,9 @@ void InstCall::process (
 
 		// thread_create takes one argument - id of thread function
 		args.push_back ( new nts::IntConstant ( id ) );
+
+		// return variable should be the first argument
+		ret_var = & map.get_variable_by_pointer ( *call.getArgOperand ( 0 ) );
 	}
 	else
 	{
