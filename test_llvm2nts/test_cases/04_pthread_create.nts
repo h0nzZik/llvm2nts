@@ -1,6 +1,7 @@
-nts test_llvm2nts/test_cases/04_pthread_create.ll;
+nts test_cases/04_pthread_create.ll;
 __thread_pool_lock : BitVector<32>
 __thread_pool_selected[20] : BitVector<32>
+init	( ( __thread_pool_lock = 0 ) && forall i : BitVector<32>[0, 19] . ( __thread_pool_selected[i] = 0 ) );
 instances __thread_pool_routine[20], main[1];
 thread_func {
 	_lbb_var : BitVector<16>;

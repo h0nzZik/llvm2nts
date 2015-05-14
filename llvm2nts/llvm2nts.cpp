@@ -421,6 +421,7 @@ void llvm_2_nts::add_thread_pool_variables()
 			"__thread_pool_lock"
 	);
 	var_thread_pool_lock->insert_to ( nts );
+	Formula & f_unlocked = CURR ( var_thread_pool_lock) == 0;
 
 	var_thread_pool_selected = new Variable (
 			DataType (
@@ -433,6 +434,26 @@ void llvm_2_nts::add_thread_pool_variables()
 			"__thread_pool_selected"
 	);
 	var_thread_pool_selected->insert_to ( nts );
+
+
+	Variable * tps_i = new BitVectorVariable ( "i", 32 );
+	Term & tps_at_i = ArrRead ( *var_thread_pool_selected ) [ CURR ( tps_i ) ];
+	AtomicProposition & tps_at_i_is_0 = tps_at_i == 0;
+	QuantifiedFormula * tps_is_0 = new QuantifiedFormula (
+			Quantifier::Forall,
+			QuantifiedType (
+				DataType ( ScalarType::BitVector ( 32 ) ),
+				std::make_unique < IntConstant > ( 0 ),
+				std::make_unique < IntConstant > ( thread_pool_size - 1 )
+			),
+			unique_ptr < Formula > ( & tps_at_i_is_0 )
+	);
+
+	tps_is_0->list.variables() += unique_ptr < Variable > ( tps_i );
+	// TODO: insert variable to list
+
+	Formula & both = f_unlocked && *tps_is_0;
+	nts.initial_add_conjunct ( unique_ptr < Formula > ( & both ) );
 }
 
 void llvm_2_nts::process_pthreads()
@@ -512,23 +533,7 @@ void llvm_2_nts::set_global_variable_initializer
 			move ( leaf )
 	);
 
-	std::unique_ptr < Formula > new_formula ;
-	if ( nts.initial_formula )
-	{
-		new_formula = std::make_unique < FormulaBop > (
-				BoolOp::And,
-				move ( eq ),
-				move ( nts.initial_formula )
-		);
-	}
-	else
-	{
-		new_formula = move ( eq );
-	}
-
-	nts.initial_formula = move ( new_formula );
-	nts.initial_formula->_parent_ptr.nts = & nts;
-	nts.initial_formula->_parent_type = Formula::ParentType::NtsInitialFormula;
+	nts.initial_add_conjunct ( move ( eq ) );
 }
 
 void llvm_2_nts::convert_functions()
