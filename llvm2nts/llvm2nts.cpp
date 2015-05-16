@@ -337,7 +337,7 @@ State & llvm_2_nts::add_thread_poll_select_transition ( State & from, unsigned i
 							new ThreadID()
 						}
 					),
-					make_unique < IntConstant > ( fun_id )
+					std::make_unique < IntConstant > ( fun_id )
 				),
 				// </ Relation >
 				std::make_unique < Havoc > ( )
